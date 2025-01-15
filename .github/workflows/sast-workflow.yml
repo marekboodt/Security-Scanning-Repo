@@ -1,0 +1,27 @@
+name: Reusable SAST Workflow
+
+on:
+  workflow_call:
+    inputs:
+      language:
+        type: string
+        required: true
+      project_dir:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+
+jobs:
+  sast-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run SAST script
+        run: |
+          bash ./scripts/sast/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}

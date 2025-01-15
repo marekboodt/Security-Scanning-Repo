@@ -1,0 +1,31 @@
+name: Reusable SCA Workflow
+
+on:
+  workflow_call:
+    inputs:
+      language:
+        type: string
+        required: true
+      project_dir:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+
+jobs:
+  sca-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Load environment-specific config
+        run: |
+          CONFIG_PATH=./environments/${{ inputs.environment }}/sca-rules.hcl
+          echo "Using config: $CONFIG_PATH"
+
+      - name: Run SCA script
+        run: |
+          bash ./scripts/sca/${{ inputs.language }}-sca.sh ${{ inputs.project_dir }}
