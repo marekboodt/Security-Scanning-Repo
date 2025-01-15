@@ -1,0 +1,4 @@
+# Bandit configuration for Python SAST
+skips:
+  - B101
+  - B403

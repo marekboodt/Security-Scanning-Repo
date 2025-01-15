@@ -1,0 +1,3 @@
+rules:
+  enforce_strict_rules: false
+  max_severity: "high"
