@@ -3,6 +3,8 @@
 This repository contains reusable workflows and scripts for security scanning:
 - **SCA (Software Composition Analysis):** Scans for vulnerable dependencies.
 - **SAST (Static Application Security Testing):** Analyzes code for vulnerabilities.
+- **DAST (Dynamic Application Security Testing):** Analyzes running code for vulnerabilities.
+- **IAC (Infrastructure as Code Security Testing):** Analyzes IAC code for vulnerabilities.
 
 ## Usage
 1. Add the following workflow to your project repository:
@@ -17,7 +19,7 @@ on:
 
 jobs:
   trigger-sca:
-    uses: org-name/security-scanning-repo/.github/workflows/sca-workflow.yml@main
+    uses: **org-name**/security-scanning-repo/.github/workflows/sca-workflow.yml@main
     with:
       language: python
       project_dir: ./src
