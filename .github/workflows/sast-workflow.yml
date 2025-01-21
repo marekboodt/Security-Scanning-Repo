@@ -21,18 +21,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Django Repository
         uses: actions/checkout@v3
 
-      - name: Authenticate with token
-        env:
-          PAT: ${{ secrets.token }}
+      - name: Checkout Security-Scanning-Repo
+        uses: actions/checkout@v3
+        with:
+          repository: marekboodt/Security-Scanning-Repo
+          path: security-scanning
+
+      - name: Debug File Structure
         run: |
-          echo "Authenticated with token"
+          echo "Root Directory:"
+          ls -R
+          echo "Security-Scanning-Repo Directory:"
+          ls -R security-scanning
 
       - name: Run SAST script
         run: |
-          ls ../
-          ls
-          bash ./scripts/sast/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
+          bash security-scanning/scripts/sast/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
+
 #        continue-on-error: ${{ inputs.environment == 'non-prod' }}
