@@ -32,7 +32,6 @@ jobs:
 
       - name: Run SAST script
         run: |
-          ls -R
           ls ../
           bash ./scripts/sast/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
 #        continue-on-error: ${{ inputs.environment == 'non-prod' }}
