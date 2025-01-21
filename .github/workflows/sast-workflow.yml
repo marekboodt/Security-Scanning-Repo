@@ -12,6 +12,9 @@ on:
       environment:
         type: string
         required: true
+    secrets:
+      token:
+        required: true
 
 jobs:
   sast-scan:
@@ -21,7 +24,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Authenticate with token
+        env:
+          PAT: ${{ secrets.token }}
+        run: |
+          echo "Authenticated with token"
+
       - name: Run SAST script
         run: |
           bash ./scripts/sast/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
-        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+#        continue-on-error: ${{ inputs.environment == 'non-prod' }}
