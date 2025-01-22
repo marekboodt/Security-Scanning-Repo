@@ -19,4 +19,5 @@ jobs:
         run: echo "Received message: ${{ inputs.message }}"
 
       - name: Run test script
-        run: ./scripts/test/test_script.sh
+        run: bash ./scripts/test/test_script.sh
+
