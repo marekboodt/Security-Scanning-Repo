@@ -12,8 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug Inputs
-        run: |
-          echo "DEBUG: Workflow started"
+        run: echo "DEBUG: Workflow started"
 
       - name: Print message from Main Workflow
         run: echo "Received message: ${{ inputs.message }}"
