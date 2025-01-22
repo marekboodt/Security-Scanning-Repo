@@ -12,19 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Debug Inputs
-        run: echo "DEBUG: Workflow started"
+        run: |
+          echo "DEBUG: Workflow started"
+          echo "Received message: ${{ inputs.message }}"
 
-      - name: Print message from Main Workflow
-        run: echo "Received message: ${{ inputs.message }}" # Correct usage of inputs
-
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - name: Check out Security-Scanning-Repo
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch the entire repository
+          # Ensure full history and all branches are fetched
+          fetch-depth: 0
+          # Specify the repository to fetch (important for reusable workflows)
           repository: marekboodt/Security-Scanning-Repo
+          # Explicitly fetch the main branch
+          ref: main
 
-      - name: List All Files (Recursive)
-        run: ls -R
+      - name: Verify Repository Files
+        run: ls -R  # Debug step to verify scripts/test/test_script.sh is available
 
-      - name: Run test script
-        run: ./scripts/test/test_script.sh
+      - name: Run Test Script
+        run: |
+          chmod +x ./scripts/test/test_script.sh
+          ./scripts/test/test_script.sh
