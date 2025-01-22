@@ -14,10 +14,12 @@ jobs:
       - name: Debug Inputs
         run: |
           echo "DEBUG: Workflow started"
-          echo "Received message: ${{ inputs.message }}"
-      
+
+      - name: Print message from Main Workflow
+        run: echo "Received message: ${{ inputs.message }}"
+        
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Fetch the entire repository, not just the shallow clone
           repository: marekboodt/Security-Scanning-Repo
