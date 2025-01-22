@@ -15,16 +15,15 @@ jobs:
         run: |
           echo "DEBUG: Workflow started"
           echo "Received message: ${{ inputs.message }}"
+      
       - name: Check out repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Fetch the entire repository, not just the shallow clone
+          repository: marekboodt/Security-Scanning-Repo
 
       - name: List All Files (Recursive)
         run: ls -R
-
-      - name: Change Permissions for Test Script
-        run: chmod +x ./scripts/test/test_script.sh
 
       - name: Run test script
         run: |
