@@ -11,7 +11,7 @@ jobs:
   Security-Scanning-Repo:
     runs-on: ubuntu-latest
     steps:
-      - name: Debug Inputs
+      - name: Print Message From Main Workflow
         run: |
           echo "Received message: ${{ inputs.message }}"
 
