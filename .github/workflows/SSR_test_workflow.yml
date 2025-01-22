@@ -13,7 +13,6 @@ jobs:
     steps:
       - name: Debug Inputs
         run: |
-          echo "DEBUG: Workflow started"
           echo "Received message: ${{ inputs.message }}"
 
       - name: Check out Security-Scanning-Repo
