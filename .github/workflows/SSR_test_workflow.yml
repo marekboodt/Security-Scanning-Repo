@@ -8,7 +8,7 @@ on:
         type: string
 
 jobs:
-  run-script:
+  Security-Scanning-Repo:
     runs-on: ubuntu-latest
     steps:
       - name: Debug Inputs
