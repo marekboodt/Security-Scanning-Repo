@@ -2,9 +2,11 @@
 name: Security Scanning Workflow
 
 on:
-  repository_dispatch:
-    types:
-      - trigger-ssr
+  workflow_call:
+    inputs:
+      message:
+        required: true
+        type: string
 
 jobs:
   run-script:
@@ -14,7 +16,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Display incoming message
-        run: echo "Received message: ${{ github.event.client_payload.message }}"
+        run: echo "Received message: ${{ inputs.message }}"
 
       - name: Run test script
         run: ./scripts/test/test_script.sh
