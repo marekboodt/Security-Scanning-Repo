@@ -18,6 +18,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
+      - name: LS files
+        run: ls
+
       - name: Run test script
         run: |
           chmod +x ./scripts/test/test_script.sh
