@@ -1,1 +1,20 @@
+# File: .github/workflows/SSR_test_workflow.yml
+name: Security Scanning Workflow
 
+on:
+  repository_dispatch:
+    types:
+      - trigger-ssr
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Display incoming message
+        run: echo "Received message: ${{ github.event.client_payload.message }}"
+
+      - name: Run test script
+        run: ./scripts/test/test_script.sh
