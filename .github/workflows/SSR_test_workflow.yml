@@ -17,6 +17,8 @@ jobs:
           echo "Received message: ${{ inputs.message }}"
       - name: Check out repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch the entire repository, not just the shallow clone
 
       - name: List All Files (Recursive)
         run: ls -R
