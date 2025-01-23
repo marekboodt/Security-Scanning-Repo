@@ -3,7 +3,7 @@ name: Security Scanning Workflow
 on:
   workflow_call:
     inputs:
-      message:
+      message:  # message that has to be set in the main Workflow YML file.
         required: true
         type: string
 
@@ -11,6 +11,7 @@ jobs:
   Security-Scanning-Repo:
     runs-on: ubuntu-latest
     steps:
+      # Print the message given in the main Workflow YML file
       - name: Print Message From Main Workflow
         run: |
           echo "Received message: ${{ inputs.message }}"
@@ -25,9 +26,11 @@ jobs:
           # Explicitly fetch the main branch
           ref: main
 
+      # Verify the full history and all branches are fetched.
       - name: Verify Repository Files
         run: ls -R  # Debug step to verify scripts/test/test_script.sh is available
 
+      # Run another script that is in another folder. 
       - name: Run Test Script
         run: |
           chmod +x ./scripts/test/test_script.sh
