@@ -14,7 +14,7 @@ on:
         required: true
     secrets:
       token:
-        required: true
+        required: false
 
 jobs:
   sast-scan:
