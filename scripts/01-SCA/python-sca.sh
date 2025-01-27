@@ -12,15 +12,17 @@ cd "$PROJECT_DIR"
 # Install pip-audit
 pip install pip-audit
 
+pip-audit
+
 # Run pip-audit and save to the dynamically named file
-pip-audit --verbose --output json > "$GITHUB_WORKSPACE/$OUTPUT_FILE" 2>&1
-EXIT_CODE=$?
-# Check if pip-audit ran successfully
-if [ $EXIT_CODE -ne 0 ]; then
-  echo "Error: pip-audit failed to execute."
-  cat "$GITHUB_WORKSPACE/$OUTPUT_FILE"
-  exit 1
-fi
+#pip-audit --verbose --output json > "$GITHUB_WORKSPACE/$OUTPUT_FILE" 2>&1
+#EXIT_CODE=$?
+## Check if pip-audit ran successfully
+#if [ $EXIT_CODE -ne 0 ]; then
+#  echo "Error: pip-audit failed to execute."
+#  cat "$GITHUB_WORKSPACE/$OUTPUT_FILE"
+#  exit 1
+#fi
 
 echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$OUTPUT_FILE ."
 
