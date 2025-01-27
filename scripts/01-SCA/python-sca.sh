@@ -13,7 +13,8 @@ cd "$PROJECT_DIR"
 # Install pip-audit
 pip install pip-audit
 
-pip-audit --output json > pip-audit-output.json
+pip-audit --output json > "$GITHUB_WORKSPACE/$OUTPUT_FILE"
+# pip-audit --output json > pip-audit-output.json
 # pip-audit --output json > $GITHUB_WORKSPACE/$OUTPUT_FILE
 
 # Run pip-audit and save to the dynamically named file
