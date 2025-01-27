@@ -47,6 +47,15 @@ jobs:
           echo "Contents of Current Directory:"
           ls -lah
       
+      - name: Verify Requirements File
+        run: |
+          if [ -f ${{ inputs.project_dir }}/requirements.txt ]; then
+            echo "Found requirements.txt in ${{ inputs.project_dir }}"
+          else
+            echo "Error: requirements.txt not found in ${{ inputs.project_dir }}"
+            exit 1
+          fi
+          
       - name: Load environment-specific config
         run: |
           CONFIG_PATH=./environments/${{ inputs.environment }}/sca-rules.hcl
@@ -60,6 +69,10 @@ jobs:
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
         #continue-on-error: true
 
+      - name: Run pip-audit
+        run: |
+          pip-audit --output json
+    
       - name: Save JSON Output as Artifact
         if: always() # Ensures the artifact is uploaded even if the previous step fails
         uses: actions/upload-artifact@v3
