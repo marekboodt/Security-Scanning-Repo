@@ -13,7 +13,9 @@ cd "$PROJECT_DIR"
 pip install pip-audit
 
 # Run pip-audit and save to the dynamically named file
-pip-audit --output json > "$GITHUB_WORKSPACE/$OUTPUT_FILE"
+pip-audit --output json > "$GITHUB_WORKSPACE/$OUTPUT_FILE" 2>&1
+EXIT_CODE=$?
+
 echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$OUTPUT_FILE ."
 
 # Move the JSON file to the root directory for easy artifact upload
