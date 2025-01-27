@@ -40,6 +40,13 @@ jobs:
           echo "Root Directory:"
           ls -R
 
+      - name: Debug Repository Structure
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "Contents of Current Directory:"
+          ls -lah
+      
       - name: Load environment-specific config
         run: |
           CONFIG_PATH=./environments/${{ inputs.environment }}/sca-rules.hcl
