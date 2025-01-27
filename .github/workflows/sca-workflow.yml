@@ -52,3 +52,10 @@ jobs:
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
         #continue-on-error: true
+
+      - name: Save JSON Output as Artifact
+        if: always() # Ensures the artifact is uploaded even if the previous step fails
+        uses: actions/upload-artifact@v3
+        with:
+          name: pip-audit-results
+          path: ${{ env.OUTPUT_FILE }} # Use the environment variable from the script
