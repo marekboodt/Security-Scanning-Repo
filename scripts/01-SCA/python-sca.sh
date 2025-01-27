@@ -4,9 +4,9 @@ PROJECT_DIR=$1
 # Get the repository name from the GITHUB_REPOSITORY environment variable
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-OUTPUT_FILE="${REPO_NAM}.sca.${TIMESTAMP}.json"
+OUTPUT_FILE="${REPO_NAME}-sca-${TIMESTAMP}.json"
 
-echo "Running Python dependency scan for project: $REPO_NAME..."
+echo "Running Python dependency scan for project: $REPO_NAME ..."
 cd "$PROJECT_DIR"
 
 # Install pip-audit
