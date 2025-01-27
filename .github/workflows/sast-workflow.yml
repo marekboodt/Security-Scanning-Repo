@@ -32,10 +32,10 @@ jobs:
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 
-#      - name: Debug File Structure
-#        run: |
-#          echo "Root Directory:"
-#          ls -R
+      - name: Debug File Structure
+        run: |
+          echo "Root Directory:"
+          ls -R
 #          echo "Security-Scanning-Repo Directory:"
 #          ls -R security-scanning
 
