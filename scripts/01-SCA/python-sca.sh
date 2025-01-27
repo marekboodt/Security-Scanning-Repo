@@ -13,6 +13,8 @@ cd "$PROJECT_DIR"
 # Install pip-audit
 pip install pip-audit
 
+pip-audit --help
+
 pip-audit -f json -o $GITHUB_WORKSPACE/$OUTPUT_FILE
 # pip-audit 
 # pip-audit --output-format=json 
