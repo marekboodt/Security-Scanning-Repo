@@ -16,5 +16,8 @@ pip install pip-audit
 pip-audit --output json > "$OUTPUT_FILE"
 echo "Dependency scan completed. Results saved to $OUTPUT_FILE."
 
+# Move the JSON file to the root directory for easy artifact upload
+mv "$OUTPUT_FILE" "$GITHUB_WORKSPACE/$OUTPUT_FILE"
+
 # Save the output file path to an environment file
-echo "OUTPUT_FILE=$PROJECT_DIR/$OUTPUT_FILE" >> $GITHUB_ENV
+echo "OUTPUT_FILE=$GITHUB_WORKSPACE/$OUTPUT_FILE" >> $GITHUB_ENV
