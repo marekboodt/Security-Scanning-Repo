@@ -21,3 +21,6 @@ echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$OUTPUT_FILE
 
 # Save the output file path to an environment file
 echo "OUTPUT_FILE=$GITHUB_WORKSPACE/$OUTPUT_FILE" >> $GITHUB_ENV
+
+# Save the filename only to the environment file
+echo "OUTPUT_FILENAME=$OUTPUT_FILE" >> $GITHUB_ENV
