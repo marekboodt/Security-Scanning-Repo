@@ -7,11 +7,14 @@ TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 OUTPUT_FILE="${PROJECT_NAME}.sca.${TIMESTAMP}.json"
 
 echo "Running Python dependency scan..."
-cd "$PROJECT_DIR"
+cd "$PROJECT_DIR" || exit
 
+# Install pip-audit
 pip install pip-audit
-pip-audit --output json > "$OUTPUT_FILE"
-echo "Dependency scan completed. Results saved to pip-audit.json."
 
-# Print the filename for debugging purposes
-echo "::set-output name=output_file::$PROJECT_DIR/$OUTPUT_FILE"
+# Run pip-audit and save to the dynamically named file
+pip-audit --output json > "$OUTPUT_FILE"
+echo "Dependency scan completed. Results saved to $OUTPUT_FILE."
+
+# Save the output file path to an environment file
+echo "OUTPUT_FILE=$PROJECT_DIR/$OUTPUT_FILE" >> $GITHUB_ENV
