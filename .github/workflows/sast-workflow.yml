@@ -45,14 +45,18 @@ jobs:
 ####################################################################
 #      - name: Initiate CodeQL Scan V3
 #        uses: github/codeql-action/init@v3
+#        with:
+#          languages: ${{ inputs.language }}
 
 #      - name: Perform CodeQL Analysis V3
 #        uses: github/codeql-action/analyze@v3
+#        with:
+#          languages: ${{ inputs.language }}
 
 ####################################################################
 # Free Security Scanning Tools per Programming Language            #
 ####################################################################
-      - name: Run FreeSAST script
+      - name: Run Free SAST script
         run: |
           bash security-scanning/scripts/02-SAST/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
 #        continue-on-error: true
