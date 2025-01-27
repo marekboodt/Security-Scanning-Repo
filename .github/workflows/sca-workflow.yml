@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Project Dependencies - SAST
         uses: actions/checkout@v3
 
-      # this tells the workflow to fetch files from the public 
+      # this tells the workflow to fetch files from the public repo 
       - name: Checkout Security-Scanning-Repo
         uses: actions/checkout@v3
         with:
@@ -35,31 +35,11 @@ jobs:
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 
-      - name: Debug File Structure
-        run: |
-          echo "Root Directory:"
-          ls -R
-
-      - name: Debug Repository Structure
-        run: |
-          echo "Current Directory:"
-          pwd
-          echo "Contents of Current Directory:"
-          ls -lah
-      
-      - name: Verify Requirements File
-        run: |
-          if [ -f ${{ inputs.project_dir }}/requirements.txt ]; then
-            echo "Found requirements.txt in ${{ inputs.project_dir }}"
-          else
-            echo "Error: requirements.txt not found in ${{ inputs.project_dir }}"
-            exit 1
-          fi
-          
-      - name: Load environment-specific config
-        run: |
-          CONFIG_PATH=./environments/${{ inputs.environment }}/sca-rules.hcl
-          echo "Using config: $CONFIG_PATH"
+# Future - Environment specific configs, not sure yet how to implement this properly         
+#      - name: Load environment-specific config
+#        run: |
+#          CONFIG_PATH=./environments/${{ inputs.environment }}/sca-rules.hcl
+#          echo "Using config: $CONFIG_PATH"
 
       - name: Run SCA script
         run: |
@@ -78,6 +58,27 @@ jobs:
           # path: ${{ inputs.project_dir }}/${{ env.OUTPUT_FILE }} # Use the environment variable from the script
 
 
+######################
+# DEBUG SCRIPTS USED #
+######################
+# Verify requirements.txt file location (python)
+#      - name: Verify Requirements File
+#        run: |
+#          if [ -f ${{ inputs.project_dir }}/requirements.txt ]; then
+#            echo "Found requirements.txt in ${{ inputs.project_dir }}"
+#          else
+#            echo "Error: requirements.txt not found in ${{ inputs.project_dir }}"
+#            exit 1
+#          fi
+
+# list content of Dir 
+#      - name: Debug Repository Structure
+#        run: |
+#          echo "Current Directory:"
+#          pwd
+#          echo "Contents of Current Directory:"
+#          ls -lah
+          
 #      - name: Run pip-audit
 #        run: |
 #          pip-audit --output json
