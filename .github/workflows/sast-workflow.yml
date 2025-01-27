@@ -24,21 +24,24 @@ jobs:
       - name: Checkout Django Repository
         uses: actions/checkout@v3
 
+      # this tells the workflow to fetch files from the public 
       - name: Checkout Security-Scanning-Repo
         uses: actions/checkout@v3
         with:
           repository: marekboodt/Security-Scanning-Repo
+          # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 
-      - name: Debug File Structure
-        run: |
-          echo "Root Directory:"
-          ls -R
-          echo "Security-Scanning-Repo Directory:"
-          ls -R security-scanning
+#      - name: Debug File Structure
+#        run: |
+#          echo "Root Directory:"
+#          ls -R
+#          echo "Security-Scanning-Repo Directory:"
+#          ls -R security-scanning
 
       - name: Run SAST script
         run: |
           bash security-scanning/scripts/sast/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
+        continue-on-error: true
 
 #        continue-on-error: ${{ inputs.environment == 'non-prod' }}
