@@ -47,7 +47,7 @@ jobs:
 
       - name: Run SCA script
         run: |
-          bash security-scanning/scripts/01-SCA/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
+          bash security-scanning/scripts/01-SCA/${{ inputs.language }}-sca.sh ${{ inputs.project_dir }}
         # If inputs.environment is 'non-prod', the pipeline will continue even if ./run-tests.sh fails. 
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
