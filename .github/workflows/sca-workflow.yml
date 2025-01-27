@@ -53,7 +53,8 @@ jobs:
         if: always() # Ensures the artifact is uploaded even if the previous step fails
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.OUTPUT_FILENAME }}
+          name: pip-audit-output.json
+          # name: ${{ env.OUTPUT_FILENAME }}
           path: ${{ env.OUTPUT_FILE }}
           # path: ${{ inputs.project_dir }}/${{ env.OUTPUT_FILE }} # Use the environment variable from the script
 
