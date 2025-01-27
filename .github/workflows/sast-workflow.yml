@@ -32,13 +32,19 @@ jobs:
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 
-      - name: Debug File Structure
-        run: |
-          echo "Root Directory:"
-          ls -R
+#      - name: Debug File Structure
+#        run: |
+#          echo "Root Directory:"
+#          ls -R
 #          echo "Security-Scanning-Repo Directory:"
 #          ls -R security-scanning
 
+      - name: Initiate CodeQL Scan V3
+        uses: github/codeql-action/init@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        
       - name: Run SAST script
         run: |
           bash security-scanning/scripts/02-SAST/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
