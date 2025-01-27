@@ -41,7 +41,7 @@ jobs:
 
       - name: Run SAST script
         run: |
-          bash security-scanning/scripts/sast/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
+          bash security-scanning/scripts/02-SAST/${{ inputs.language }}-sast.sh ${{ inputs.project_dir }}
         continue-on-error: true
 
 #        continue-on-error: ${{ inputs.environment == 'non-prod' }}
