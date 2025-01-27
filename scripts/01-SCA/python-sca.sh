@@ -20,27 +20,7 @@ pip install pip-audit
 # Normal Text Output
 pip-audit -o $GITHUB_WORKSPACE/$OUTPUT_FILE
 
-# pip-audit 
-# pip-audit --output-format=json 
-# pip-audit --output-format=json > pip_audit_report.json
-# pip-audit --output json > "$GITHUB_WORKSPACE/$OUTPUT_FILE" 2>&1
-# pip-audit --output json > pip-audit-output.json
-# pip-audit --output json > $GITHUB_WORKSPACE/$OUTPUT_FILE
-
-# Run pip-audit and save to the dynamically named file
-#pip-audit --verbose --output json > "$GITHUB_WORKSPACE/$OUTPUT_FILE" 2>&1
-#EXIT_CODE=$?
-## Check if pip-audit ran successfully
-#if [ $EXIT_CODE -ne 0 ]; then
-#  echo "Error: pip-audit failed to execute."
-#  cat "$GITHUB_WORKSPACE/$OUTPUT_FILE"
-#  exit 1
-#fi
-
 echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$OUTPUT_FILE ."
-
-# Move the JSON file to the root directory for easy artifact upload
-# mv "$OUTPUT_FILE" "$GITHUB_WORKSPACE/$OUTPUT_FILE"
 
 # Save the output file path to an environment file
 echo "OUTPUT_FILE=$GITHUB_WORKSPACE/$OUTPUT_FILE" >> $GITHUB_ENV
