@@ -7,7 +7,7 @@ TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 OUTPUT_FILE="${PROJECT_NAME}.sca.${TIMESTAMP}.json"
 
 echo "Running Python dependency scan..."
-cd "$PROJECT_DIR" || exit
+cd "$PROJECT_DIR"
 
 # Install pip-audit
 pip install pip-audit
