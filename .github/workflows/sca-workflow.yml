@@ -58,4 +58,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: pip-audit-results
-          path: ${{ env.OUTPUT_FILE }} # Use the environment variable from the script
+          path: ${{ inputs.project_dir }}/${{ env.OUTPUT_FILE }} # Use the environment variable from the script
