@@ -4,8 +4,10 @@ PROJECT_DIR=$1
 # Get the repository name from the GITHUB_REPOSITORY environment variable
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-# OUTPUT_FILE="pip-audit-output.json"
-OUTPUT_FILE="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}.json"
+# JSON Output
+#OUTPUT_FILE="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}.json"
+# Text Output
+OUTPUT_FILE="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}.txt"
 
 echo "Running Python dependency scan for project: $REPO_NAME ..."
 cd "$PROJECT_DIR"
@@ -13,9 +15,11 @@ cd "$PROJECT_DIR"
 # Install pip-audit
 pip install pip-audit
 
-pip-audit --help
+# Json Output
+# pip-audit -f json -o $GITHUB_WORKSPACE/$OUTPUT_FILE
+# Normal Text Output
+pip-audit -o $GITHUB_WORKSPACE/$OUTPUT_FILE
 
-pip-audit -f json -o $GITHUB_WORKSPACE/$OUTPUT_FILE
 # pip-audit 
 # pip-audit --output-format=json 
 # pip-audit --output-format=json > pip_audit_report.json
