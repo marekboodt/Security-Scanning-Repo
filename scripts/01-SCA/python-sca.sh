@@ -1,12 +1,12 @@
 #!/bin/bash
 PROJECT_DIR=$1
 
-# Generate a dynamic filename for the JSON output
-PROJECT_NAME=$(basename "$PROJECT_DIR") # Get the last part of the project_dir path
+# Get the repository name from the GITHUB_REPOSITORY environment variable
+REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
-OUTPUT_FILE="${PROJECT_NAME}.sca.${TIMESTAMP}.json"
+OUTPUT_FILE="${REPO_NAM}.sca.${TIMESTAMP}.json"
 
-echo "Running Python dependency scan..."
+echo "Running Python dependency scan for project: $REPO_NAME..."
 cd "$PROJECT_DIR"
 
 # Install pip-audit
