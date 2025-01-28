@@ -65,6 +65,15 @@ jobs:
           name: ${{ env.SAFETY_FILENAME }}
           path: ${{ env.SAFETY_OUTPUT_FILE }}
 
+
+      - name: Save All Scan Results as Artifact
+        if: always() # Ensures the artifact is uploaded even if the previous step fails
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-results
+          path: ${{ env.SCAN_RESULTS_DIR }}
+
+    
 ######################
 # DEBUG SCRIPTS USED #
 ######################
