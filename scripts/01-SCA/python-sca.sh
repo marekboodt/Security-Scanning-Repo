@@ -42,7 +42,7 @@ echo "Starting SAFETY scan..."
 # Install safety
 pip install safety
 
-safety scan --output json
+safety scan --json
 
 safety scan --output json > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output as JSON
 # safety scan --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Full human-readable report
