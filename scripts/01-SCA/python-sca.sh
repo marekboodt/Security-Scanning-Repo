@@ -38,7 +38,7 @@ echo "Starting SAFETY scan..."
 # Install safety
 pip install safety
 
-safety check
+safety check --output json
 
  safety check --full-report > "$GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output
  echo "SAFETY scan completed. Results saved to $GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE."
