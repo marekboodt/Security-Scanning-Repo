@@ -3,7 +3,7 @@ PROJECT_DIR=$1
 
 # Get the repository name from the GITHUB_REPOSITORY environment variable
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
-TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H-%M-%S")
+TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H:%M")
 
 # Directory to store all scan results
 SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/scan-results"
