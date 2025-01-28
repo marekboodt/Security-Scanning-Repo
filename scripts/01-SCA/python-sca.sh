@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 PROJECT_DIR=$1
 
 # Get the repository name from the GITHUB_REPOSITORY environment variable
