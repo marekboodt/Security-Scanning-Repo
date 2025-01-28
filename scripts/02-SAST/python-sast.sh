@@ -17,7 +17,7 @@ echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 BANDIT_OUTPUT_FILE="${REPO_NAME}-SAST-BANDIT-SCAN-${TIMESTAMP}.json"
 
 echo "Running Python static code analysis for project: $REPO_NAME ..."
-cd "$PROJECT_DIR" || exit
+cd "$PROJECT_DIR"
 
 #######################
 # Bandit Static Analysis
