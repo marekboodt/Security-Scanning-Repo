@@ -6,7 +6,7 @@ REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")
 
 # Directory to store all scan results
-SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/sast-results"
+SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/SAST-scan-results"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Dynamic artifact name
