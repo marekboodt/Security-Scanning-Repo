@@ -49,14 +49,21 @@ jobs:
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
         #continue-on-error: true
     
-      - name: Save JSON Output as Artifact
+      - name: Save  PIP-AUDIT JSON Output as Artifact
         if: always() # Ensures the artifact is uploaded even if the previous step fails
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ env.OUTPUT_FILENAME }}
-          path: ${{ env.OUTPUT_FILE }}
+          name: ${{ env.PIP_AUDIT_FILENAME }}
+          path: ${{ env.PIP_AUDIT_OUTPUT_FILE }}
+          # path: ${{ env.OUTPUT_FILE }}
           # path: ${{ inputs.project_dir }}/${{ env.OUTPUT_FILE }} # Use the environment variable from the script
 
+      - name: Save SAFETY Output as Artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.SAFETY_FILENAME }}
+          path: ${{ env.SAFETY_OUTPUT_FILE }}
 
 ######################
 # DEBUG SCRIPTS USED #
