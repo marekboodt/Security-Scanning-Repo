@@ -10,9 +10,9 @@ SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/scan-results"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Set the output filename extension 
-PIP_AUDIT_OUTPUT_FILE="${REPO_NAME}-PIP-AUDIT-SCAN-${TIMESTAMP}.txt"          # Text Output / Normal Output (Pip Audit)
-  #PIP_AUDIT_OUTPUT_FILEE="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}.json"     # JSON Output (Pip Audit)
-SAFETY_OUTPUT_FILE="${REPO_NAME}-SAFETY-SCAN-${TIMESTAMP}.json"         # JSON Output for SAFETY
+PIP_AUDIT_OUTPUT_FILE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.txt"          # Text Output / Normal Output (Pip Audit)
+  #PIP_AUDIT_OUTPUT_FILEE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.json"     # JSON Output (Pip Audit)
+SAFETY_OUTPUT_FILE="${REPO_NAME}-SCA-SAFETY-SCAN-${TIMESTAMP}.json"         # JSON Output for SAFETY
 
 echo "Running Python dependency scan for project: $REPO_NAME ..."
 cd "$PROJECT_DIR"
