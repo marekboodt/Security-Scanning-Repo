@@ -9,6 +9,10 @@ TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/scan-results"
 mkdir -p "$SCAN_RESULTS_DIR"
 
+# Dynamic artifact name
+ARTIFACT_NAME="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}"
+echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+
 # Set the output filename extension 
 PIP_AUDIT_OUTPUT_FILE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.txt"          # Text Output / Normal Output (Pip Audit)
 #PIP_AUDIT_OUTPUT_FILEE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.json"       # JSON Output (Pip Audit)
