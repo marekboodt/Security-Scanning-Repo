@@ -1,5 +1,6 @@
 #!/bin/bash 
 PROJECT_DIR=$1
+ENVIRONMENT=$2  # Environment passed as an argument (e.g., prod or non-prod)
 
 # Get the repository name from the GITHUB_REPOSITORY environment variable
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
@@ -10,13 +11,13 @@ SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/SCA-scan-results"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Dynamic artifact name
-ARTIFACT_NAME="${REPO_NAME}-ALL-SCA-SCANS-${TIMESTAMP}"
+ARTIFACT_NAME="${REPO_NAME}-${ENVIRONMENT}-ALL-SCA-SCANS-${TIMESTAMP}"
 echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
 # Set the output filename extension 
-PIP_AUDIT_OUTPUT_FILE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.txt"          # Text Output / Normal Output (Pip Audit)
+PIP_AUDIT_OUTPUT_FILE="${REPO_NAME}-${ENVIRONMENT}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.txt"          # Text Output / Normal Output (Pip Audit)
 #PIP_AUDIT_OUTPUT_FILEE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.json"       # JSON Output (Pip Audit)
-SAFETY_OUTPUT_FILE="${REPO_NAME}-SCA-SAFETY-SCAN-${TIMESTAMP}.json"               # JSON Output for SAFETY
+SAFETY_OUTPUT_FILE="${REPO_NAME}-${ENVIRONMENT}-SCA-SAFETY-SCAN-${TIMESTAMP}.json"               # JSON Output for SAFETY
 
 echo "Running Python dependency scan for project: $REPO_NAME ..."
 cd "$PROJECT_DIR"
