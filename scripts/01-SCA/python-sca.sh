@@ -10,7 +10,7 @@ SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/scan-results"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Dynamic artifact name
-ARTIFACT_NAME="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}"
+ARTIFACT_NAME="${REPO_NAME}-ALL-SCA-SCANS-${TIMESTAMP}"
 echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
 # Set the output filename extension 
