@@ -38,10 +38,10 @@ echo "Starting SAFETY scan..."
 # Install safety
 pip install safety
 
-safety check --output json --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output
+safety check --output json > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output as JSON
+# safety check --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Full human-readable report
 echo "SAFETY scan completed. Results saved to $SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE."
  
-
 #echo "SAFETY scan completed. Results saved to $GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE."
 # safety check --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"
 
