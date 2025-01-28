@@ -69,8 +69,8 @@ jobs:
       - name: Save All Scan Results as Artifact
         if: always() # Ensures the artifact is uploaded even if the previous step fails
         uses: actions/upload-artifact@v4
-        with:
-          name: scan-results
+        with: 
+          name: ${{ env.ARTIFACT_NAME }}
           path: ${{ env.SCAN_RESULTS_DIR }}
 ######################
 # DEBUG SCRIPTS USED #
