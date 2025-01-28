@@ -11,8 +11,8 @@ mkdir -p "$SCAN_RESULTS_DIR"
 
 # Set the output filename extension 
 PIP_AUDIT_OUTPUT_FILE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.txt"          # Text Output / Normal Output (Pip Audit)
-  #PIP_AUDIT_OUTPUT_FILEE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.json"     # JSON Output (Pip Audit)
-SAFETY_OUTPUT_FILE="${REPO_NAME}-SCA-SAFETY-SCAN-${TIMESTAMP}.json"         # JSON Output for SAFETY
+#PIP_AUDIT_OUTPUT_FILEE="${REPO_NAME}-SCA-PIP-AUDIT-SCAN-${TIMESTAMP}.json"       # JSON Output (Pip Audit)
+SAFETY_OUTPUT_FILE="${REPO_NAME}-SCA-SAFETY-SCAN-${TIMESTAMP}.json"               # JSON Output for SAFETY
 
 echo "Running Python dependency scan for project: $REPO_NAME ..."
 cd "$PROJECT_DIR"
@@ -24,12 +24,12 @@ echo "Starting PIP-AUDIT scan..."
 # Install pip-audit
 pip install pip-audit
 
-pip-audit
+pip-audit -o "$SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE"                # Normal Text Output
+# pip-audit -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE                  # Normal Text Output
+echo "PIP-AUDIT completed. Results saved to $SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE ."
 
+# echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE ."
 # pip-audit -f json -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE        # Json Output
- pip-audit -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE                  # Normal Text Output
- echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE ."
-pip-audit -o "$SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE"
 
 ###################
 # SAFETY SCANNING #
@@ -38,10 +38,11 @@ echo "Starting SAFETY scan..."
 # Install safety
 pip install safety
 
-safety check --output json
+safety check --output json --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output
+echo "SAFETY scan completed. Results saved to $SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE."
+ 
 
- safety check --full-report > "$GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output
- echo "SAFETY scan completed. Results saved to $GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE."
+#echo "SAFETY scan completed. Results saved to $GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE."
 # safety check --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"
 
 ##################################
@@ -55,4 +56,4 @@ safety check --output json
  echo "SAFETY_OUTPUT_FILE=$GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE" >> $GITHUB_ENV
  echo "SAFETY_FILENAME=$SAFETY_OUTPUT_FILE" >> $GITHUB_ENV
 
-# echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_ENV
+echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_ENV
