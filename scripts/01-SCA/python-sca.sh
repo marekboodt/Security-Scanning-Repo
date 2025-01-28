@@ -24,6 +24,8 @@ echo "Starting PIP-AUDIT scan..."
 # Install pip-audit
 pip install pip-audit
 
+pip-audit
+
 # pip-audit -f json -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE        # Json Output
  pip-audit -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE                  # Normal Text Output
  echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE ."
@@ -35,6 +37,8 @@ pip-audit -o "$SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE"
 echo "Starting SAFETY scan..."
 # Install safety
 pip install safety
+
+safety check
 
  safety check --full-report > "$GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output
  echo "SAFETY scan completed. Results saved to $GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE."
