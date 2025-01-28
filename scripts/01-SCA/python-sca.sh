@@ -29,11 +29,9 @@ echo "Starting PIP-AUDIT scan..."
 pip install pip-audit
 
 pip-audit -o "$SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE"                # Normal Text Output
-# pip-audit -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE                  # Normal Text Output
-echo "PIP-AUDIT completed. Results saved to $SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE ."
-
-# echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE ."
+# pip-audit -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE                  # Normal Text Output -> save in github_workspace
 # pip-audit -f json -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE        # Json Output
+echo "PIP-AUDIT / Dependency completed. Results saved to $SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE ."
 
 ###################
 # SAFETY SCANNING #
@@ -42,13 +40,10 @@ echo "Starting SAFETY scan..."
 # Install safety
 pip install safety
 
-# Safety scan is the current way, but requires an account
+# Safety SCAN should be used, but requires an account. "check" is used here
 safety check --json > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Run safety check and save the output as JSON
 # safety scan --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"   # Full human-readable report
 echo "SAFETY scan completed. Results saved to $SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE."
- 
-#echo "SAFETY scan completed. Results saved to $GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE."
-# safety check --full-report > "$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE"
 
 ##################################
 # Save file paths to environment #
