@@ -1,5 +1,6 @@
 #!/bin/bash
 PROJECT_DIR=$1
+ENVIRONMENT=$2  # Environment passed as an argument (e.g., prod or non-prod)
 
 # Get the repository name from the GITHUB_REPOSITORY environment variable
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
@@ -14,7 +15,7 @@ ARTIFACT_NAME="${REPO_NAME}-ALL-SAST-SCANS-${TIMESTAMP}"
 echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
 # Set output filename
-BANDIT_OUTPUT_FILE="${REPO_NAME}-SAST-BANDIT-SCAN-${TIMESTAMP}.json"
+BANDIT_OUTPUT_FILE="${REPO_NAME}-SAST-BANDIT-SCAN-${ENVIRONMENT}-${TIMESTAMP}.json"
 
 echo "Running Python static code analysis for project: $REPO_NAME ..."
 cd "$PROJECT_DIR"
