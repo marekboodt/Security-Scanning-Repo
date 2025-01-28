@@ -49,7 +49,7 @@ jobs:
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
         #continue-on-error: true
     
-      - name: Save All Scan Results as Artifact
+      - name: Save All Scan Results as in a Single Artifact Direcroty
         if: always() # Ensures the artifact is uploaded even if the previous step fails
         uses: actions/upload-artifact@v4
         with: 
@@ -57,23 +57,22 @@ jobs:
           path: ${{ env.SCAN_RESULTS_DIR }}
 
 
-#######################
-# SAVE SINGLE SCRIPTS #
-#######################
-      - name: Save  PIP-AUDIT JSON Output as Artifact
-        if: always() # Ensures the artifact is uploaded even if the previous step fails
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.PIP_AUDIT_FILENAME }}
-          path: ${{ env.PIP_AUDIT_OUTPUT_FILE }}
+#########################
+# SAVE SINGLE ARTIFACTS #
+#########################
+#      - name: Save  PIP-AUDIT JSON Output as Artifact
+#        if: always() # Ensures the artifact is uploaded even if the previous step fails
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ env.PIP_AUDIT_FILENAME }}
+#          path: ${{ env.PIP_AUDIT_OUTPUT_FILE }}
 
-      - name: Save SAFETY Output as Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.SAFETY_FILENAME }}
-          path: ${{ env.SAFETY_OUTPUT_FILE }}
-
+ #     - name: Save SAFETY Output as Artifact
+ #       if: always()
+ #       uses: actions/upload-artifact@v4
+ #       with:
+ #         name: ${{ env.SAFETY_FILENAME }}
+ #         path: ${{ env.SAFETY_OUTPUT_FILE }}
 
 ######################
 # DEBUG SCRIPTS USED #
