@@ -54,11 +54,12 @@ echo "SAFETY scan completed. Results saved to $SCAN_RESULTS_DIR/$SAFETY_OUTPUT_F
 # Save file paths to environment #
 ##################################
 # Save the PIP Audit output file path to an environment file || 1 = file Location,  1 File = Name
- echo "PIP_AUDIT_OUTPUT_FILE=$GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE" >> $GITHUB_ENV
+# echo "PIP_AUDIT_OUTPUT_FILE=$GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE" >> $GITHUB_ENV
+ echo "PIP_AUDIT_OUTPUT_FILE= $SCAN_RESULTS_DIR/$PIP_AUDIT_OUTPUT_FILE" >> $GITHUB_ENV
  echo "PIP_AUDIT_FILENAME=$PIP_AUDIT_OUTPUT_FILE" >> $GITHUB_ENV
 
 # Save the SAFETY output file path to an environment file || 1 = file Location,  1 File = Name
- echo "SAFETY_OUTPUT_FILE=$GITHUB_WORKSPACE/$SAFETY_OUTPUT_FILE" >> $GITHUB_ENV
+ echo "SAFETY_OUTPUT_FILE=$SCAN_RESULTS_DIR/$SAFETY_OUTPUT_FILE" >> $GITHUB_ENV
  echo "SAFETY_FILENAME=$SAFETY_OUTPUT_FILE" >> $GITHUB_ENV
 
 echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_ENV
