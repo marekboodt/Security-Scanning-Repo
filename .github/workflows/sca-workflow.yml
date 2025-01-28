@@ -51,7 +51,7 @@ jobs:
     
       - name: Save  PIP-AUDIT JSON Output as Artifact
         if: always() # Ensures the artifact is uploaded even if the previous step fails
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.PIP_AUDIT_FILENAME }}
           path: ${{ env.PIP_AUDIT_OUTPUT_FILE }}
@@ -60,7 +60,7 @@ jobs:
 
       - name: Save SAFETY Output as Artifact
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.SAFETY_FILENAME }}
           path: ${{ env.SAFETY_OUTPUT_FILE }}
