@@ -6,7 +6,7 @@ REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
 
 #OUTPUT_FILE="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}.json"            # JSON Output
-OUTPUT_FILE="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}.txt"              # Text Output / Normal Output
+PIP_AUDIT_OUTPUT_FILE="${REPO_NAME}-SCA-SCAN-${TIMESTAMP}.txt"              # Text Output / Normal Output
 
 SAFETY_OUTPUT_FILE="${REPO_NAME}-SAFETY-SCAN-${TIMESTAMP}.json"   # JSON Output for SAFETY
 
@@ -21,10 +21,10 @@ echo "Starting PIP-AUDIT scan..."
 pip install pip-audit
 
 # Json Output
-# pip-audit -f json -o $GITHUB_WORKSPACE/$OUTPUT_FILE
+# pip-audit -f json -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE
 # Normal Text Output
-pip-audit -o $GITHUB_WORKSPACE/$OUTPUT_FILE
-echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$OUTPUT_FILE ."
+pip-audit -o $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE
+echo "Dependency scan completed. Results saved to $GITHUB_WORKSPACE/$PIP_AUDIT_OUTPUT_FILE ."
 
 ######################
 # SAFETY SCANNING #
