@@ -33,3 +33,7 @@ jobs:
           repository: marekboodt/Security-Scanning-Repo
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
+
+      - name: Run Chekov IaC script
+          run: |
+            
