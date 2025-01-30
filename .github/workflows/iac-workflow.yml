@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  sast-scan:
+  iac-scan:
     runs-on: ubuntu-latest
 
     steps:
