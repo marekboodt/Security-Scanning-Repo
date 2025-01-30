@@ -1,1 +1,35 @@
+name: Reusable IAC Workflow
 
+on:
+  workflow_call:
+    inputs:
+      language:
+        type: string
+        required: true
+      project_dir:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+    secrets:
+      token:
+        required: false
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  sast-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Project Repository - IAC
+        uses: actions/checkout@v3
+
+      # this tells the workflow to fetch files from the public 
+      - name: Checkout Security-Scanning-Repo
+        uses: actions/checkout@v3
+        with:
+          repository: marekboodt/Security-Scanning-Repo
+          # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
+          path: security-scanning
