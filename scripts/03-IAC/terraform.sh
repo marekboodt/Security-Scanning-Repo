@@ -18,7 +18,7 @@ echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 CHECKOV_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMESTAMP}.json"
 
 echo "Running Infrastructure as Code (IaC) scan for project: $REPO_NAME in environment: $ENVIRONMENT ..."
-cd "$PROJECT_DIR" || exit
+cd "$PROJECT_DIR"
 
 #######################
 # Checkov IaC Scanning
