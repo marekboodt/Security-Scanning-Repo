@@ -36,7 +36,7 @@ jobs:
 
       - name: Run Chekov IaC script
         run: |
-          bash security-scanning/scripts/02-SAST/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }}
+          bash security-scanning/scripts/03-IAC/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }}
 #        continue-on-error: true
         # If inputs.environment is 'non-prod', the pipeline will continue even if ./run-tests.sh fails. 
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
