@@ -29,7 +29,7 @@ pip install checkov
 
 # Run Checkov for Terraform scanning, saving output as JSON
 echo "Starting Checkov scan..."
-checkov -d . --quiet --output json > "$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE"
+checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE"
 
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE" ]; then
