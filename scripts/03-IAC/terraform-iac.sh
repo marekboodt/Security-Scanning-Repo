@@ -11,14 +11,15 @@ SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/IaC-scan-results"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Dynamic artifact name, including environment
-ARTIFACT_NAME="${REPO_NAME}-IAC-SCANS-${ENVIRONMENT}-${TIMESTAMP}"
-echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+ARTIFACT_NAME="${REPO_NAME}-ALL-IAC-SCANS-${ENVIRONMENT}-${TIMESTAMP}"
+SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/$ARTIFACT_NAME"
+mkdir -p "$SCAN_RESULTS_DIR"
 
-# Checkov output file
-CHECKOV_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMESTAMP}.json"
+# Define Checkov output file
+CHECKOV_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMESTAMP}.txt"
 
 echo "Running Checkov scan for project: $REPO_NAME in environment: $ENVIRONMENT ..."
-cd "$PROJECT_DIR" || exit
+cd "$PROJECT_DIR"
 
 #######################
 # Install and Run Checkov
@@ -43,5 +44,7 @@ echo "Checkov scan results saved to: $SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE"
 ##################################
 # Save file paths to environment #
 ##################################
-echo "CHECKOV_OUTPUT_FILE=$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
-echo "CHECKOV_FILENAME=$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
+echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_ENV
+# echo "CHECKOV_OUTPUT_FILE=$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
+# echo "CHECKOV_FILENAME=$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
