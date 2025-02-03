@@ -34,7 +34,7 @@ jobs:
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 
-      - name: Run Chekov IaC script
+      - name: Run IaC scripts
         run: |
           bash security-scanning/scripts/03-IAC/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }}
 #        continue-on-error: true
