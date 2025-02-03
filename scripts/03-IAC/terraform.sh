@@ -14,8 +14,12 @@ mkdir -p "$SCAN_RESULTS_DIR"
 ARTIFACT_NAME="${REPO_NAME}-ALL-IAC-SCANS-${ENVIRONMENT}-${TIMESTAMP}"
 echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
-# Set the output filename
+# Set output filenames
 CHECKOV_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMESTAMP}.json"
+TERRASCAN_AWS_OUTPUT_FILE="${REPO_NAME}-IAC-TERRASCAN-AWS-${ENVIRONMENT}-${TIMESTAMP}.json"
+TERRASCAN_AZURE_OUTPUT_FILE="${REPO_NAME}-IAC-TERRASCAN-AZURE-${ENVIRONMENT}-${TIMESTAMP}.json"
+TERRASCAN_GCP_OUTPUT_FILE="${REPO_NAME}-IAC-TERRASCAN-GCP-${ENVIRONMENT}-${TIMESTAMP}.json"
+TFLINT_OUTPUT_FILE="${REPO_NAME}-IAC-TFLINT-SCAN-${ENVIRONMENT}-${TIMESTAMP}.json"
 
 echo "Running Infrastructure as Code (IaC) scan for project: $REPO_NAME in environment: $ENVIRONMENT ..."
 cd "$PROJECT_DIR"
@@ -31,9 +35,41 @@ checkov -d . --quiet --output json > "$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE"
 
 echo "Checkov scan completed. Results saved to $SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE."
 
+#######################
+# Terrascan IaC Scanning
+#######################
+echo "Starting Terrascan scans..."
+curl -L "$(curl -s https://api.github.com/repos/tenable/terrascan/releases/latest | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url")" -o terrascan
+chmod +x terrascan
+mv terrascan /usr/local/bin/
+
+# Run Terrascan for AWS
+terrascan scan -t terraform -p aws -d . --json > "$SCAN_RESULTS_DIR/$TERRASCAN_AWS_OUTPUT_FILE"
+echo "Terrascan AWS scan completed."
+
+# Run Terrascan for Azure
+terrascan scan -t terraform -p azure -d . --json > "$SCAN_RESULTS_DIR/$TERRASCAN_AZURE_OUTPUT_FILE"
+echo "Terrascan Azure scan completed."
+
+# Run Terrascan for GCP
+terrascan scan -t terraform -p gcp -d . --json > "$SCAN_RESULTS_DIR/$TERRASCAN_GCP_OUTPUT_FILE"
+echo "Terrascan GCP scan completed."
+
+#######################
+# TFLint Scanning
+#######################
+echo "Starting TFLint scan..."
+curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+tflint --init
+tflint -f json > "$SCAN_RESULTS_DIR/$TFLINT_OUTPUT_FILE"
+echo "TFLint scan completed. Results saved to $SCAN_RESULTS_DIR/$TFLINT_OUTPUT_FILE."
+
+
 ##################################
 # Save file paths to environment #
 ##################################
-echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_ENV
-echo "CHECKOV_OUTPUT_FILE=$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
-echo "CHECKOV_FILENAME=$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
+echo "TERRASCAN_AWS_OUTPUT_FILE=$SCAN_RESULTS_DIR/$TERRASCAN_AWS_OUTPUT_FILE" >> $GITHUB_ENV
+echo "TERRASCAN_AZURE_OUTPUT_FILE=$SCAN_RESULTS_DIR/$TERRASCAN_AZURE_OUTPUT_FILE" >> $GITHUB_ENV
+echo "TERRASCAN_GCP_OUTPUT_FILE=$SCAN_RESULTS_DIR/$TERRASCAN_GCP_OUTPUT_FILE" >> $GITHUB_ENV
+echo "TFLINT_OUTPUT_FILE=$SCAN_RESULTS_DIR/$TFLINT_OUTPUT_FILE" >> $GITHUB_ENV
+echo "TFLINT_FILENAME=$TFLINT_OUTPUT_FILE" >> $GITHUB_ENV
