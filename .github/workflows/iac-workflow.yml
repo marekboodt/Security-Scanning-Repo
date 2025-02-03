@@ -42,13 +42,6 @@ jobs:
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
-      - name: Save Checkov JSON Output as Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.CHECKOV_FILENAME }}
-          path: ${{ env.CHECKOV_OUTPUT_FILE }}
-      
 #      - name: Save Terrascan AWS JSON Output as Artifact
 #        if: always()
 #         uses: actions/upload-artifact@v4
