@@ -36,22 +36,31 @@ checkov -d . --quiet --output json > "$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE"
 echo "Checkov scan completed. Results saved to $SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE."
 
 #######################
+# Install Terrascan
+#######################
+echo "Installing Terrascan..."
+TERRASCAN_VERSION=$(curl -s "https://api.github.com/repos/tenable/terrascan/releases/latest" | jq -r ".tag_name")
+TERRASCAN_URL="https://github.com/tenable/terrascan/releases/download/${TERRASCAN_VERSION}/terrascan-linux-amd64"
+
+if [ -z "$TERRASCAN_VERSION" ] || [ "$TERRASCAN_VERSION" = "null" ]; then
+  echo "Error: Failed to fetch the latest Terrascan version."
+  exit 1
+fi
+
+curl -L "$TERRASCAN_URL" -o terrascan
+chmod +x terrascan
+sudo mv terrascan /usr/local/bin/
+
+#######################
 # Terrascan IaC Scanning
 #######################
 echo "Starting Terrascan scans..."
-curl -L "$(curl -s https://api.github.com/repos/tenable/terrascan/releases/latest | jq -r ".assets[] | select(.name | test(\"linux_amd64\")) | .browser_download_url")" -o terrascan
-chmod +x terrascan
-mv terrascan /usr/local/bin/
-
-# Run Terrascan for AWS
 terrascan scan -t terraform -p aws -d . --json > "$SCAN_RESULTS_DIR/$TERRASCAN_AWS_OUTPUT_FILE"
 echo "Terrascan AWS scan completed."
 
-# Run Terrascan for Azure
 terrascan scan -t terraform -p azure -d . --json > "$SCAN_RESULTS_DIR/$TERRASCAN_AZURE_OUTPUT_FILE"
 echo "Terrascan Azure scan completed."
 
-# Run Terrascan for GCP
 terrascan scan -t terraform -p gcp -d . --json > "$SCAN_RESULTS_DIR/$TERRASCAN_GCP_OUTPUT_FILE"
 echo "Terrascan GCP scan completed."
 
