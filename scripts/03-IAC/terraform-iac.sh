@@ -21,12 +21,15 @@ CHECKOV_SINGLE_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMES
 echo "Running Checkov scan for project: $REPO_NAME in environment: $ENVIRONMENT ..."
 cd "$PROJECT_DIR"
 
-#######################
-# Install and Run Checkov
-#######################
+###################
+# Install Checkov #
+###################
 echo "Installing Checkov..."
 pip install checkov
 
+###########################
+# Run Checkov Single File Output #
+###########################
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov scan Single output file..."
 checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
@@ -39,6 +42,9 @@ else
 fi
 echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 
+###############################################
+# Run Checkov Multiple Directory Files Output #
+###############################################
 # Detect all directories inside the project directory
 echo "Detecting directories to scan..."
 DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1)  # Get top-level directories
@@ -51,13 +57,13 @@ fi
 # Loop through each directory and run Checkov
 for DIR in $DIRECTORIES; do
     DIR_NAME=$(basename "$DIR")  # Extract only the directory name
-    OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-${DIR_NAME}-${ENVIRONMENT}-${TIMESTAMP}.txt"
+    OUTPUT_DIRECTORY_FILE="${REPO_NAME}-IAC-CHECKOV-${DIR_NAME}-${ENVIRONMENT}-${TIMESTAMP}.txt"
     
     echo "Starting Checkov scan for directory: $DIR_NAME..."
-    checkov -d "$DIR" --quiet > "$SCAN_RESULTS_DIR/$OUTPUT_FILE"
+    checkov -d "$DIR" --quiet > "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
 
     # Verify if the output file is created and not empty
-    if [ -s "$SCAN_RESULTS_DIR/$OUTPUT_FILE" ]; then
+    if [ -s "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE" ]; then
         echo "Checkov scan for $DIR_NAME completed successfully."
     else
         echo "Warning: Checkov scan for $DIR_NAME did not produce any results!"
