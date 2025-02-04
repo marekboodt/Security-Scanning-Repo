@@ -74,11 +74,11 @@ jobs:
 
 # ===================== Generate Timestamp =====================
       - name: Generate Timestamp
-        run: mkdir -p ${{ inputs.framework }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
-
+        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_ENV
+        
 # ===================== Checkov as GitHub Action =====================
       - name: Create Checkov Scan Results Folder
-        run: mkdir -p iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
+        run: mkdir -p ${{ inputs.framework }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
 
       - name: Run Checkov Scan - CLI Output
         id: checkov-cli
