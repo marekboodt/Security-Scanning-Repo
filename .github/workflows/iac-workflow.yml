@@ -74,14 +74,9 @@ jobs:
 
 # ===================== Generate Timestamp =====================
       - name: Generate Timestamp
-        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_ENV
+        run: mkdir -p ${{ inputs.framework }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
 
 # ===================== Checkov as GitHub Action =====================
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-
       - name: Create Checkov Scan Results Folder
         run: mkdir -p iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
 
@@ -92,7 +87,7 @@ jobs:
           directory: ${{ inputs.project_dir }}
           framework: terraform
           output_format: cli
-          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/checkov.log
+          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/${{ inputs.framework }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.log
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
@@ -104,7 +99,7 @@ jobs:
           directory: ${{ inputs.project_dir }}
           framework: terraform
           output_format: sarif
-          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/checkov.sarif
+          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/${{ inputs.framework }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
@@ -116,7 +111,7 @@ jobs:
           directory: ${{ inputs.project_dir }}
           framework: terraform
           output_format: json
-          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/checkov.json
+          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/${{ inputs.framework }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.json
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
@@ -137,7 +132,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}  # Give it a distinct name
+          name: ${{ inputs.framework }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Timestamped artifact name
           path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/  # Upload all Checkov outputs
           if-no-files-found: ignore
             
