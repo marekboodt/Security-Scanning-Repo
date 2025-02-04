@@ -71,6 +71,8 @@ jobs:
 #          name: ${{ env.TFLINT_FILENAME }}
 #          path: ${{ env.TFLINT_OUTPUT_FILE }}
 
+
+
 # ===================== Checkov as GitHub Action =====================
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
@@ -78,7 +80,7 @@ jobs:
           python-version: 3.8
 
       - name: Create Checkov Scan Results Folder
-        run: mkdir -p iac-checkov-GitHub-Action-results  # Separate folder for Checkov action
+        run: mkdir -p iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
 
       - name: Run Checkov Scan - CLI Output
         id: checkov-cli
