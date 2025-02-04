@@ -76,6 +76,7 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}  # Folder name as artifact name
           path: ${{ env.SCAN_RESULTS_DIR }}  # Upload the entire folder
-          if-no-files-found: warn  # Prevent failure if the folder is empty
+          # if-no-files-found: warn  # Prevent failure if the folder is empty
+          if-no-files-found: ignore  # Avoids failure if all files were removed
 
             
