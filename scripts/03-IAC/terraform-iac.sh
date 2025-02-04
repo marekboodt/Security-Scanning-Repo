@@ -27,10 +27,9 @@ cd "$PROJECT_DIR"
 echo "Installing Checkov..."
 pip install checkov
 
-# Run Checkov for Terraform scanning, saving output as JSON
-echo "Starting Checkov scan..."
+# Run Checkov for Terraform scanning, saving output as text
+echo "Starting Checkov scan Single output file..."
 checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
-
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" ]; then
     echo "Checkov scan completed successfully."
@@ -38,13 +37,39 @@ else
     echo "Warning: Checkov scan did not produce any results!"
     exit 1  # Exit with failure if Checkov fails
 fi
+echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 
-echo "Checkov scan results saved to: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+# Detect all directories inside the project directory
+echo "Detecting directories to scan..."
+DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1)  # Get top-level directories
+
+if [ -z "$DIRECTORIES" ]; then
+    echo "No directories found to scan!"
+    exit 1
+fi
+
+# Loop through each directory and run Checkov
+for DIR in $DIRECTORIES; do
+    DIR_NAME=$(basename "$DIR")  # Extract only the directory name
+    OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-${DIR_NAME}-${ENVIRONMENT}-${TIMESTAMP}.txt"
+    
+    echo "Starting Checkov scan for directory: $DIR_NAME..."
+    checkov -d "$DIR" --quiet > "$SCAN_RESULTS_DIR/$OUTPUT_FILE"
+
+    # Verify if the output file is created and not empty
+    if [ -s "$SCAN_RESULTS_DIR/$OUTPUT_FILE" ]; then
+        echo "Checkov scan for $DIR_NAME completed successfully."
+    else
+        echo "Warning: Checkov scan for $DIR_NAME did not produce any results!"
+    fi
+done
+
+echo "All Checkov scans completed. Results saved in: $SCAN_RESULTS_DIR"
 
 ##################################
 # Save file paths to environment #
 ##################################
 echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_ENV
-# echo "CHECKOV_OUTPUT_FILE=$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
-# echo "CHECKOV_FILENAME=$CHECKOV_OUTPUT_FILE" >> $GITHUB_ENV
+# echo "CHECKOV_SINGLE_OUTPUT_FILE=$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" >> $GITHUB_ENV
+# echo "CHECKOV_FILENAME=$CHECKOV_SINGLE_OUTPUT_FILE" >> $GITHUB_ENV
