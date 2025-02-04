@@ -127,4 +127,12 @@ jobs:
           # if-no-files-found: warn  # Prevent failure if the folder is empty
           if-no-files-found: ignore  # Avoids failure if all files were removed
 
+# ===================== Save Checkov GitHub Action Scan Results =====================
+      - name: Save Checkov Scan Results as Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iac-checkov-GitHub-Action-results  # Give it a distinct name
+          path: iac-checkov-GitHub-Action-results/  # Upload all Checkov outputs
+          if-no-files-found: ignore
             
