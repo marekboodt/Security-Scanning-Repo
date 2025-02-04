@@ -85,10 +85,11 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: ${{ inputs.project_dir }}
-          framework: terraform  # Change this for Kubernetes, CloudFormation, etc.
+          framework: terraform
           output_format: cli,sarif,json
-          output_file_path: iac-checkov-GitHub-Action-results/checkov.log,iac-checkov-GitHub-Action-results/checkov.sarif,iac-checkov-GitHub-Action-results/checkov.json
-
+          output_file_path: "iac-checkov-GitHub-Action-results/checkov.log iac-checkov-GitHub-Action-results/checkov.sarif iac-checkov-GitHub-Action-results/checkov.json"
+          log_level: WARNING
+          container_user: 0
       
       - name: Save All IaC Scan Results as Artifact
         if: always()
