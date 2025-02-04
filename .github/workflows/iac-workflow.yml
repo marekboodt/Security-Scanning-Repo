@@ -128,7 +128,7 @@ jobs:
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_cli.txt \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.log
       
-          mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results.sarif \
+          mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
  
 # ===================== Save All Artifacts =====================
