@@ -133,6 +133,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Timestamped artifact name
-          path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/  # Upload all Checkov outputs
+          path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/  # Corrected folder path
           if-no-files-found: ignore
             
