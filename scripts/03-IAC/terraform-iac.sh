@@ -16,7 +16,7 @@ SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/$ARTIFACT_NAME"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Define Checkov output file
-CHECKOV_SINGLE_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMESTAMP}.txt"
+CHECKOV_SINGLE_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SINGLE-FILE-SCAN-${ENVIRONMENT}-${TIMESTAMP}.txt"
 
 echo "Running Checkov scan for project: $REPO_NAME in environment: $ENVIRONMENT ..."
 cd "$PROJECT_DIR"
@@ -43,7 +43,7 @@ fi
 echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 
 ###############################################
-# Run Checkov Multiple Directory Files Output #
+# Run Checkov Multiple Directory Output Files #
 ###############################################
 # Detect all directories inside the project directory
 echo "Detecting directories to scan..."
