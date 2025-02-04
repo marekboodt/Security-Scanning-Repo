@@ -72,6 +72,9 @@ jobs:
 #          path: ${{ env.TFLINT_OUTPUT_FILE }}
 
 
+# ===================== Generate Timestamp =====================
+      - name: Generate Timestamp
+        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_ENV
 
 # ===================== Checkov as GitHub Action =====================
       - name: Set up Python 3.8
@@ -89,7 +92,7 @@ jobs:
           directory: ${{ inputs.project_dir }}
           framework: terraform
           output_format: cli
-          output_file_path: iac-checkov-GitHub-Action-results/checkov.log
+          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/checkov.log
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
@@ -101,7 +104,7 @@ jobs:
           directory: ${{ inputs.project_dir }}
           framework: terraform
           output_format: sarif
-          output_file_path: iac-checkov-GitHub-Action-results/checkov.sarif
+          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/checkov.sarif
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
@@ -113,7 +116,7 @@ jobs:
           directory: ${{ inputs.project_dir }}
           framework: terraform
           output_format: json
-          output_file_path: iac-checkov-GitHub-Action-results/checkov.json
+          output_file_path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/checkov.json
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
@@ -134,7 +137,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: iac-checkov-GitHub-Action-results  # Give it a distinct name
-          path: iac-checkov-GitHub-Action-results/  # Upload all Checkov outputs
+          name: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}  # Give it a distinct name
+          path: iac-checkov-GitHub-Action-results-${{ env.TIMESTAMP }}/  # Upload all Checkov outputs
           if-no-files-found: ignore
             
