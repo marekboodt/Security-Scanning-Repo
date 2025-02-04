@@ -7,8 +7,8 @@ REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")
 
 # Directory to store scan results
-SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/IaC-scan-results"
-mkdir -p "$SCAN_RESULTS_DIR"
+#SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/IaC-scan-results"
+#mkdir -p "$SCAN_RESULTS_DIR"
 
 # Dynamic artifact name, including environment
 ARTIFACT_NAME="${REPO_NAME}-ALL-IAC-SCANS-${ENVIRONMENT}-${TIMESTAMP}"
@@ -16,7 +16,7 @@ SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/$ARTIFACT_NAME"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Define Checkov output file
-CHECKOV_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMESTAMP}.txt"
+CHECKOV_SINGLE_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SCAN-${ENVIRONMENT}-${TIMESTAMP}.txt"
 
 echo "Running Checkov scan for project: $REPO_NAME in environment: $ENVIRONMENT ..."
 cd "$PROJECT_DIR"
@@ -29,17 +29,17 @@ pip install checkov
 
 # Run Checkov for Terraform scanning, saving output as JSON
 echo "Starting Checkov scan..."
-checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE"
+checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 
 # Verify if the output file exists and is not empty
-if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE" ]; then
+if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" ]; then
     echo "Checkov scan completed successfully."
 else
     echo "Warning: Checkov scan did not produce any results!"
     exit 1  # Exit with failure if Checkov fails
 fi
 
-echo "Checkov scan results saved to: $SCAN_RESULTS_DIR/$CHECKOV_OUTPUT_FILE"
+echo "Checkov scan results saved to: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 
 ##################################
 # Save file paths to environment #
