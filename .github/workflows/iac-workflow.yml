@@ -71,7 +71,7 @@ jobs:
 #          name: ${{ env.TFLINT_FILENAME }}
 #          path: ${{ env.TFLINT_OUTPUT_FILE }}
 
-      # ===================== Checkov as GitHub Action =====================
+# ===================== Checkov as GitHub Action =====================
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
@@ -80,17 +80,40 @@ jobs:
       - name: Create Checkov Scan Results Folder
         run: mkdir -p iac-checkov-GitHub-Action-results  # Separate folder for Checkov action
 
-      - name: Run Checkov Scan as GitHub Action
-        id: checkov
+      - name: Run Checkov Scan - CLI Output
+        id: checkov-cli
         uses: bridgecrewio/checkov-action@master
         with:
           directory: ${{ inputs.project_dir }}
           framework: terraform
-          output_format: cli,sarif,json
-          output_file_path: "iac-checkov-GitHub-Action-results/checkov.log iac-checkov-GitHub-Action-results/checkov.sarif iac-checkov-GitHub-Action-results/checkov.json"
+          output_format: cli
+          output_file_path: iac-checkov-GitHub-Action-results/checkov.log
           log_level: WARNING
           container_user: 0
       
+      - name: Run Checkov Scan - SARIF Output
+        id: checkov-sarif
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ inputs.project_dir }}
+          framework: terraform
+          output_format: sarif
+          output_file_path: iac-checkov-GitHub-Action-results/checkov.sarif
+          log_level: WARNING
+          container_user: 0
+      
+      - name: Run Checkov Scan - JSON Output
+        id: checkov-json
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ inputs.project_dir }}
+          framework: terraform
+          output_format: json
+          output_file_path: iac-checkov-GitHub-Action-results/checkov.json
+          log_level: WARNING
+          container_user: 0
+      
+# ===================== Save All Artifacts =====================
       - name: Save All IaC Scan Results as Artifact
         if: always()
         uses: actions/upload-artifact@v4
