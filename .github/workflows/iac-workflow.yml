@@ -34,6 +34,7 @@ jobs:
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 
+# ===================== Custom IaC Scan =====================
       - name: Run IaC scripts
         run: |
           bash security-scanning/scripts/03-IAC/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }}
@@ -69,6 +70,25 @@ jobs:
 #        with:
 #          name: ${{ env.TFLINT_FILENAME }}
 #          path: ${{ env.TFLINT_OUTPUT_FILE }}
+
+      # ===================== Checkov as GitHub Action =====================
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Create Checkov Scan Results Folder
+        run: mkdir -p iac-checkov-GitHub-Action-results  # Separate folder for Checkov action
+
+      - name: Run Checkov Scan as GitHub Action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ inputs.project_dir }}
+          framework: terraform  # Change this for Kubernetes, CloudFormation, etc.
+          output_format: cli,sarif,json
+          output_file_path: iac-checkov-GitHub-Action-results/checkov.log,iac-checkov-GitHub-Action-results/checkov.sarif,iac-checkov-GitHub-Action-results/checkov.json
+
       
       - name: Save All IaC Scan Results as Artifact
         if: always()
