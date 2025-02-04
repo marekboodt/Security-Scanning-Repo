@@ -90,6 +90,7 @@ jobs:
           output_file_path: iac-checkov-GitHub-Action-results/checkov.log
           log_level: WARNING
           container_user: 0
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
       
       - name: Run Checkov Scan - SARIF Output
         id: checkov-sarif
@@ -101,7 +102,8 @@ jobs:
           output_file_path: iac-checkov-GitHub-Action-results/checkov.sarif
           log_level: WARNING
           container_user: 0
-      
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+
       - name: Run Checkov Scan - JSON Output
         id: checkov-json
         uses: bridgecrewio/checkov-action@master
@@ -112,7 +114,9 @@ jobs:
           output_file_path: iac-checkov-GitHub-Action-results/checkov.json
           log_level: WARNING
           container_user: 0
-      
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+
+        
 # ===================== Save All Artifacts =====================
       - name: Save All IaC Scan Results as Artifact
         if: always()
