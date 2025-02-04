@@ -47,11 +47,13 @@ echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHE
 ###############################################
 # Detect all directories inside the project directory
 echo "Detecting directories to scan..."
-DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1)  # Get top-level directories
+# DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1)  # Get top-level directories
+DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1 ! -name ".*")  # Get top-level directories And no "."* folders
 
 if [ -z "$DIRECTORIES" ]; then
     echo "No directories found to scan!"
-    exit 1
+    # exit 1 # First it was this
+    exit 0  # Exit successfully if no valid directories
 fi
 
 # Loop through each directory and run Checkov
@@ -62,11 +64,12 @@ for DIR in $DIRECTORIES; do
     echo "Starting Checkov scan for directory: $DIR_NAME..."
     checkov -d "$DIR" --quiet > "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
 
-    # Verify if the output file is created and not empty
-    if [ -s "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE" ]; then
-        echo "Checkov scan for $DIR_NAME completed successfully."
+    # If the file is empty, remove it
+    if [ ! -s "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE" ]; then
+        echo "No issues found in $DIR_NAME. Removing empty file."
+        rm "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
     else
-        echo "Warning: Checkov scan for $DIR_NAME did not produce any results!"
+        echo "Checkov scan for $DIR_NAME completed successfully."
     fi
 done
 
