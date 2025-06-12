@@ -41,7 +41,8 @@ ls -al
 ## test ##
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
-checkov -d . --quiet --config-file "$PROJECT_DIR/security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+echo "line 1" 
+checkov -d . --quiet --config-file "./security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" ]; then
     echo "Checkov scan completed successfully."
@@ -72,6 +73,7 @@ for DIR in $DIRECTORIES; do
     
     echo "Starting Checkov scan for directory: $DIR_NAME..."
     # checkov -d "$DIR" --quiet > "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
+    echo "line 2" 
     checkov -d "$DIR" --quiet --config-file "./security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
 
 
