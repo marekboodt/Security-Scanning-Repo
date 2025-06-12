@@ -21,6 +21,9 @@ CHECKOV_SINGLE_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SINGLE-FILE-SCAN-${ENVIRONM
 echo "Running Checkov Custom scans for project: $REPO_NAME in environment: $ENVIRONMENT !!!"
 cd "$PROJECT_DIR"
 
+echo "Confirming .checkov.yml exists:"
+cat .checkov.yml || echo "NO FILE"
+
 ###################
 # Install Checkov #
 ###################
