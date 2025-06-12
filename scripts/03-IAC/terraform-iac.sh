@@ -57,7 +57,7 @@ echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHE
 # Detect all directories inside the project directory 
 echo "Detecting directories to scan..."
 # Get top-level directories And no "."* folders nor security-scanning (import from git folder) and *-ALL-IAC-SCANS-*
-DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1 ! -name ".*" ! -name "security-scanning" ! -name "*ALL-IAC-SCANS*")
+DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1 ! -name ".*" ! -name "security-scan*" ! -name "*ALL-IAC-SCANS*")
 
 if [ -z "$DIRECTORIES" ]; then
     echo "No directories found to scan!"
