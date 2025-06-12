@@ -43,8 +43,8 @@ checkov -d . --show-config
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov scan Single output file..."
 
-checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
-# checkov -d . --quiet --config-file "./security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+# checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+checkov -d . --quiet --config-file .checkov.yml > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" ]; then
     echo "Checkov scan completed successfully."
