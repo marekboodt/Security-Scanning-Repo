@@ -23,7 +23,7 @@ cd "$PROJECT_DIR"
 
 ### test ###
 echo "Confirming .checkov.yml exists:"
-cat .checkov.yml || echo "NO FILE"
+cat /.checkov.yml || echo "NO FILE"
 ### test ###
 
 ###################
