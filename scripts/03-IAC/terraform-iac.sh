@@ -18,7 +18,7 @@ mkdir -p "$SCAN_RESULTS_DIR"
 # Define Checkov output file
 CHECKOV_SINGLE_OUTPUT_FILE="${REPO_NAME}-IAC-CHECKOV-SINGLE-FILE-SCAN-${ENVIRONMENT}-${TIMESTAMP}.txt"
 
-echo "Running Checkov scan for project: $REPO_NAME in environment: $ENVIRONMENT ..."
+echo "Running Checkov Custom scans for project: $REPO_NAME in environment: $ENVIRONMENT !!!"
 cd "$PROJECT_DIR"
 
 ###################
@@ -27,9 +27,9 @@ cd "$PROJECT_DIR"
 echo "Installing Checkov..."
 pip install checkov
 
-###########################
+##################################
 # Run Checkov Single File Output #
-###########################
+##################################
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov scan Single output file..."
 checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
@@ -45,10 +45,12 @@ echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHE
 ###############################################
 # Run Checkov Multiple Directory Output Files #
 ###############################################
-# Detect all directories inside the project directory
+# Detect all directories inside the project directory 
 echo "Detecting directories to scan..."
-# DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1)  # Get top-level directories
-DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1 ! -name ".*")  # Get top-level directories And no "."* folders
+# Get top-level directories And no "."* folders nor security-scanning (import from git folder) and *-ALL-IAC-SCANS-*
+DIRECTORIES=$(find . -type d -mindepth 1 -maxdepth 1 ! -name ".*" \ 
+            ! -name "security-scanning" \
+            ! -name "*ALL-IAC-SCANS*")     
 
 if [ -z "$DIRECTORIES" ]; then
     echo "No directories found to scan!"
