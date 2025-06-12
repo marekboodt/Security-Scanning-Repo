@@ -32,8 +32,15 @@ pip install checkov
 ##################################
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov scan Single output file..."
+
+## test ##
+echo "Verifying Checkov config file location:"
+cat ./security-scan-exceptions/.checkov.yml || echo "./sec NOT FOUND!"
+cat $PROJECT_DIR/security-scan-exceptions/.checkov.yml || echo "$PROJECT_DIR NOT FOUND!"
+## test ##
+
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
-checkov -d . --quiet --config-file "./security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+checkov -d . --quiet --config-file "$PROJECT_DIR/security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" ]; then
     echo "Checkov scan completed successfully."
