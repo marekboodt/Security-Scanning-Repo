@@ -101,7 +101,7 @@ jobs:
           framework: terraform
           output_format: sarif
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
-          #/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
+          # will write automatically in sarif format /${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
