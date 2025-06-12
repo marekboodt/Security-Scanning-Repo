@@ -32,7 +32,8 @@ pip install checkov
 ##################################
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov scan Single output file..."
-checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+# checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+checkov -d . --quiet --config-file "./security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" ]; then
     echo "Checkov scan completed successfully."
@@ -62,7 +63,9 @@ for DIR in $DIRECTORIES; do
     OUTPUT_DIRECTORY_FILE="${REPO_NAME}-IAC-CHECKOV-${DIR_NAME}-${ENVIRONMENT}-${TIMESTAMP}.txt"
     
     echo "Starting Checkov scan for directory: $DIR_NAME..."
-    checkov -d "$DIR" --quiet > "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
+    # checkov -d "$DIR" --quiet > "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
+    checkov -d "$DIR" --quiet --config-file "./security-scan-exceptions/.checkov.yml" > "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE"
+
 
     # If the file is empty, remove it
     if [ ! -s "$SCAN_RESULTS_DIR/$OUTPUT_DIRECTORY_FILE" ]; then
