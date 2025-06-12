@@ -37,6 +37,7 @@ echo "Starting Checkov scan Single output file..."
 echo "Verifying Checkov config file location:"
 cat ./security-scan-exceptions/.checkov.yml || echo "./sec NOT FOUND!"
 cat $PROJECT_DIR/security-scan-exceptions/.checkov.yml || echo "$PROJECT_DIR NOT FOUND!"
+ls -al
 ## test ##
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
