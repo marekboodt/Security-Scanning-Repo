@@ -11,6 +11,8 @@ TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")
 #SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/IaC-scan-results"
 #mkdir -p "$SCAN_RESULTS_DIR"
 
+echo "LANGUAGE = $LANGUAGE"
+
 # Dynamic artifact name, including environment
 ARTIFACT_NAME="${LANGUAGE}-ALL-IAC-SCANS-${ENVIRONMENT}-${TIMESTAMP}"
 SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/$ARTIFACT_NAME"
