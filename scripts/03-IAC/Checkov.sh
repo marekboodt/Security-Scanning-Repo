@@ -7,6 +7,8 @@ ENVIRONMENT=$2  # prod or non-prod
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
 TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")
 
+echo "TEST 1234"
+
 # Result directory
 SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/Checkov-scan-results"
 mkdir -p "$SCAN_RESULTS_DIR"
