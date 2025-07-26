@@ -85,7 +85,10 @@ jobs:
     needs: generate-timestamp
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
-    steps:        
+    steps:    
+      - name: Checkout Project Repository - GH actions
+        uses: actions/checkout@v3
+        
 # ===================== Checkov as GitHub Action =====================
       - name: Create Checkov Scan Results Folder
         run: mkdir -p ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
