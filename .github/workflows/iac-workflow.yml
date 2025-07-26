@@ -43,34 +43,7 @@ jobs:
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
-#      - name: Save Terrascan AWS JSON Output as Artifact
-#        if: always()
-#         uses: actions/upload-artifact@v4
-#        with:
-#          name: ${{ env.TERRASCAN_AWS_OUTPUT_FILE }}
-#          path: ${{ env.TERRASCAN_AWS_OUTPUT_FILE }}
-      
-#       - name: Save Terrascan Azure JSON Output as Artifact
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: ${{ env.TERRASCAN_AZURE_OUTPUT_FILE }}
-#          path: ${{ env.TERRASCAN_AZURE_OUTPUT_FILE }}
-      
-#      - name: Save Terrascan GCP JSON Output as Artifact
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: ${{ env.TERRASCAN_GCP_OUTPUT_FILE }}
-#          path: ${{ env.TERRASCAN_GCP_OUTPUT_FILE }}
-      
-#      - name: Save TFLint JSON Output as Artifact
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: ${{ env.TFLINT_FILENAME }}
-#          path: ${{ env.TFLINT_OUTPUT_FILE }}
-
+# ===================== GitHub Action IaC Scan =====================
   github-action-iac-scan:
     runs-on: ubuntu-latest
     steps:
