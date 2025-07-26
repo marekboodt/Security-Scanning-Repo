@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  iac-scan:
+  custom-iac-scan:
     runs-on: ubuntu-latest
 
     steps:
@@ -71,7 +71,9 @@ jobs:
 #          name: ${{ env.TFLINT_FILENAME }}
 #          path: ${{ env.TFLINT_OUTPUT_FILE }}
 
-
+  github-action-iac-scan:
+    runs-on: ubuntu-latest
+    steps:
 # ===================== Generate Timestamp =====================
       - name: Generate Timestamp
         run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_ENV
@@ -130,7 +132,10 @@ jobs:
       
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
- 
+
+  iac-artifact-upload:
+    runs-on: ubuntu-latest
+    steps:
 # ===================== Save All Artifacts =====================
       - name: Save All IaC Scan Results as Artifact
         if: always()
