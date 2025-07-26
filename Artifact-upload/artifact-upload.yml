@@ -1,0 +1,23 @@
+# Artifact-upload/artifact-upload.yml
+name: Reusable Artifact Upload
+
+on:
+  workflow_call:
+    inputs:
+      artifact_name:
+        type: string
+        required: true
+      artifact_path:
+        type: string
+        required: true
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ${{ inputs.artifact_path }}
+          if-no-files-found: ignore
