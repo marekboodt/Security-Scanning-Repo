@@ -2,10 +2,11 @@
 PROJECT_DIR=$1
 ENVIRONMENT=$2  # Environment passed as an argument (e.g., prod or non-prod)
 LANGUAGE=$3  # ← this is now "terraform"
+TIMESTAMP=$4
+
 
 # Get the repository name from the GITHUB_REPOSITORY environment variable
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
-TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")
 
 # Directory to store scan results
 #SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/IaC-scan-results"
