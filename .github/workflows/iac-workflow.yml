@@ -21,10 +21,25 @@ on:
 jobs:
 
 #####################################################################
+# ===================== Generate TimeStamp for Name =====================
+#####################################################################
+  generate-timestamp:
+    runs-on: ubuntu-latest
+    outputs:
+      timestamp: ${{ steps.set-timestamp.outputs.timestamp }}
+    steps:
+      - name: Generate Timestamp
+        id: set-timestamp
+        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_OUTPUT
+        
+#####################################################################
 # ===================== Custom IaC Scan =====================
 #####################################################################
   custom-iac-scan:
     runs-on: ubuntu-latest
+    needs: [generate-timestamp]
+    env:
+      TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     # outputs set in the .sh file 
     outputs:
       artifact_name: ${{ steps.run-custom-iac-checkov-scan.outputs.ARTIFACT_NAME }}
@@ -46,7 +61,7 @@ jobs:
       - name: Run IaC Custom *.sh scripts
         id: run-custom-iac-checkov-scan # set ID to later in artifact upload use need.<<ID>>.outputs.artifact_name
         run: |
-          bash security-scanning/scripts/03-IAC/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }}
+          bash security-scanning/scripts/03-IAC/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
         # continue-on-error: true
         # If inputs.environment is 'non-prod', the pipeline will continue even if ./run-tests.sh fails. 
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
@@ -56,7 +71,7 @@ jobs:
       - name: Upload scan results for next job
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.language }}-ALL-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          name: ${{ inputs.language }}-ALL-IAC-SCANS-${{ inputs.environment }}-${{ TIMESTAMP }}
           path: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
           
 #####################################################################
@@ -64,11 +79,7 @@ jobs:
 #####################################################################
   github-action-iac-scan:
     runs-on: ubuntu-latest
-    steps:
-# ===================== Generate Timestamp =====================
-      - name: Generate Timestamp
-        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_ENV
-        
+    steps:        
 # ===================== Checkov as GitHub Action =====================
       - name: Create Checkov Scan Results Folder
         run: mkdir -p ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
@@ -124,9 +135,14 @@ jobs:
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
 
+#####################################################################
+# ===================== Custom IaC Artifact Upload ==================
+#####################################################################
   iac-artifact-upload:
     runs-on: ubuntu-latest
-    needs: [custom-iac-scan]
+    needs: [custom-iac-scan, generate-timestamp]
+    env:
+      TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
 # ===================== Download All Custom IAC Artifacts =====================
       - name: Download scan results from previous job
@@ -143,6 +159,9 @@ jobs:
           # if-no-files-found: warn  # Prevent failure if the folder is empty
           if-no-files-found: ignore  # Avoids failure if all files were removed
 
+#####################################################################
+# ===================== Custom IaC Scan =====================
+#####################################################################
   iac-gh-action-artifact-upload:
     runs-on: ubuntu-latest
     needs: [github-action-iac-scan]
