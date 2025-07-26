@@ -1,1 +1,18 @@
+name: Generate Timestamp
 
+on:
+  workflow_call:
+    outputs:
+      timestamp:
+        description: "Generated timestamp"
+        value: ${{ jobs.generate-timestamp.outputs.timestamp }}
+
+jobs:
+  generate-timestamp:
+    runs-on: ubuntu-latest
+    outputs:
+      timestamp: ${{ steps.set-timestamp.outputs.timestamp }}
+    steps:
+      - name: Generate Timestamp
+        id: set-timestamp
+        run: echo "timestamp=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_OUTPUT
