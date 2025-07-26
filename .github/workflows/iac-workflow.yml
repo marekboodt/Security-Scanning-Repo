@@ -85,7 +85,7 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: ${{ inputs.project_dir }}
-          framework: terraform
+          framework: ${{ inputs.language }}
           output_format: cli
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
           #/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.log
@@ -98,7 +98,7 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: ${{ inputs.project_dir }}
-          framework: terraform
+          framework: ${{ inputs.language }}
           output_format: sarif
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
           # will write automatically in sarif format /${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
@@ -111,7 +111,7 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
           directory: ${{ inputs.project_dir }}
-          framework: terraform
+          framework: ${{ inputs.language }}
           output_format: json
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
           # /${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.json
