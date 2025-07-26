@@ -64,7 +64,7 @@ jobs:
       - name: Run IaC Custom *.sh scripts
         id: run-custom-iac-checkov-scan # set ID to later in artifact upload use need.<<ID>>.outputs.artifact_name
         run: |
-          bash security-scanning/scripts/03-IAC/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
+          bash security-scanning/scripts/03-IAC/custom-${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
         # continue-on-error: true
         # If inputs.environment is 'non-prod', the pipeline will continue even if ./run-tests.sh fails. 
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
