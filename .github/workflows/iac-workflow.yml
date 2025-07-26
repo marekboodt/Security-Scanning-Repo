@@ -74,7 +74,7 @@ jobs:
       - name: Upload scan results for next job
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.language }}-ALL-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          name: ${{ inputs.language }}-ALL-CUSTOM-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
           path: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
           
 #####################################################################
@@ -157,7 +157,7 @@ jobs:
       - name: Download scan results from previous job
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.language }}-ALL-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          name: ${{ inputs.language }}-ALL-CUSTOM-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
 # ===================== Save All Artifacts =====================
       - name: Save All IaC Scan Results as Artifact
         if: always()
