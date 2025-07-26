@@ -1,0 +1,93 @@
+on:
+  workflow_call:
+    inputs:
+      language:
+        type: string
+        required: true
+      project_dir:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+  workflow_dispatch:
+
+jobs:
+  generate-timestamp:
+    runs-on: ubuntu-latest
+    outputs:
+      timestamp: ${{ steps.set-timestamp.outputs.timestamp }}
+    steps:
+      - name: Generate Timestamp
+        id: set-timestamp
+        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_OUTPUT
+
+  custom-iac-scan:
+    runs-on: ubuntu-latest
+    needs: [generate-timestamp]
+    env:
+      TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
+    steps:
+      - name: Checkout Project Repository - IAC
+        uses: actions/checkout@v3
+      - name: Checkout Security-Scanning-Repo
+        uses: actions/checkout@v3
+        with:
+          repository: marekboodt/Security-Scanning-Repo
+          path: security-scanning
+      - name: Run IaC Custom *.sh scripts
+        id: run-custom-iac-checkov-scan
+        run: |
+          bash security-scanning/scripts/03-IAC/custom-${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
+
+  github-action-iac-scan:
+    runs-on: ubuntu-latest
+    needs: generate-timestamp
+    env:
+      TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
+    steps:
+      - name: Checkout Project Repository - GH actions
+        uses: actions/checkout@v3
+      - name: Create Checkov Scan Results Folder
+        run: mkdir -p ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+      - name: Run Checkov Scan - CLI Output
+        id: checkov-cli
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ inputs.project_dir }}
+          framework: terraform
+          output_format: cli
+          output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          log_level: WARNING
+          container_user: 0
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+      - name: Run Checkov Scan - SARIF Output
+        id: checkov-sarif
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ inputs.project_dir }}
+          framework: terraform
+          output_format: sarif
+          output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          log_level: WARNING
+          container_user: 0
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+      - name: Run Checkov Scan - JSON Output
+        id: checkov-json
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ${{ inputs.project_dir }}
+          framework: terraform
+          output_format: json
+          output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          log_level: WARNING
+          container_user: 0
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+      - name: Rename Checkov Output Files
+        run: |
+          mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_json.json \
+             ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.json
+          mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_cli.txt \
+             ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.log
+          mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
+             ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
