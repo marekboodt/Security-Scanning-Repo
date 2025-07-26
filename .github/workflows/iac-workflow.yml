@@ -74,7 +74,7 @@ jobs:
       - name: Upload scan results for next job
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.language }}-ALL-IAC-SCANS-${{ inputs.environment }}-${{ needs.generate-timestamp.outputs.timestamp }}
+          name: ${{ inputs.language }}-ALL-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
           path: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
           
 #####################################################################
