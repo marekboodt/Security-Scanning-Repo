@@ -132,14 +132,20 @@ jobs:
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
  
 # ===================== Save All Artifacts =====================
-      - name: Save All IaC Scan Results as Artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}  # Folder name as artifact name
-          path: ${{ env.SCAN_RESULTS_DIR }}  # Upload the entire folder
-          # if-no-files-found: warn  # Prevent failure if the folder is empty
-          if-no-files-found: ignore  # Avoids failure if all files were removed
+#      - name: Save All IaC Scan Results as Artifact
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ env.ARTIFACT_NAME }}  # Folder name as artifact name
+#          path: ${{ env.SCAN_RESULTS_DIR }}  # Upload the entire folder
+#          # if-no-files-found: warn  # Prevent failure if the folder is empty
+#          if-no-files-found: ignore  # Avoids failure if all files were removed
+# ===================== NEW Save All Artifacts =====================
+      - name: Set artifact upload outputs NEW
+        id: artifact-outputs
+        run: |
+          echo "artifact_name=${ARTIFACT_NAME}" >> $GITHUB_OUTPUT
+          echo "artifact_path=${SCAN_RESULTS_DIR}" >> $GITHUB_OUTPUT
 
 # ===================== Save Checkov GitHub Action Scan Results =====================
       - name: Save Checkov Scan Results as Artifact
@@ -150,3 +156,10 @@ jobs:
           path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/  # Corrected folder path
           if-no-files-found: ignore
             
+            
+  upload-artifact:
+    needs: iac-scan
+    uses: security-scanning/Artifact-upload/artifact-upload.yml
+    with:
+      artifact_name: ${{ needs.iac-scan.outputs.artifact_name }}
+      artifact_path: ${{ needs.iac-scan.outputs.artifact_path }}
