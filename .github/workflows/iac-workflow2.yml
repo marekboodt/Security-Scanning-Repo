@@ -1,6 +1,11 @@
+name: Reusable IAC Workflow
+
 on:
   workflow_call:
     inputs:
+      type:
+        type: string
+        required: true
       language:
         type: string
         required: true
@@ -10,9 +15,16 @@ on:
       environment:
         type: string
         required: true
+    secrets:
+      token:
+        required: false
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
+#####################################################################
+# ===================== Generate TimeStamp for Name =====================
+#####################################################################
   generate-timestamp:
     runs-on: ubuntu-latest
     outputs:
@@ -22,34 +34,59 @@ jobs:
         id: set-timestamp
         run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_OUTPUT
 
+#####################################################################
+# ===================== Custom IaC Scan =====================
+#####################################################################
   custom-iac-scan:
     runs-on: ubuntu-latest
     needs: [generate-timestamp]
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
+      - name: Use the timestamp in step
+        run: echo "The timestamp is $TIMESTAMP"
+
+# ===================== fetch files from the public Repo ===================== 
       - name: Checkout Project Repository - IAC
         uses: actions/checkout@v3
+        
       - name: Checkout Security-Scanning-Repo
         uses: actions/checkout@v3
         with:
           repository: marekboodt/Security-Scanning-Repo
+          # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
+# ===================== Run Custom IaC Scan =====================
       - name: Run IaC Custom *.sh scripts
-        id: run-custom-iac-checkov-scan
+        id: run-custom-iac-checkov-scan # set ID to later in artifact upload use need.<<ID>>.outputs.artifact_name
         run: |
           bash security-scanning/scripts/03-IAC/custom-${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+# ===================== Upload Custom IaC Scan files - Artifacts =====================
+      - name: Upload scan results of Custom IaC Scan
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.language }}-ALL-CUSTOM-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          path: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
 
+#####################################################################
+# ===================== GitHub Action IaC Scan =====================
+#####################################################################          
   github-action-iac-scan:
     runs-on: ubuntu-latest
     needs: generate-timestamp
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
-    steps:
+    outputs:
+      scan_results_dir: ${{ steps.set-scan-dir.outputs.scan_results_dir }}
+    steps:    
       - name: Checkout Project Repository - GH actions
         uses: actions/checkout@v3
+        
+# ===================== Checkov as GitHub Action =====================
       - name: Create Checkov Scan Results Folder
-        run: mkdir -p ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+        run: mkdir -p ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}  # Separate folder for Checkov action
+
       - name: Run Checkov Scan - CLI Output
         id: checkov-cli
         uses: bridgecrewio/checkov-action@master
@@ -58,9 +95,11 @@ jobs:
           framework: terraform
           output_format: cli
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          #/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.log
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
+      
       - name: Run Checkov Scan - SARIF Output
         id: checkov-sarif
         uses: bridgecrewio/checkov-action@master
@@ -69,9 +108,11 @@ jobs:
           framework: terraform
           output_format: sarif
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          # will write automatically in sarif format /${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
+
       - name: Run Checkov Scan - JSON Output
         id: checkov-json
         uses: bridgecrewio/checkov-action@master
@@ -80,14 +121,27 @@ jobs:
           framework: terraform
           output_format: json
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          # /${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.json
           log_level: WARNING
           container_user: 0
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
+
+# ===================== Rename Checkov Output Files =====================
       - name: Rename Checkov Output Files
         run: |
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_json.json \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.json
+      
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_cli.txt \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.log
+      
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
+
+# ===================== Upload GH Action Checkov Output Files - Artifacts =====================
+      - name: Upload Checkov GitHub Actions Scan Results as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/
+          if-no-files-found: ignore
