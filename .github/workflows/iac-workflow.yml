@@ -85,6 +85,8 @@ jobs:
     needs: generate-timestamp
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
+    outputs:
+      scan_results_dir: ${{ steps.set-scan-dir.outputs.scan_results_dir }}
     steps:    
       - name: Checkout Project Repository - GH actions
         uses: actions/checkout@v3
@@ -144,12 +146,17 @@ jobs:
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
 
-      - name: Upload Checkov Scan Results as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
-          path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/
-          if-no-files-found: ignore
+      - name: Set scan dir output
+        id: set-scan-dir
+        run: echo "scan_results_dir=${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}" >> $GITHUB_OUTPUT
+
+      
+#      - name: Upload Checkov Scan Results as Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+#          path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/
+#          if-no-files-found: ignore
 #####################################################################
 # ===================== Custom IaC Artifact Upload ==================
 #####################################################################
@@ -177,6 +184,20 @@ jobs:
 #####################################################################
 # ===================== GH Action IaC Scan =====================
 #####################################################################
+  artifact-upload:
+    runs-on: ubuntu-latest
+    needs: [github-action-iac-scan]
+    steps:
+      - name: Upload Checkov Scan Results as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          path: ${{ needs.github-action-iac-scan.outputs.scan_results_dir }}/*
+          if-no-files-found: ignore
+
+  
+  
+  
   iac-gh-action-artifact-upload:
     runs-on: ubuntu-latest
     needs: [generate-timestamp, github-action-iac-scan]
