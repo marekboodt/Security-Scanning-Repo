@@ -19,6 +19,10 @@ on:
   workflow_dispatch:
 
 jobs:
+
+#####################################################################
+# ===================== Custom IaC Scan =====================
+#####################################################################
   custom-iac-scan:
     runs-on: ubuntu-latest
     # outputs set in the .sh file 
@@ -38,7 +42,7 @@ jobs:
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 
-# ===================== Custom IaC Scan =====================
+# ===================== Run Custom IaC Scan =====================
       - name: Run IaC Custom *.sh scripts
         id: run-custom-iac-checkov-scan # set ID to later in artifact upload use need.<<ID>>.outputs.artifact_name
         run: |
@@ -48,7 +52,16 @@ jobs:
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
+# ===================== Upload Custom IaC Scan =====================
+      - name: Upload scan results for next job
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-results
+          path: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
+          
+#####################################################################
 # ===================== GitHub Action IaC Scan =====================
+#####################################################################
   github-action-iac-scan:
     runs-on: ubuntu-latest
     steps:
@@ -115,6 +128,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [custom-iac-scan]
     steps:
+# ===================== Download All Custom IAC Artifacts =====================
+      - name: Download scan results from previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: scan-results
 # ===================== Save All Artifacts =====================
       - name: Save All IaC Scan Results as Artifact
         if: always()
