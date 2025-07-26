@@ -147,7 +147,7 @@ jobs:
 #####################################################################
 # ===================== Custom IaC Artifact Upload ==================
 #####################################################################
-  iac-artifact-upload:
+  custom-iac-artifact-upload:
     runs-on: ubuntu-latest
     needs: [custom-iac-scan]
     env:
@@ -169,7 +169,7 @@ jobs:
           if-no-files-found: ignore  # Avoids failure if all files were removed
 
 #####################################################################
-# ===================== Custom IaC Scan =====================
+# ===================== GH Action IaC Scan =====================
 #####################################################################
   iac-gh-action-artifact-upload:
     runs-on: ubuntu-latest
