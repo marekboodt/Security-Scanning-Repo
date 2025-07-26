@@ -149,7 +149,7 @@ jobs:
 #####################################################################
   custom-iac-artifact-upload:
     runs-on: ubuntu-latest
-    needs: [custom-iac-scan]
+    needs: [generate-timestamp, custom-iac-scan]
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
