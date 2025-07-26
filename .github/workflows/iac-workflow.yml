@@ -44,9 +44,9 @@ jobs:
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     # outputs set in the .sh file 
-    outputs:
-      artifact_name: ${{ steps.run-custom-iac-checkov-scan.outputs.ARTIFACT_NAME }}
-      scan_results_dir: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
+#    outputs:
+#      artifact_name: ${{ steps.run-custom-iac-checkov-scan.outputs.ARTIFACT_NAME }}
+#      scan_results_dir: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
 
     steps:
       - name: Use the timestamp in step
@@ -73,7 +73,7 @@ jobs:
         # If inputs.environment is not 'non-prod' (e.g., 'prod'), the pipeline will stop if ./run-tests.sh fails
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
-# ===================== Upload Custom IaC Scan =====================
+# ===================== Upload Custom IaC Scan files - Artifacts =====================
       - name: Upload scan results of Custom IaC Scan
         uses: actions/upload-artifact@v4
         with:
@@ -150,11 +150,7 @@ jobs:
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
 
-#      - name: Set scan dir output
-#        id: set-scan-dir
-#        run: echo "scan_results_dir=${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}" >> $GITHUB_OUTPUT
-
-      
+# ===================== Upload GH Action Checkov Output Files - Artifacts =====================
       - name: Upload Checkov GitHub Actions Scan Results as Artifact
         uses: actions/upload-artifact@v4
         with:
