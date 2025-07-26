@@ -120,8 +120,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ needs.run-custom-iac-checkov-scan.outputs.ARTIFACT_NAME }}  # Folder name as artifact name
-          path: ${{ needs.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}  # Upload the entire folder
+          name: ${{ needs.custom-iac-scan.outputs.ARTIFACT_NAME }}  # Folder name as artifact name
+          path: ${{ needs.custom-iac-scan.outputs.SCAN_RESULTS_DIR }}  # Upload the entire folder
           # if-no-files-found: warn  # Prevent failure if the folder is empty
           if-no-files-found: ignore  # Avoids failure if all files were removed
 
