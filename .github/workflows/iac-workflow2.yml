@@ -25,14 +25,18 @@ jobs:
 #####################################################################
 # ===================== Generate TimeStamp for Name =====================
 #####################################################################
+#  generate-timestamp:
+#    runs-on: ubuntu-latest
+#    outputs:
+#      timestamp: ${{ steps.set-timestamp.outputs.timestamp }}
+#    steps:
+#      - name: Generate Timestamp
+#        id: set-timestamp
+#        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_OUTPUT
+
   generate-timestamp:
-    runs-on: ubuntu-latest
-    outputs:
-      timestamp: ${{ steps.set-timestamp.outputs.timestamp }}
-    steps:
-      - name: Generate Timestamp
-        id: set-timestamp
-        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_OUTPUT
+    uses: ./.github/workflows/generate-timestamp.yml
+
 
 #####################################################################
 # ===================== Custom IaC Scan =====================
