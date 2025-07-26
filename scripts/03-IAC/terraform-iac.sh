@@ -85,7 +85,7 @@ echo "All Checkov scans completed. Results saved in: $SCAN_RESULTS_DIR"
 ##################################
 # Save file paths to environment #
 ##################################
-echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
-echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_ENV
+echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+echo "SCAN_RESULTS_DIR=$SCAN_RESULTS_DIR" >> $GITHUB_OUTPUT
 # echo "CHECKOV_SINGLE_OUTPUT_FILE=$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" >> $GITHUB_ENV
 # echo "CHECKOV_FILENAME=$CHECKOV_SINGLE_OUTPUT_FILE" >> $GITHUB_ENV
