@@ -23,8 +23,9 @@ jobs:
     runs-on: ubuntu-latest
     # outputs set in the .sh file 
     outputs:
-      artifact_name: ${{ steps.run-custom-iac.outputs.ARTIFACT_NAME }}
-      scan_results_dir: ${{ steps.run-custom-iac.outputs.SCAN_RESULTS_DIR }}
+      artifact_name: ${{ steps.run-custom-iac-checkov-scan.outputs.ARTIFACT_NAME }}
+      scan_results_dir: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
+
     steps:
       - name: Checkout Project Repository - IAC
         uses: actions/checkout@v3
