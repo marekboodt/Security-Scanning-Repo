@@ -144,6 +144,12 @@ jobs:
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif \
              ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif
 
+      - name: Upload Checkov Scan Results as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+          path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/
+          if-no-files-found: ignore
 #####################################################################
 # ===================== Custom IaC Artifact Upload ==================
 #####################################################################
@@ -177,10 +183,15 @@ jobs:
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
+      - name: Download Checkov scan results from previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+
       - name: List contents of Checkov scan results folder
         run: |
           ls -al ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
-
+          
 # ===================== Save Checkov GitHub Action Scan Results =====================
       - name: Save Checkov Scan Results as Artifact
         if: always()
