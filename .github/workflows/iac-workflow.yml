@@ -190,10 +190,13 @@ jobs:
 
       - name: List all files recursively
         run: find terraform-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+        continue-on-error: true
       - name: List all files recursively /*
         run: find terraform-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/*
+        continue-on-error: true
       - name: List all files recursively /**/*
         run: find terraform-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/**/*
+        continue-on-error: true
           
 # ===================== Save Checkov GitHub Action Scan Results =====================
       - name: Save Checkov Scan Results as Artifact
