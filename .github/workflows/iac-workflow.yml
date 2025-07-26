@@ -173,7 +173,7 @@ jobs:
 #####################################################################
   iac-gh-action-artifact-upload:
     runs-on: ubuntu-latest
-    needs: [github-action-iac-scan]
+    needs: [generate-timestamp, github-action-iac-scan]
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
