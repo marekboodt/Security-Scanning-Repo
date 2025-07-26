@@ -177,6 +177,10 @@ jobs:
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
+      - name: List contents of Checkov scan results folder
+        run: |
+          ls -al ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
+
 # ===================== Save Checkov GitHub Action Scan Results =====================
       - name: Save Checkov Scan Results as Artifact
         if: always()
