@@ -186,7 +186,7 @@ jobs:
 #####################################################################
   artifact-upload:
     runs-on: ubuntu-latest
-    needs: [github-action-iac-scan]
+    needs: [github-action-iac-scan, generate-timestamp]
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
@@ -199,7 +199,7 @@ jobs:
 
   artifact-upload-2:
     runs-on: ubuntu-latest
-    needs: [github-action-iac-scan]
+    needs: [github-action-iac-scan, generate-timestamp]
     steps:
       - name: Upload Checkov Scan Results as Artifact
         uses: actions/upload-artifact@v4
@@ -210,7 +210,7 @@ jobs:
 
   artifact-upload-3:
     runs-on: ubuntu-latest
-    needs: [github-action-iac-scan]
+    needs: [github-action-iac-scan, generate-timestamp]
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
     steps:
