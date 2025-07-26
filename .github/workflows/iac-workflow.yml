@@ -21,7 +21,10 @@ on:
 jobs:
   custom-iac-scan:
     runs-on: ubuntu-latest
-
+    # outputs set in the .sh file 
+    outputs:
+      artifact_name: ${{ steps.run-custom-iac.outputs.ARTIFACT_NAME }}
+      scan_results_dir: ${{ steps.run-custom-iac.outputs.SCAN_RESULTS_DIR }}
     steps:
       - name: Checkout Project Repository - IAC
         uses: actions/checkout@v3
@@ -36,6 +39,7 @@ jobs:
 
 # ===================== Custom IaC Scan =====================
       - name: Run IaC Custom *.sh scripts
+        id: run-custom-iac-checkov-scan # set ID to later in artifact upload use need.<<ID>>.outputs.artifact_name
         run: |
           bash security-scanning/scripts/03-IAC/${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }}
         # continue-on-error: true
@@ -115,8 +119,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.ARTIFACT_NAME }}  # Folder name as artifact name
-          path: ${{ env.SCAN_RESULTS_DIR }}  # Upload the entire folder
+          name: ${{ needs.run-custom-iac-checkov-scan.outputs.ARTIFACT_NAME }}  # Folder name as artifact name
+          path: ${{ needs.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}  # Upload the entire folder
           # if-no-files-found: warn  # Prevent failure if the folder is empty
           if-no-files-found: ignore  # Avoids failure if all files were removed
 
