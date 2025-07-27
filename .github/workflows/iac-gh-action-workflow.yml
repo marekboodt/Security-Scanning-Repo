@@ -1,4 +1,4 @@
-name: Reusable IAC GH actions Workflow with Checkov
+name: Reusable IAC Checkov GH actions Workflow
 
 on:
   workflow_call:
