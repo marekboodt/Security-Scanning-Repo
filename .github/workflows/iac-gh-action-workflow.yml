@@ -1,5 +1,5 @@
 name: Reusable IAC Checkov GH actions Workflow
-
+# https://github.com/marketplace/actions/checkov-github-action
 on:
   workflow_call:
     inputs:
@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Checkov Scan - CLI Output
         id: checkov-cli
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
           directory: ${{ inputs.project_dir }}
           framework: terraform
@@ -58,7 +58,7 @@ jobs:
       
       - name: Run Checkov Scan - SARIF Output
         id: checkov-sarif
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
           directory: ${{ inputs.project_dir }}
           framework: terraform
@@ -71,7 +71,7 @@ jobs:
 
       - name: Run Checkov Scan - JSON Output
         id: checkov-json
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12
         with:
           directory: ${{ inputs.project_dir }}
           framework: terraform
