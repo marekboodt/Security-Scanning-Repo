@@ -35,7 +35,7 @@ jobs:
 #        run: echo "TIMESTAMP=$(date +"%Y-%m-%d_GMT_%H.%M")" >> $GITHUB_OUTPUT
 
   generate-timestamp:
-    uses: ../timestamp/generate-timestamp.yml
+    uses: ./timestamp/generate-timestamp.yml
 
 
 #####################################################################
