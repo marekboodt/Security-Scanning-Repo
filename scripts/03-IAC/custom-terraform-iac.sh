@@ -1,8 +1,8 @@
 #!/bin/bash
 PROJECT_DIR=$1
 ENVIRONMENT=$2  # Environment passed as an argument (e.g., prod or non-prod)
-LANGUAGE=$3  # ← this is now "terraform"
-TIMESTAMP=$4
+LANGUAGE=$3  # "terraform"
+TIMESTAMP=$4 # timestamp to return later
 
 
 # Get the repository name from the GITHUB_REPOSITORY environment variable
