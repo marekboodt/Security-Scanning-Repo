@@ -48,7 +48,7 @@ jobs:
           # specifies the directory where the repository will be cloned in the runner's workspace. path: security-scanning -- add same path later at name: Run SAST script
           path: security-scanning
 # ===================== Run Custom IaC Scan =====================
-      - name: Run IaC Custom *.sh scripts
+      - name: Run IaC Custom *.sh scripts - Download Checkov and Run it
         id: run-custom-iac-checkov-scan # set ID to later in artifact upload use need.<<ID>>.outputs.artifact_name
         run: |
           bash security-scanning/scripts/03-IAC/custom-${{ inputs.language }}-iac.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
