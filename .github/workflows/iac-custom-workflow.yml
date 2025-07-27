@@ -1,4 +1,4 @@
-name: Reusable IAC Workflow with Checkov
+name: Reusable IAC Checkov Workflow 
 
 on:
   workflow_call:
