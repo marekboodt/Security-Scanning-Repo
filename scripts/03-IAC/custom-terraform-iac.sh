@@ -21,7 +21,6 @@ mkdir -p "$SCAN_RESULTS_DIR"
 
 # Define Single Checkov output file 
 CHECKOV_SINGLE_OUTPUT_FILE_TXT="${LANGUAGE}-IAC-CHECKOV-SINGLE-FILE-SCAN-Text-${ENVIRONMENT}-${TIMESTAMP}.txt"
-
 # Define Single Checkov output file (SARIF)
 CHECKOV_SINGLE_OUTPUT_FILE_SARIF="${LANGUAGE}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF-${ENVIRONMENT}-${TIMESTAMP}.sarif"
 
@@ -57,18 +56,12 @@ echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHE
 # remove file thingy
 echo "Starting Checkov SARIF file remove thing"
 
-SARIF_PATH="$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
-# Remove file or directory if it exists at the SARIF path
-if [ -e "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF" ]; then
-  rm -rf "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
-fi
-
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov SARIF scan Single output file..."
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
-# checkov -d . --quiet --config-file .checkov.yml --output sarif > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
-checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR
+checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
+
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF" ]; then
     echo "Checkov scan Single Sarif completed successfully."
