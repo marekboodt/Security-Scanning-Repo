@@ -54,7 +54,7 @@ jobs:
         with:
           directory: ${{ inputs.project_dir }}
           framework: terraform
-          output_format: cli,json,sarif
+          output_format: json,sarif
           # ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_cli.txt,
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_json.json,${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif
           log_level: WARNING
