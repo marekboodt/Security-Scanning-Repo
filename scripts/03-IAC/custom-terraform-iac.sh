@@ -4,15 +4,10 @@ ENVIRONMENT=$2  # Environment passed as an argument (e.g., prod or non-prod)
 LANGUAGE=$3  # "terraform"
 TIMESTAMP=$4 # timestamp to return later
 
+echo "LANGUAGE = $LANGUAGE"
 
 # Get the repository name from the GITHUB_REPOSITORY environment variable
 REPO_NAME=$(basename "$GITHUB_REPOSITORY")
-
-# Directory to store scan results
-#SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/IaC-scan-results"
-#mkdir -p "$SCAN_RESULTS_DIR"
-
-echo "LANGUAGE = $LANGUAGE"
 
 # Dynamic artifact name, including environment
 ARTIFACT_NAME="${LANGUAGE}-ALL-IAC-SCANS-${ENVIRONMENT}-${TIMESTAMP}"
@@ -33,9 +28,9 @@ cd "$PROJECT_DIR"
 echo "Installing Checkov..."
 pip install checkov
 
-##################################
+######################################
 # Run Checkov Single File Output TXT #
-##################################
+######################################
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov TXT scan Single output file..."
 
@@ -50,16 +45,12 @@ else
 fi
 echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_TXT"
 
-##################################
+########################################
 # Run Checkov Single File Output SARIF #
-##################################
-# remove file thingy
-echo "Starting Checkov SARIF file remove thing"
-
-# Run Checkov for Terraform scanning, saving output as text
+########################################
+# Run Checkov for Terraform scanning, saving output as SARIF
 echo "Starting Checkov SARIF scan Single output file..."
 
-# checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 
 # Verify if the output file exists and is not empty
