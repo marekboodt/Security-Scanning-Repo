@@ -62,9 +62,9 @@ jobs:
 
       - name: Show SARIF file content (for debugging)
         run: |
-          cat "${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}/${{ inputs.language }}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif" || echo "SARIF file not found!"
+          cat "${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}/${{ inputs.language }}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif/results_sarif.sarif" || echo "SARIF file not found!"
       
       - name: Upload Checkov SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}/${{ inputs.language }}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif
+          sarif_file: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}/${{ inputs.language }}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif/results_sarif.sarif
