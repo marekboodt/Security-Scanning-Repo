@@ -59,11 +59,11 @@ jobs:
         with:
           name: ${{ inputs.language }}-ALL-CUSTOM-IAC-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
           path: ${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}
-
+# ===================== Check if Sarif File exists to Upload later - Artifacts =====================
       - name: Show SARIF file content (for debugging)
         run: |
           cat "${{ steps.run-custom-iac-checkov-scan.outputs.SCAN_RESULTS_DIR }}/${{ inputs.language }}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif/results_sarif.sarif" || echo "SARIF file not found!"
-      
+# ===================== Upload Sarif File via CodeQL-Action - To Show in "Code-Scanning"-Tab on GitHub/Security =====================      
       - name: Upload Checkov SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
