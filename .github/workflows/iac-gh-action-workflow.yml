@@ -102,6 +102,10 @@ jobs:
           path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/
           if-no-files-found: ignore
 
+      - name: Show SARIF file content (for debugging)
+        run: |
+          cat "${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/${{ inputs.language }}-IAC-Checkov-githubactions-scan-${{ inputs.environment }}-${{ env.TIMESTAMP }}.sarif" || echo "SARIF file not found!"
+
       - name: Upload Checkov SARIF to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
