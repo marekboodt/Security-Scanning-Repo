@@ -38,7 +38,7 @@ pip install checkov
 # Run Checkov Single File Output TXT #
 ##################################
 # Run Checkov for Terraform scanning, saving output as text
-echo "Starting Checkov scan Single output file..."
+echo "Starting Checkov TXT scan Single output file..."
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_TXT"
 checkov -d . --quiet --config-file .checkov.yml > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_TXT"
@@ -55,7 +55,7 @@ echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHE
 # Run Checkov Single File Output SARIF #
 ##################################
 # Run Checkov for Terraform scanning, saving output as text
-echo "Starting Checkov scan Single output file..."
+echo "Starting Checkov SARIF scan Single output file..."
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
