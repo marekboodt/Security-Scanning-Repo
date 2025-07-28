@@ -61,6 +61,9 @@ jobs:
           soft_fail_on: LOW,MEDIUM
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
+      - name: Show Checkov CLI Output
+        run: cat terraform-ALL-IAC-GITHUB-ACTION-SCANS-prod-${{ env.TIMESTAMP }}/results_cli.txt
+  
       - name: Rename Checkov Output Files
         run: |
           mv ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_json.json \
