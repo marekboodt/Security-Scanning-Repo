@@ -19,8 +19,11 @@ ARTIFACT_NAME="${LANGUAGE}-ALL-IAC-SCANS-${ENVIRONMENT}-${TIMESTAMP}"
 SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/$ARTIFACT_NAME"
 mkdir -p "$SCAN_RESULTS_DIR"
 
-# Define Checkov output file
-CHECKOV_SINGLE_OUTPUT_FILE="${LANGUAGE}-IAC-CHECKOV-SINGLE-FILE-SCAN-${ENVIRONMENT}-${TIMESTAMP}.txt"
+# Define Single Checkov output file
+CHECKOV_SINGLE_OUTPUT_FILE_TXT="${LANGUAGE}-IAC-CHECKOV-SINGLE-FILE-SCAN-Text${ENVIRONMENT}-${TIMESTAMP}.txt"
+
+# Define Single Checkov output file (SARIF)
+CHECKOV_SINGLE_OUTPUT_FILE_SARIF="${LANGUAGE}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF${ENVIRONMENT}-${TIMESTAMP}.sarif"
 
 echo "Running Checkov Custom scans for project: $REPO_NAME in environment: $ENVIRONMENT !!!"
 cd "$PROJECT_DIR"
@@ -32,21 +35,38 @@ echo "Installing Checkov..."
 pip install checkov
 
 ##################################
-# Run Checkov Single File Output #
+# Run Checkov Single File Output TXT #
 ##################################
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov scan Single output file..."
 
-# checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
-checkov -d . --quiet --config-file .checkov.yml > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+# checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_TXT"
+checkov -d . --quiet --config-file .checkov.yml > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_TXT"
 # Verify if the output file exists and is not empty
-if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE" ]; then
-    echo "Checkov scan completed successfully."
+if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_TXT" ]; then
+    echo "Checkov Single txt scan completed successfully."
 else
-    echo "Warning: Checkov scan did not produce any results!"
+    echo "Warning: Checkov Single txt did not produce any results!"
     exit 1  # Exit with failure if Checkov fails
 fi
-echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE"
+echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_TXT"
+
+##################################
+# Run Checkov Single File Output SARIF #
+##################################
+# Run Checkov for Terraform scanning, saving output as text
+echo "Starting Checkov scan Single output file..."
+
+# checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
+checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
+# Verify if the output file exists and is not empty
+if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF" ]; then
+    echo "Checkov scan Single Sarif completed successfully."
+else
+    echo "Warning: Checkov scan Single Sarif did not produce any results!"
+    exit 1  # Exit with failure if Checkov fails
+fi
+echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 
 ###############################################
 # Run Checkov Multiple Directory Output Files #
