@@ -6,7 +6,11 @@ on:
       timestamp:
         description: "Generated timestamp"
         value: ${{ jobs.generate-timestamp.outputs.timestamp }}
-
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+  
 jobs:
   generate-timestamp:
     runs-on: ubuntu-latest
