@@ -54,15 +54,17 @@ echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHE
 ##################################
 # Run Checkov Single File Output SARIF #
 ##################################
-# Run Checkov for Terraform scanning, saving output as text
-echo "Starting Checkov SARIF scan Single output file..."
+# remove file thingy
+echo "Starting Checkov SARIF file remove thing"
 
 SARIF_PATH="$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
-# Remove directory if it exists with the SARIF file name
-if [ -d "$SARIF_PATH" ]; then
-  echo "WARNING: Directory with SARIF filename exists, removing..."
-  rm -rf "$SARIF_PATH"
+# Remove file or directory if it exists at the SARIF path
+if [ -e "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF" ]; then
+  rm -rf "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 fi
+
+# Run Checkov for Terraform scanning, saving output as text
+echo "Starting Checkov SARIF scan Single output file..."
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
