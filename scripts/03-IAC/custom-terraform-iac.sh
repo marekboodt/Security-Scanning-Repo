@@ -20,10 +20,10 @@ SCAN_RESULTS_DIR="$GITHUB_WORKSPACE/$ARTIFACT_NAME"
 mkdir -p "$SCAN_RESULTS_DIR"
 
 # Define Single Checkov output file 
-CHECKOV_SINGLE_OUTPUT_FILE_TXT="${LANGUAGE}-IAC-CHECKOV-SINGLE-FILE-SCAN-Text${ENVIRONMENT}-${TIMESTAMP}.txt"
+CHECKOV_SINGLE_OUTPUT_FILE_TXT="${LANGUAGE}-IAC-CHECKOV-SINGLE-FILE-SCAN-Text-${ENVIRONMENT}-${TIMESTAMP}.txt"
 
 # Define Single Checkov output file (SARIF)
-CHECKOV_SINGLE_OUTPUT_FILE_SARIF="${LANGUAGE}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF${ENVIRONMENT}-${TIMESTAMP}.sarif"
+CHECKOV_SINGLE_OUTPUT_FILE_SARIF="${LANGUAGE}-IAC-Checkov-SINGLE-FILE-SCAN-SARIF-${ENVIRONMENT}-${TIMESTAMP}.sarif"
 
 echo "Running Checkov Custom scans for project: $REPO_NAME in environment: $ENVIRONMENT !!!"
 cd "$PROJECT_DIR"
@@ -56,6 +56,13 @@ echo "Checkov scan results saved to a Single Output File: $SCAN_RESULTS_DIR/$CHE
 ##################################
 # Run Checkov for Terraform scanning, saving output as text
 echo "Starting Checkov SARIF scan Single output file..."
+
+SARIF_PATH="$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
+# Remove directory if it exists with the SARIF file name
+if [ -d "$SARIF_PATH" ]; then
+  echo "WARNING: Directory with SARIF filename exists, removing..."
+  rm -rf "$SARIF_PATH"
+fi
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
