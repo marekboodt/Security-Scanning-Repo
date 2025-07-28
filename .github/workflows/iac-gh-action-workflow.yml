@@ -59,8 +59,8 @@ jobs:
           output_file_path: ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_json.json,${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_sarif.sarif
           log_level: WARNING
           container_user: 0
-          #soft_fail_on: LOW,MEDIUM,HIGH,CRITICAL
-        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+          soft_fail_on: LOW,MEDIUM,HIGH,CRITICAL
+        # continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
       - name: Show Checkov CLI Output
         run: cat ${{ inputs.language }}-ALL-IAC-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_cli.txt
