@@ -67,7 +67,7 @@ fi
 echo "Starting Checkov SARIF scan Single output file..."
 
 # checkov -d . --quiet > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
-checkov -d . --quiet --config-file .checkov.yml --output sarif --output-file-path "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
+checkov -d . --quiet --config-file .checkov.yml --output sarif > "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF"
 # Verify if the output file exists and is not empty
 if [ -s "$SCAN_RESULTS_DIR/$CHECKOV_SINGLE_OUTPUT_FILE_SARIF" ]; then
     echo "Checkov scan Single Sarif completed successfully."
