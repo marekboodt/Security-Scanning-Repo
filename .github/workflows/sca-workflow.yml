@@ -1,3 +1,7 @@
+######################################################
+# USE DEPENDABOT OR RENOVATE !! NOT THIS ONE ANYMORE #
+######################################################
+
 name: Reusable SCA Workflow
 
 on:
