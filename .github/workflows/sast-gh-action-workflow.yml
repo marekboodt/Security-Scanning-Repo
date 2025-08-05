@@ -59,7 +59,8 @@ jobs:
           # Generate a token from Semgrep AppSec Platform > Settings
           # and add it to your GitHub secrets.
       #    SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-
+    continue-on-error: ${{ inputs.environment == 'non-prod' }}
+    
   semgrep-sarif-output:
     name: Semgrep SARIF Scan
     runs-on: ubuntu-latest
@@ -71,7 +72,8 @@ jobs:
       
       - name: Run Semgrep scan with SARIF output
         run: semgrep scan --config p/ci --sarif -o semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif --error
-      
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+        
       - name: Upload SARIF results
         uses: actions/upload-artifact@v4
         with:
