@@ -63,3 +63,18 @@ jobs:
           # and add it to your GitHub secrets.
       #    SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
+  semgrep-sarif:
+    name: Semgrep SARIF Scan
+    runs-on: ubuntu-latest
+    needs: generate-timestamp
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Semgrep scan with SARIF output
+        run: semgrep scan --config p/ci --sarif -o semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+      - name: Upload SARIF results
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-sarif-results
+          path: semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
