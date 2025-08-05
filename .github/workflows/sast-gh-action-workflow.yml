@@ -41,9 +41,7 @@ jobs:
 # CodeQL - multi lang
 
   semgrep-normal-scan:
-    # User definable name of this GitHub Actions job.
     name: semgrep/ci
-    # If you are self-hosting, change the following `runs-on` value:
     runs-on: ubuntu-latest
     needs: generate-timestamp
     container:
@@ -52,7 +50,6 @@ jobs:
     # Skip any PR created by dependabot to avoid permission issues:
     if: (github.actor != 'dependabot[bot]')
     steps:
-      # Fetch project source with GitHub Actions Checkout. Use either v3 or v4.
       - uses: actions/checkout@v4
       # Run the "semgrep ci" command on the command line of the docker image.
       - run: semgrep scan --config p/ci
@@ -63,7 +60,7 @@ jobs:
           # and add it to your GitHub secrets.
       #    SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
-  semgrep-sarif:
+  semgrep-sarif-output:
     name: Semgrep SARIF Scan
     runs-on: ubuntu-latest
     needs: generate-timestamp
@@ -85,3 +82,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+
