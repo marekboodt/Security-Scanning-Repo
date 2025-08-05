@@ -78,7 +78,20 @@ jobs:
       # Run the "semgrep ci" command on the command line of the docker image.
       - run: semgrep ci
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
-        
+  
+  semgrep-deep2:
+    name: semgrep/ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+    container:
+      image: semgrep/semgrep
+    steps:
+    - uses: actions/checkout@v4
+    - run: semgrep ci
+    
   semgrep-sarif-output:
     name: Semgrep SARIF Scan
     runs-on: ubuntu-latest
