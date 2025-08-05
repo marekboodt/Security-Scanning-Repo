@@ -45,6 +45,7 @@ jobs:
     name: semgrep/ci
     # If you are self-hosting, change the following `runs-on` value:
     runs-on: ubuntu-latest
+    needs: generate-timestamp
     container:
       # A Docker image with Semgrep installed. Do not change this.
       image: semgrep/semgrep
