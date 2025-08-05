@@ -41,7 +41,7 @@ jobs:
 # CodeQL - multi lang
 
   semgrep-normal-scan:
-    name: semgrep/ci
+    name: semgrep scan --config p/ci --error
     runs-on: ubuntu-latest
     needs: generate-timestamp
     container:
