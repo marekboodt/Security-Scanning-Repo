@@ -40,7 +40,7 @@ jobs:
 # Bearer - multi lang
 # CodeQL - multi lang
 
-  semgrep:
+  semgrep-normal-scan:
     # User definable name of this GitHub Actions job.
     name: semgrep/ci
     # If you are self-hosting, change the following `runs-on` value:
@@ -71,10 +71,17 @@ jobs:
       image: semgrep/semgrep
     steps:
       - uses: actions/checkout@v4
+      
       - name: Run Semgrep scan with SARIF output
         run: semgrep scan --config p/ci --sarif -o semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+      
       - name: Upload SARIF results
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-sarif-results
           path: semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+
+      - name: Upload Semgrep SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
