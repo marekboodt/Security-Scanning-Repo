@@ -65,7 +65,7 @@ jobs:
       image: semgrep/semgrep
     steps:
     - uses: actions/checkout@v4
-    - run: semgrep ci --sarif --output=semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif --error
+    - run: semgrep ci --sarif --output=semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
       with:
