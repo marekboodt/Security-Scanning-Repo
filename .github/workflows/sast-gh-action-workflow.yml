@@ -79,12 +79,6 @@ jobs:
       - name: Create Checkov Scan Results Folder
         run: mkdir -p ${{ inputs.language }}-ALL-SAST-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}
 
-      - name: Run SAST Scan - All Outputs
-        id: 
-        uses: 
-        with:
-        continue-on-error: ${{ inputs.environment == 'non-prod' }}
-
       - name: Rename Checkov Output Files
         run: |
           mv ${{ inputs.language }}-ALL-SAST-GITHUB-ACTION-SCANS-${{ inputs.environment }}-${{ env.TIMESTAMP }}/results_json.json \
