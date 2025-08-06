@@ -1,0 +1,46 @@
+on:
+  workflow_call:
+    inputs:
+      scantool: { type: string, required: true }
+      language: { type: string, required: true }
+      project_dir: { type: string, required: true }
+      environment: { type: string, required: true }
+    secrets:
+      CODEQL_TOKEN: { required: false }
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  generate-timestamp:
+    uses: ./.github/workflows/generate-timestamp.yml
+
+  codeql-analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ inputs.language }}
+          # Optional: adjust build mode or paths if needed
+          # build-mode: none
+
+      # Optional: Add a build step if needed for compiled languages
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ inputs.language }}"
+
+      - name: Upload CodeQL SARIF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-sarif-results
+          path: codeql-results.sarif
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
