@@ -51,4 +51,15 @@ jobs:
     secrets:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
+  CodeQL-Scan:
+    if: ${{ inputs.scantool == 'codeql' }}
+    uses: ./.github/workflows/sast-semgrep-workflow.yml
+    with:
+      scantool: ${{ inputs.language }}
+      language: ${{ inputs.language }}
+      project_dir: ${{ inputs.project_dir }}
+      environment: ${{ inputs.environment }}
+    secrets:
+      CODEQL_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
 
