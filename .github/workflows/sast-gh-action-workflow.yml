@@ -53,7 +53,7 @@ jobs:
 
   CodeQL-Scan:
     if: ${{ inputs.scantool == 'codeql' }}
-    uses: ./.github/workflows/sast-semgrep-workflow.yml
+    uses: ./.github/workflows/sast-codeql-workflow.yml
     with:
       scantool: ${{ inputs.language }}
       language: ${{ inputs.language }}
