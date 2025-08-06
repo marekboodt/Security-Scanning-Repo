@@ -31,21 +31,16 @@ permissions:
   contents: read
   security-events: write
 
-jobs:
-  generate-timestamp:
-    uses: ./.github/workflows/generate-timestamp.yml
-
 #####################################################################
 # ===================== GitHub Action SAST Scan =====================
 #####################################################################
-
 ### the list to test with official github actions 
 # Semgrep - multi lang
 # Sonarqube - con Heavy setup, some paid features
 # Bearer - multi lang
 # CodeQL - multi lang
-
-  semgrep:
+jobs:
+  Semgrep-Scan:
     if: ${{ inputs.scantool == 'semgrep' }}
     uses: ./.github/workflows/sast-semgrep-workflow.yml
     with:
