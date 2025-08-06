@@ -47,7 +47,7 @@ jobs:
 
   semgrep:
     if: ${{ inputs.scantool == 'semgrep' }}
-    uses: ./.github/workflows/semgrep-sast-workflow.yml
+    uses: ./.github/workflows/sast-semgrep-workflow.yml
     with:
       language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
@@ -57,7 +57,7 @@ jobs:
 
   sonarqube:
     if: ${{ inputs.scantool == 'sonarqube' }}
-    uses: ./.github/workflows/sonarqube-gh-action-workflow.yml
+    uses: ./.github/workflows/sast-sonarcube-workflow.yml
     with:
       language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
@@ -67,7 +67,7 @@ jobs:
 
   bearer:
     if: ${{ inputs.scantool == 'bearer' }}
-    uses: ./.github/workflows/bearer-gh-action-workflow.yml
+    uses: ./.github/workflows/sast-bearer-workflow.yml
     with:
       language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
@@ -77,7 +77,7 @@ jobs:
 
   codeql:
     if: ${{ inputs.scantool == 'codeql' }}
-    uses: ./.github/workflows/codeql-gh-action-workflow.yml
+    uses: ./.github/workflows/sast-codeql-workflow.yml
     with:
       language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
