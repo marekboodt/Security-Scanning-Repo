@@ -6,9 +6,9 @@ on:
       scantool:
         type: string
         required: true
-#      language:
-#        type: string
-#        required: true
+      language:
+        type: string
+        required: false
       project_dir:
         type: string
         required: true
@@ -56,7 +56,7 @@ jobs:
     uses: ./.github/workflows/sast-codeql-workflow.yml
     with:
       scantool: ${{ inputs.scantool }}
-#      language: ${{ inputs.language }}
+      language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
     secrets:
