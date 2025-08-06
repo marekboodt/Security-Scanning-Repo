@@ -46,7 +46,6 @@ jobs:
     name: semgrep/ci deep scan SARIF output
     runs-on: ubuntu-latest
     needs: generate-timestamp
-    continue-on-error: ${{ inputs.environment == 'non-prod' }}
     env:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     container:
@@ -54,10 +53,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - run: semgrep ci --sarif --output=semgrep-results-deep-scan-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+      continue-on-error: ${{ inputs.environment == 'non-prod' }}
+      
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: semgrep-results-deep-scan-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+        
     - name: Upload SARIF file as artifact
       uses: actions/upload-artifact@v4
       with:
