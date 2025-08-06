@@ -9,6 +9,7 @@ on:
       SEMGREP_APP_TOKEN: { required: false }
 
 permissions:
+  actions: read
   contents: read
   security-events: write
 
