@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       scantool: { type: string, required: true }
- #     language: { type: string, required: true }
+      language: { type: string, required: false }
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
     secrets:
@@ -27,8 +27,8 @@ jobs:
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
-#        with:
-#          languages: ${{ inputs.language }}
+        with:
+          languages: ${{ inputs.language }}
           # Optional: adjust build mode or paths if needed
           # build-mode: none
 
@@ -36,5 +36,5 @@ jobs:
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-#        with:
-#          category: "/language:${{ inputs.language }}"
+        with:
+          category: "/language:${{ inputs.language }}"
