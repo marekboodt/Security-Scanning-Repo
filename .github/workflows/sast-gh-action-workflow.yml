@@ -47,7 +47,7 @@ jobs:
 
   semgrep:
     if: ${{ inputs.scantool == 'semgrep' }}
-    uses: ./.github/workflows/semgrep-gh-action-workflow.yml
+    uses: ./.github/workflows/semgrep-sast-workflow.yml
     with:
       language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
