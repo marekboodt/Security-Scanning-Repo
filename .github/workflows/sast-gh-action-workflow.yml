@@ -3,7 +3,7 @@ name: Reusable SAST Checkov GH actions Workflow
 on:
   workflow_call:
     inputs:
-      type:
+      scantool:
         type: string
         required: true
       language:
@@ -18,8 +18,13 @@ on:
     secrets:
       SEMGREP_APP_TOKEN:
         required: false
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+      SONAR_TOKEN:
+        required: false
+      BEARER_TOKEN:
+        required: false
+      CODEQL_TOKEN:
+        required: false
+  workflow_dispatch:   # Allows you to run this workflow manually from the Actions tab
 
 permissions:
   actions: read
@@ -39,6 +44,47 @@ jobs:
 # Sonarqube - con Heavy setup, some paid features
 # Bearer - multi lang
 # CodeQL - multi lang
+
+  semgrep:
+    if: ${{ inputs.scantool == 'semgrep' }}
+    uses: ./.github/workflows/semgrep-gh-action-workflow.yml
+    with:
+      language: ${{ inputs.language }}
+      project_dir: ${{ inputs.project_dir }}
+      environment: ${{ inputs.environment }}
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+  sonarqube:
+    if: ${{ inputs.scantool == 'sonarqube' }}
+    uses: ./.github/workflows/sonarqube-gh-action-workflow.yml
+    with:
+      language: ${{ inputs.language }}
+      project_dir: ${{ inputs.project_dir }}
+      environment: ${{ inputs.environment }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  bearer:
+    if: ${{ inputs.scantool == 'bearer' }}
+    uses: ./.github/workflows/bearer-gh-action-workflow.yml
+    with:
+      language: ${{ inputs.language }}
+      project_dir: ${{ inputs.project_dir }}
+      environment: ${{ inputs.environment }}
+    secrets:
+      BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+
+  codeql:
+    if: ${{ inputs.scantool == 'codeql' }}
+    uses: ./.github/workflows/codeql-gh-action-workflow.yml
+    with:
+      language: ${{ inputs.language }}
+      project_dir: ${{ inputs.project_dir }}
+      environment: ${{ inputs.environment }}
+    secrets:
+      CODEQL_TOKEN: ${{ secrets.CODEQL_TOKEN }}
+
 
   semgrep-fast-lightweight-scan-sarif-output:
     name: Semgrep SARIF Scan
