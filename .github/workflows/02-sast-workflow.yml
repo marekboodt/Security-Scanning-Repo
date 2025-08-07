@@ -22,10 +22,10 @@ permissions:
 # ===================== GitHub Action SAST Scan =====================
 #####################################################################
 ### the list to test with official github actions 
-# Semgrep - multi lang
-# Sonarqube - con Heavy setup, some paid features
-# Bearer - multi lang
-# CodeQL - multi lang
+# Semgrep - multi lang - best result WITH the key
+# Bearer - multi lang - okay-ish outcome
+# CodeQL - multi lang - okay-ish outcome
+# Sonarqube - multi lang - not set up yet
 jobs:
   Semgrep-Scan:
     if: ${{ inputs.scantool == 'semgrep' }}
