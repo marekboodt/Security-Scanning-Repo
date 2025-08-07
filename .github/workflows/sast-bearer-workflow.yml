@@ -19,13 +19,13 @@ jobs:
 
   rule_check:
     runs-on: ubuntu-latest
+    continue-on-error: ${{ inputs.environment == 'non-prod' }}
     steps:
       - uses: actions/checkout@v3
       - name: Run Report
         id: report
         uses: bearer/bearer-action@v2
         # continue-on-error: true 
-        continue-on-error: ${{ inputs.environment == 'non-prod' }}
         
   bearer_scan:
     runs-on: ubuntu-latest
