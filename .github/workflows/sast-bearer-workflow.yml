@@ -21,7 +21,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Run Report
-        id: report
+      
+      - name: Run Bearer scan (SARIF output)
         uses: bearer/bearer-action@v2
+        with:
+          format: sarif
+          output: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
+  
+      - name: Upload SARIF file to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+  
+      - name: Upload SARIF file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bearer-sarif-scan
+          path: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
