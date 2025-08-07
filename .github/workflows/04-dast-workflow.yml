@@ -31,4 +31,4 @@ jobs:
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
       start_command: ${{ inputs.start_command }}
-      website_target: ${{ github.event.inputs.target_url }}
+      website_target: ${{ inputs.website_target }}
