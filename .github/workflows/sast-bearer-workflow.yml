@@ -22,7 +22,7 @@ jobs:
     needs: generate-timestamp
     # continue-on-error: ${{ inputs.environment == 'non-prod' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run Report
         id: report
         uses: bearer/bearer-action@v2
@@ -32,23 +32,22 @@ jobs:
     runs-on: ubuntu-latest
     needs: generate-timestamp
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Run Bearer scan (SARIF output)
         uses: bearer/bearer-action@v2
         with:
           format: sarif
-          output: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
-          path: ${{ inputs.project_dir }}
+          output: results.sarif
         continue-on-error: true
   
       - name: Upload SARIF file to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+          sarif_file: results.sarif
   
       - name: Upload SARIF file as artifact
         uses: actions/upload-artifact@v4
         with:
           name: bearer-sarif-scan
-          path: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+          path: results.sarif
