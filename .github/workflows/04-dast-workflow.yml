@@ -7,8 +7,8 @@ on:
       language: { type: string, required: false }
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
-    secrets:
-      GITHUB_TOKEN: { required: false }
+#    secrets:
+#      GITHUB_TOKEN: { required: false }
   workflow_dispatch:   # Allows you to run this workflow manually from the Actions tab
 
 permissions:
