@@ -6,8 +6,6 @@ on:
       language: { type: string, required: false }
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
-    secrets:
-      CODEQL_TOKEN: { required: false }
 
 permissions:
   actions: read
