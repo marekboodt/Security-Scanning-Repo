@@ -30,7 +30,7 @@ jobs:
       - name: ZAP Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
-          target: '${{ github.event.inputs.target_url }}'
+          target: '${{ inputs.website_target }}'
           # target: 'https://www.zaproxy.org/'
           # target: 'http://localhost:8080'
 
