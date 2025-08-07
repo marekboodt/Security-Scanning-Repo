@@ -1,0 +1,32 @@
+name: Reusable DAST Checkov GH actions Workflow
+# https://github.com/marketplace/actions/checkov-github-action
+on:
+  workflow_call:
+    inputs:
+      scantool: { type: string, required: true }
+      language: { type: string, required: false }
+      project_dir: { type: string, required: true }
+      environment: { type: string, required: true }
+    secrets:
+      SEMGREP_APP_TOKEN: { required: false }
+      SONAR_TOKEN: { required: false }
+      SONAR_HOST_URL: { required: false }
+  workflow_dispatch:   # Allows you to run this workflow manually from the Actions tab
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+#####################################################################
+# ===================== GitHub Action DAST Scan =====================
+#####################################################################
+jobs:
+  ZAP-Scan:
+    if: ${{ inputs.scantool == 'zap' }}
+    uses: ./.github/workflows/dast-zap-workflow.yml
+    with:
+      scantool: ${{ inputs.scantool }}
+#      language: ${{ inputs.language }}
+      project_dir: ${{ inputs.project_dir }}
+      environment: ${{ inputs.environment }}
