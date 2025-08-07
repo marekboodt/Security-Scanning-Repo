@@ -19,7 +19,7 @@ jobs:
 
   rule_check:
     runs-on: ubuntu-latest
-    continue-on-error: ${{ inputs.environment == 'non-prod' }}
+    # continue-on-error: ${{ inputs.environment == 'non-prod' }}
     steps:
       - uses: actions/checkout@v3
       - name: Run Report
