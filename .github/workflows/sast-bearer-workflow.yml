@@ -1,0 +1,20 @@
+on:
+  workflow_call:
+    inputs:
+      scantool: { type: string, required: true }
+#      language: { type: string, required: true }
+      project_dir: { type: string, required: true }
+      environment: { type: string, required: true }
+    secrets:
+      BEARER_TOKEN: { required: false }
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+ 
+jobs:
+  generate-timestamp:
+    uses: ./.github/workflows/generate-timestamp.yml
+
+  
