@@ -8,9 +8,7 @@ on:
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
     secrets:
-      SEMGREP_APP_TOKEN: { required: false }
-      SONAR_TOKEN: { required: false }
-      SONAR_HOST_URL: { required: false }
+      GITHUB_TOKEN: { required: false }
   workflow_dispatch:   # Allows you to run this workflow manually from the Actions tab
 
 permissions:
