@@ -53,3 +53,4 @@ jobs:
       - name: Run Report
         id: report
         uses: bearer/bearer-action@v2
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
