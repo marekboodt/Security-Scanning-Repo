@@ -28,6 +28,7 @@ jobs:
         with:
           format: sarif
           output: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+          path: ${{ inputs.project_dir }}
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
   
       - name: Upload SARIF file to GitHub Security tab
