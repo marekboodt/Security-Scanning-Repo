@@ -71,5 +71,5 @@ jobs:
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
     secrets:
-      CODEQL_TOKEN: ${{ secrets.BEARER_TOKEN }}
+      BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
 
