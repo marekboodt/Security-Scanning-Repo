@@ -1,4 +1,5 @@
 # https://docs.bearer.com/guides/github-action/
+# https://github.com/marketplace/actions/bearer-action
 on:
   workflow_call:
     inputs:
