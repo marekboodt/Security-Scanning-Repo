@@ -46,8 +46,6 @@ jobs:
       language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
-    secrets:
-      CODEQL_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
   Bearer-Scan:
     if: ${{ inputs.scantool == 'bearer' }}
@@ -57,6 +55,4 @@ jobs:
 #      language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
-    secrets:
-      BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
 
