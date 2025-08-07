@@ -7,8 +7,6 @@ on:
 #      language: { type: string, required: true }
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
-    secrets:
-      BEARER_TOKEN: { required: false }
 
 permissions:
   actions: read
