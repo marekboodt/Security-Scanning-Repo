@@ -7,6 +7,7 @@ on:
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
       start_command: { type: string, required: true }
+      website_target: { type: string, required: true }
 
 permissions:
   actions: read
@@ -29,7 +30,8 @@ jobs:
       - name: ZAP Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
-          target: 'https://www.zaproxy.org/'
+          target: '${{ github.event.inputs.target_url }}'
+          # target: 'https://www.zaproxy.org/'
           # target: 'http://localhost:8080'
 
 #      - name: ZAP Scan
