@@ -14,13 +14,8 @@ permissions:
   security-events: write
 
 jobs:
-# CodeQL does not allow to safe the outcome as an artifact, therefore this job is not used. 
-#  generate-timestamp:
-#    uses: ./.github/workflows/generate-timestamp.yml
-
   codeql-analyze:
     runs-on: ubuntu-latest
- #   needs: generate-timestamp
     timeout-minutes: 60
     steps:
       - name: Checkout repository
@@ -30,10 +25,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ inputs.language }}
-          # Optional: adjust build mode or paths if needed
-          # build-mode: none
-
-      # Optional: Add a build step if needed for compiled languages
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
