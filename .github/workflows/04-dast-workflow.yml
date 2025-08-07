@@ -8,6 +8,7 @@ on:
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
       start_command: { type: string, required: true }
+      website_target: { type: string, required: true }
 #    secrets:
 #      GITHUB_TOKEN: { required: false }
   workflow_dispatch:   # Allows you to run this workflow manually from the Actions tab
@@ -30,3 +31,4 @@ jobs:
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
       start_command: ${{ inputs.start_command }}
+      website_target: ${{ github.event.inputs.target_url }}
