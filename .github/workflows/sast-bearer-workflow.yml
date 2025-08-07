@@ -38,16 +38,16 @@ jobs:
         uses: bearer/bearer-action@v2
         with:
           format: sarif
-          output: results.sarif
+          output: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
         continue-on-error: true
   
       - name: Upload SARIF file to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: results.sarif
+          sarif_file: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
   
       - name: Upload SARIF file as artifact
         uses: actions/upload-artifact@v4
         with:
           name: bearer-sarif-scan
-          path: results.sarif
+          path: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
