@@ -49,5 +49,5 @@ jobs:
       - name: Upload SARIF file as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: bearer-sarif-scan
+          name: bearer-sarif-scan-${{ needs.generate-timestamp.outputs.timestamp }}
           path: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
