@@ -67,7 +67,7 @@ jobs:
     uses: ./.github/workflows/sast-bearer-workflow.yml
     with:
       scantool: ${{ inputs.scantool }}
-      language: ${{ inputs.language }}
+#      language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
     secrets:
