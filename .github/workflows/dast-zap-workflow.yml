@@ -1,4 +1,4 @@
-# 
+# https://github.com/marketplace/actions/zap-full-scan
 on:
   workflow_call:
     inputs:
