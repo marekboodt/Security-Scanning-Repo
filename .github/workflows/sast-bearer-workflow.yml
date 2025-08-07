@@ -39,7 +39,7 @@ jobs:
         with:
           format: sarif
           output: bearer-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
-        continue-on-error: true
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
   
       - name: Upload SARIF file to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
