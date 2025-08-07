@@ -3,27 +3,14 @@ name: Reusable SAST Checkov GH actions Workflow
 on:
   workflow_call:
     inputs:
-      scantool:
-        type: string
-        required: true
-      language:
-        type: string
-        required: false
-      project_dir:
-        type: string
-        required: true
-      environment:
-        type: string
-        required: true
+      scantool: { type: string, required: true }
+      language: { type: string, required: false }
+      project_dir: { type: string, required: true }
+      environment: { type: string, required: true }
     secrets:
-      SEMGREP_APP_TOKEN:
-        required: false
-      SONAR_TOKEN:
-        required: false
-      BEARER_TOKEN:
-        required: false
-      CODEQL_TOKEN:
-        required: false
+      SEMGREP_APP_TOKEN: { required: false }
+      SONAR_TOKEN: { required: false }
+      SONAR_HOST_URL: { required: false }
   workflow_dispatch:   # Allows you to run this workflow manually from the Actions tab
 
 permissions:
