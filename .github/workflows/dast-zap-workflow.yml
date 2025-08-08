@@ -34,7 +34,6 @@ jobs:
             
       - name: Start Application
         run: |
-#          cd ${{ inputs.project_dir }}
           ${{ inputs.start_command }} &
           timeout 60 bash -c "until curl -s http://localhost:8000; do sleep 2; done"
 
