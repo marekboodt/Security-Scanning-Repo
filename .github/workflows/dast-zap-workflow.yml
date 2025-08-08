@@ -30,12 +30,13 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r ${{ inputs.project_dir }}/requirements.txt
             
       - name: Start Application
         run: |
+          cd ${{ inputs.project_dir }}
           ${{ inputs.start_command }} &
-          sleep 10
+          timeout 60 bash -c "until curl -s http://localhost:8000; do sleep 2; done"
 
       - name: Check app is running
         run: curl -v http://localhost:8000 || exit 1
