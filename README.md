@@ -104,12 +104,7 @@ permissions:
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
 
-### SAST scan - code to be added in your pipeline
-
-> **Note:**  
-> - Set `SEMGREP_APP_TOKEN` and `SONAR_TOKEN` as [GitHub Actions repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets).  
-> - Set `SONAR_HOST_URL` as a [GitHub Actions repository variable](https://docs.github.com/en/actions/learn-github-actions/variables).  
-> - If you are not using Semgrep or SonarQube, you can leave these empty or remove them from your workflow.
+### SAST scan - Parameters
 
 <table>
   <thead>
@@ -143,20 +138,34 @@ Add one of the following blocks to your own repository’s workflow file, and cu
     <tr>
       <td><code>SEMGREP_APP_TOKEN</code></td>
       <td>Secret value</td>
-      <td>Required for Semgrep scans. Set as a GitHub secret.</td>
+      <td>
+        Required for Semgrep scans.<br>
+        Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
+        If not using Semgrep, leave empty or remove.
+      </td>
     </tr>
     <tr>
       <td><code>SONAR_TOKEN</code></td>
       <td>Secret value</td>
-      <td>Required for SonarQube scans. Set as a GitHub secret.</td>
+      <td>
+        Required for SonarQube scans.<br>
+        Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
+        If not using SonarQube, leave empty or remove.
+      </td>
     </tr>
     <tr>
       <td><code>SONAR_HOST_URL</code></td>
       <td>Variable value</td>
-      <td>Required for SonarQube. Set as a GitHub variable.</td>
+      <td>
+        Required for SonarQube.<br>
+        Set as a <a href="https://docs.github.com/en/actions/learn-github-actions/variables">GitHub Actions repository variable</a>.<br>
+        If not using SonarQube, leave empty or remove.
+      </td>
     </tr>
   </tbody>
 </table>
+
+### SAST scan - code to be added in your pipeline
 
 ```yaml
 SAST-Scan: 
