@@ -1,4 +1,0 @@
-<dependency-check>
-    <dataDirectory>./dependency-check-data</dataDirectory>
-    <failOnError>true</failOnError>
-</dependency-check>
