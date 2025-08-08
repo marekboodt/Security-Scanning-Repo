@@ -87,12 +87,13 @@ This snippet will call the relevant workflow from this repository and run the se
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
 
+### SAST scan - code to be added in your pipeline
+
 > **Note:**  
 > - Set `SEMGREP_APP_TOKEN` and `SONAR_TOKEN` as [GitHub Actions repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets).  
 > - Set `SONAR_HOST_URL` as a [GitHub Actions repository variable](https://docs.github.com/en/actions/learn-github-actions/variables).  
 > - If you are not using Semgrep or SonarQube, you can leave these empty or remove them from your workflow.
 
-### SAST scan - code to be added in your pipeline
 ```yaml
 SAST-Scan:
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/02-sast-workflow.yml@main
