@@ -171,12 +171,6 @@ permissions:
       <td>SAST</td>
     </tr>
     <tr>
-      <td><code>type</code></td>
-      <td><code>iac</code></td>
-      <td>Set to <code>iac</code> for Infrastructure as Code scans.</td>
-      <td>IAC</td>
-    </tr>
-    <tr>
       <td><code>start_command</code></td>
       <td>Shell command</td>
       <td>Command to start your application before DAST scan (e.g., <code>python manage.py runserver</code>).</td>
