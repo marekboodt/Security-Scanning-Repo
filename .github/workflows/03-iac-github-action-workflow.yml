@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   generate-timestamp:
-    uses: ./.github/workflows/generate-timestamp.yml
+    uses: ./.github/workflows/00-generate-timestamp.yml
 
 #####################################################################
 # ===================== GitHub Action IaC Scan =====================
