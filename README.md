@@ -238,7 +238,7 @@ IAC-GH-Actions-Workflow:
     environment: non-prod 
 ```
 
-### IAC scan (Custom sScan) - code to be added in your pipeline
+### IAC scan (Custom Scan) - code to be added in your pipeline
 if you want a more fine grained outcome
 ```yaml
 IAC-Custom-Workflow:
@@ -250,11 +250,13 @@ IAC-Custom-Workflow:
     environment: non-prod 
 ```
 
-> **Note for Checkov users:**  
+> **Note for IAC scanning with Checkov:**  
 > If you want to accept certain risks or skip specific checks in your IaC scans, add a file named <code>.checkov.yml</code> to the root folder of your GitHub project.  
 > This file allows you to configure which folders or checks to skip.  
 >  
 > Example <code>.checkov.yml</code> configuration:
+
+### .checkov.yml example 
 
 ```yaml
 # Skip PATH in the Security Scanning Repo
