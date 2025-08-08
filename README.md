@@ -27,7 +27,7 @@ This snippet will call the relevant workflow from this repository and run the se
 
 - **SAST (Static Application Security Testing):**  
   Analyzes your source code or binaries for vulnerabilities before running the application.  
-  Supported tools: `semgrep`, `sonarqube` *(coming soon)*, `bearer`, `codeql`
+  Supported tools: `semgrep`, `bearer`, `codeql` and `sonarqube` *(work in progress)*.
 
 - **IaC (Infrastructure as Code Security):**  
   Scans your Terraform infrastructure-as-code files for misconfigurations and security risks.  
@@ -112,7 +112,7 @@ permissions:
   <tbody>
     <tr>
       <td><code>sast-scan-tool</code></td>
-      <td><code>semgrep</code>,  <code>bearer</code>, <code>codeql</code>, <code>sonarqube</code> (work in progress)</td>
+      <td><code>semgrep</code>,  <code>bearer</code>, <code>codeql</code> and <code>sonarqube</code> (work in progress)</td>
       <td>Select the SAST tool to use for static code analysis.</td>
       <td>SAST</td>
     </tr>
@@ -125,7 +125,7 @@ permissions:
     <tr>
       <td><code>language</code></td>
       <td>e.g. <code>python</code>, <code>javascript</code>, <code>terraform</code></td>
-      <td>(Optional) For CodeQL, comma-separated list of languages. For IAC: use <code>terraform</code>.</td>
+      <td>(Optional) For CodeQL, could make the scan Comma-separated list of languages. For IAC: use terraform.</code>.</td>
       <td>SAST, IAC</td>
     </tr>
     <tr>
@@ -204,7 +204,7 @@ Add one of the following blocks to your own repository’s workflow file, and cu
 SAST-Scan: 
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/02-sast-workflow.yml@main
   with:
-    scantool: semgrep 
+    sast-scan-tool: semgrep 
     # language: python, javascript
     project_dir: ./src
     environment: non-prod
@@ -214,7 +214,20 @@ SAST-Scan:
     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
 ```
 
+### DAST scan (work in progress) - code to be added in your pipeline
+```yaml
+DAST-Scan:
+  uses: marekboodt/Security-Scanning-Repo/.github/workflows/04-dast-workflow.yml@main
+  with:
+    dast-scan-tool: zap # Currently supported: [zap]
+    project_dir: ./src
+    environment: non-prod 
+    start_command: python manage.py runserver
+    website_target: 'http://localhost:8000'
+```
+
 ### IAC scan (GitHub Actions) - code to be added in your pipeline
+Best to use. 
 ```yaml
 IAC-GH-Actions-Workflow:
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/03-iac-github-action-workflow.yml@main
@@ -225,7 +238,8 @@ IAC-GH-Actions-Workflow:
     environment: non-prod 
 ```
 
-### IAC scan (custom scan) - code to be added in your pipeline
+### IAC scan (Custom sScan) - code to be added in your pipeline
+if you want a more fine grained outcome
 ```yaml
 IAC-Custom-Workflow:
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/03-iac-custom-workflow.yml@main
@@ -236,13 +250,26 @@ IAC-Custom-Workflow:
     environment: non-prod 
 ```
 
-### DAST scan (work in progress) - code to be added in your pipeline
+> **Note for Checkov users:**  
+> If you want to accept certain risks or skip specific checks in your IaC scans, add a file named <code>.checkov.yml</code> to the root folder of your GitHub project.  
+> This file allows you to configure which folders or checks to skip.  
+>  
+> Example <code>.checkov.yml</code> configuration:
+
 ```yaml
-DAST-Scan:
-  uses: marekboodt/Security-Scanning-Repo/.github/workflows/04-dast-workflow.yml@main
-  with:
-    scantool: zap # Currently supported: [zap]
-    project_dir: ./src
-    environment: non-prod 
-    start_command: python manage.py runserver
-    website_target: 'http://localhost:8000'
+# Skip PATH in the Security Scanning Repo
+skip-path:
+  - .github/workflows/DEV/
+  - .github/workflows/OLD/
+
+# Testing to "accept" risks / vulnerabilities
+skip-check:
+  ## AWS ##
+  - CKV_AWS_23      # Reason X: we accept the risk of S3 bucket doesn't need versioning 
+
+  ## AZURE ##
+  - CKV_AZURE_141   # Reason Y: we accept the risk ...
+
+  ## GCP ##
+  - CKV_GCP_53      # Reason Z: we accept the risk ...
+```
