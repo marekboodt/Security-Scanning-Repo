@@ -30,7 +30,7 @@ This snippet will call the relevant workflow from this repository and run the se
   Supported tools: `semgrep`, `sonarqube` *(coming soon)*, `bearer`, `codeql`
 
 - **IaC (Infrastructure as Code Security):**  
-  Checks your infrastructure-as-code files (like Terraform, CloudFormation) for misconfigurations and security risks.  
+  Scans your Terraform infrastructure-as-code files for misconfigurations and security risks.  
   Supported tool: `checkov`
 
 - **DAST (Dynamic Application Security Testing):**  
