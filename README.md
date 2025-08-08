@@ -98,7 +98,7 @@ permissions:
   security-events: write
 ```
 
-## Parameter Reference: SAST, DAST & IAC Workflows
+## 📝 Parameter Reference: SAST, DAST & IAC Workflows
 
 <table>
   <thead>
@@ -215,7 +215,7 @@ IAC-GH-Actions-Workflow:
     type: iac
     language: terraform
     project_dir: ./
-    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
+    environment: non-prod 
 ```
 
 ### IAC scan (custom scan) - code to be added in your pipeline
@@ -226,7 +226,7 @@ IAC-Custom-Workflow:
     type: iac
     language: terraform
     project_dir: ./
-    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
+    environment: non-prod 
 ```
 
 ### DAST scan (work in progress) - code to be added in your pipeline
@@ -236,6 +236,6 @@ DAST-Scan:
   with:
     scantool: zap # Currently supported: [zap]
     project_dir: ./src
-    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
+    environment: non-prod 
     start_command: python manage.py runserver
     website_target: 'http://localhost:8000'
