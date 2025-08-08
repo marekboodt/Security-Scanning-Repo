@@ -53,53 +53,35 @@ This snippet will call the relevant workflow from this repository and run the se
 
 ## 🔑 Required Secrets and Variables
 
-|
- Tool      
-|
- Required Secret/Variable     
-|
- Where to Set                         
-|
-|
------------
-|
------------------------------
-|
---------------------------------------
-|
-|
- Semgrep   
-|
-`SEMGREP_APP_TOKEN`
-|
- GitHub Actions repository secret     
-|
-|
- SonarQube 
-|
-`SONAR_TOKEN`
-|
- GitHub Actions repository secret     
-|
-|
- SonarQube 
-|
-`SONAR_HOST_URL`
-|
- GitHub Actions repository variable   
-|
-|
- Others    
-|
-_
-none
-_
-|
--
-|
+<table>
+  <tr>
+    <th>Tool</th>
+    <th>Required Secret/Variable</th>
+    <th>Where to Set</th>
+  </tr>
+  <tr>
+    <td>Semgrep</td>
+    <td><code>SEMGREP_APP_TOKEN</code></td>
+    <td>GitHub Actions repository secret</td>
+  </tr>
+  <tr>
+    <td>SonarQube</td>
+    <td><code>SONAR_TOKEN</code></td>
+    <td>GitHub Actions repository secret</td>
+  </tr>
+  <tr>
+    <td>SonarQube</td>
+    <td><code>SONAR_HOST_URL</code></td>
+    <td>GitHub Actions repository variable</td>
+  </tr>
+  <tr>
+    <td>Others</td>
+    <td><em>none</em></td>
+    <td>-</td>
+  </tr>
+</table>
 
-
-
+---
 
 ## 🧩 Example Usage
 
