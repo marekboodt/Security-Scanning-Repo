@@ -98,13 +98,7 @@ permissions:
   security-events: write
 ```
 
----
-
-## 🧩 Example Usage
-
-Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
-
-### SAST scan - Parameters
+## Parameter Reference: SAST, DAST & IAC Workflows
 
 <table>
   <thead>
@@ -112,28 +106,33 @@ Add one of the following blocks to your own repository’s workflow file, and cu
       <th>Variable</th>
       <th>Values</th>
       <th>Comment/Reason</th>
+      <th>Used In</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><code>scantool</code></td>
-      <td><code>semgrep</code>, <code>sonarqube</code> (work in progress), <code>bearer</code>, <code>codeql</code></td>
-      <td>Select the static analysis tool to use.</td>
+      <td><code>semgrep</code>, <code>sonarqube</code> (work in progress), <code>bearer</code>, <code>codeql</code>, <code>zap</code></td>
+      <td>Select the analysis tool to use. For DAST, use <code>zap</code>.</td>
+      <td>SAST, DAST</td>
     </tr>
     <tr>
       <td><code>language</code></td>
-      <td>e.g. <code>python</code>, <code>javascript</code></td>
-      <td>(Optional) For CodeQL: comma-separated list of languages to scan.</td>
+      <td>e.g. <code>python</code>, <code>javascript</code>, <code>terraform</code></td>
+      <td>(Optional) For CodeQL: comma-separated list of languages. For IAC: use <code>terraform</code>.</td>
+      <td>SAST, IAC</td>
     </tr>
     <tr>
       <td><code>project_dir</code></td>
-      <td>Path (e.g. <code>./src</code>)</td>
-      <td>Directory containing your source code.</td>
+      <td>Path (e.g. <code>./src</code>, <code>./</code>)</td>
+      <td>Directory containing your source code or IaC files.</td>
+      <td>SAST, IAC, DAST</td>
     </tr>
     <tr>
       <td><code>environment</code></td>
       <td><code>prod</code>, <code>non-prod</code></td>
       <td><code>prod</code>: blocks pipeline on findings; <code>non-prod</code>: does not block pipeline (continue-on-error).</td>
+      <td>SAST, IAC, DAST</td>
     </tr>
     <tr>
       <td><code>SEMGREP_APP_TOKEN</code></td>
@@ -143,6 +142,7 @@ Add one of the following blocks to your own repository’s workflow file, and cu
         Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
         If not using Semgrep, leave empty or remove.
       </td>
+      <td>SAST</td>
     </tr>
     <tr>
       <td><code>SONAR_TOKEN</code></td>
@@ -152,6 +152,7 @@ Add one of the following blocks to your own repository’s workflow file, and cu
         Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
         If not using SonarQube, leave empty or remove.
       </td>
+      <td>SAST</td>
     </tr>
     <tr>
       <td><code>SONAR_HOST_URL</code></td>
@@ -161,9 +162,34 @@ Add one of the following blocks to your own repository’s workflow file, and cu
         Set as a <a href="https://docs.github.com/en/actions/learn-github-actions/variables">GitHub Actions repository variable</a>.<br>
         If not using SonarQube, leave empty or remove.
       </td>
+      <td>SAST</td>
+    </tr>
+    <tr>
+      <td><code>type</code></td>
+      <td><code>iac</code></td>
+      <td>Set to <code>iac</code> for Infrastructure as Code scans.</td>
+      <td>IAC</td>
+    </tr>
+    <tr>
+      <td><code>start_command</code></td>
+      <td>Shell command</td>
+      <td>Command to start your application before DAST scan (e.g., <code>python manage.py runserver</code>).</td>
+      <td>DAST</td>
+    </tr>
+    <tr>
+      <td><code>website_target</code></td>
+      <td>URL (e.g., <code>http://localhost:8000</code>)</td>
+      <td>URL of the running application to scan with DAST.</td>
+      <td>DAST</td>
     </tr>
   </tbody>
 </table>
+
+--- 
+
+## 🧩 Example Usage
+
+Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
 
 ### SAST scan - code to be added in your pipeline
 
@@ -174,8 +200,8 @@ SAST-Scan:
     scantool: semgrep 
     # language: python, javascript
     project_dir: ./src
-    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
-  secrets: # Set these as GitHub repository secrets or variables. If not using Semgrep or SonarQube, these can be left empty.
+    environment: non-prod
+  secrets: 
     SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
