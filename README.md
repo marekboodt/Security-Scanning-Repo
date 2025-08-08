@@ -112,7 +112,7 @@ Add one of the following blocks to your own repository’s workflow file, and cu
 > - If you are not using Semgrep or SonarQube, you can leave these empty or remove them from your workflow.
 
 ```yaml
-SAST-Scan:
+SAST-Scan: 
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/02-sast-workflow.yml@main
   with:
     scantool: semgrep # Options: [semgrep, sonarqube (work in progress), bearer, codeql]
