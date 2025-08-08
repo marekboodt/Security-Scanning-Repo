@@ -88,6 +88,18 @@ This snippet will call the relevant workflow from this repository and run the se
 
 ---
 
+## 🔒 Required Workflow Permissions
+
+To ensure security scan results are properly uploaded and visible in your repository’s Security tab, make sure to set the following permissions at the top of your main workflow YAML file:
+```yaml
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+```
+
+---
+
 ## 🧩 Example Usage
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
