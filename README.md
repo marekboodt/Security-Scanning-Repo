@@ -57,8 +57,8 @@ SAST-Scan:
     scantool: semgrep # Options: [semgrep, sonarqube (coming soon), bearer, codeql]
     # language: python, javascript # (Optional) For CodeQL, comma-separated list
     project_dir: ./src
-    environment: non-prod
-  secrets:
+    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
+  secrets: # Set these as GitHub repository secrets or variables. If not using Semgrep or SonarQube, these can be left empty.
     SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
@@ -72,7 +72,7 @@ IAC-GH-Actions-Workflow:
     type: iac
     language: terraform
     project_dir: ./
-    environment: non-prod
+    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
 ```
 
 ### IAC scan (custom scan) - code to be added in your pipeline
@@ -83,7 +83,7 @@ IAC-Custom-Workflow:
     type: iac
     language: terraform
     project_dir: ./
-    environment: non-prod
+    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
 ```
 
 ### DAST scan - code to be added in your pipeline
@@ -93,6 +93,6 @@ DAST-Scan:
   with:
     scantool: zap # Currently supported: [zap]
     project_dir: ./src
-    environment: non-prod
+    environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
     start_command: python manage.py runserver
     website_target: 'http://localhost:8000'
