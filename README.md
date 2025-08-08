@@ -8,7 +8,7 @@ It is designed to make security scanning easy and accessible for all developers 
 ## 👤 Who Is This For?
 
 **Any developer or team who wants to add robust security scanning to their GitHub projects with minimal setup.**
-All you need to do is add a small code snippet to your workflow; everything else is managed for you.
+Just add a code snippet to your workflow; this repository manages everything else.
 
 ---
 
@@ -30,24 +30,83 @@ This snippet will call the relevant workflow from this repository and run the se
 - **IaC (Infrastructure as Code Security):**
   - Supported tool: `checkov`
 - **DAST (Dynamic Application Security Testing):**
-  - Supported tool: `OWASP ZAP` *(coming soon)*
+  - Supported tool: `OWASP ZAP` *(work in progress)*
 
 ---
 
 ## 📈 Results and Artifacts
 
-- **All scan results are output in SARIF format** and are visible in your repository’s Security tab and Actions tab.
-- **SARIF files** can be downloaded as artifacts.
-- For custom IaC scans, you will also receive:
-  - SARIF
-  - JSON
-  - Plain text results (from Checkov)
+> **Scan results:**  
+> - All findings will appear in your repository’s **Security** and **Actions** tabs.  
+> - SARIF and other output files will be available as downloadable artifacts after the workflow run.
 
+---
+
+## ⚡ Quick Start
+
+1. Copy one of the code blocks below into your repository’s `.github/workflows/your-workflow.yml`.
+2. Adjust the `with:` parameters as needed for your project and scan tool.
+3. Set any required secrets or variables in your repository settings.
+4. Commit and push—scans will run automatically!
+
+---
+
+## 🔑 Required Secrets and Variables
+
+|
+ Tool      
+|
+ Required Secret/Variable     
+|
+ Where to Set                             
+|
+|
+-----------
+|
+-----------------------------
+|
+------------------------------------------
+|
+|
+ Semgrep   
+|
+`SEMGREP_APP_TOKEN`
+|
+ GitHub Actions repository secret         
+|
+|
+ SonarQube 
+|
+`SONAR_TOKEN`
+|
+ GitHub Actions repository secret         
+|
+|
+ SonarQube 
+|
+`SONAR_HOST_URL`
+|
+ GitHub Actions repository variable       
+|
+|
+ Others    
+|
+_
+none
+_
+|
+-
+|
 ---
 
 ## 🧩 Example Usage
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
+
+> **Note:**  
+> - Set `SEMGREP_APP_TOKEN` and `SONAR_TOKEN` as [GitHub Actions repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets).  
+> - Set `SONAR_HOST_URL` as a [GitHub Actions repository variable](https://docs.github.com/en/actions/learn-github-actions/variables).  
+> - If you are not using Semgrep or SonarQube, you can leave these empty or remove them from your workflow.
 
 ### SAST scan - code to be added in your pipeline
 ```yaml
@@ -86,7 +145,7 @@ IAC-Custom-Workflow:
     environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
 ```
 
-### DAST scan - code to be added in your pipeline
+### DAST scan (work in progress) - code to be added in your pipeline
 ```yaml
 DAST-Scan:
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/04-dast-workflow.yml@main
