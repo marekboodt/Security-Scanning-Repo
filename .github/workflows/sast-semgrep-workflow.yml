@@ -35,7 +35,7 @@ jobs:
       - name: Upload SARIF results
         uses: actions/upload-artifact@v4
         with:
-          name: semgrep-sarif-lightweight-results
+          name: semgrep-sarif-lightweight-results-${{ needs.generate-timestamp.outputs.timestamp }}
           path: semgrep-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
 
       - name: Upload Semgrep SARIF to GitHub Code Scanning
@@ -65,5 +65,5 @@ jobs:
     - name: Upload SARIF file as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: semgrep-sarif-deep-scan
+        name: semgrep-sarif-deep-scan-${{ needs.generate-timestamp.outputs.timestamp }}
         path: semgrep-results-deep-scan-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
