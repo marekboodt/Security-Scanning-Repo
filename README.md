@@ -10,6 +10,24 @@ It is designed to make security scanning easy and accessible for all developers 
 **Any developer or team who wants to add robust security scanning to their GitHub projects with minimal setup.**
 Just add a code snippet to your workflow; this repository manages everything else.
 
+**Scan Types Explained:**
+- **SAST:** Analyzes your code for vulnerabilities before running it (static analysis).
+- **DAST:** Tests your running application for vulnerabilities (dynamic analysis, like an external attacker).
+- **IaC:** Checks your infrastructure-as-code files for misconfigurations and security risks.
+
+---
+
+## 🛡️ What Are SAST, DAST, and IaC?
+
+**SAST (Static Application Security Testing):**  
+Analyzes your source code or binaries for security vulnerabilities without executing the program. Helps catch issues early in development.
+
+**DAST (Dynamic Application Security Testing):**  
+Scans your running application (usually a web app) from the outside, looking for vulnerabilities by simulating real attacks—no access to source code needed.
+
+**IaC (Infrastructure as Code Security):**  
+Checks your infrastructure-as-code files (like Terraform, CloudFormation, etc.) for misconfigurations or security risks before they reach production.
+
 ---
 
 ## 🚀 How It Works
