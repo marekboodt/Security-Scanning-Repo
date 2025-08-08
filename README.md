@@ -26,7 +26,7 @@ This snippet will call the relevant workflow from this repository and run the se
 ## 🛠️ Supported Scan Types & Tools
 
 - **SAST (Static Application Security Testing):**
-  - Supported tools: `semgrep`, `sonarqube` *(coming soon)*, `bearer`, `codeql`
+  - Supported tools: `semgrep`, `sonarqube` *(work in progress)*, `bearer`, `codeql`
 - **IaC (Infrastructure as Code Security):**
   - Supported tool: `checkov`
 - **DAST (Dynamic Application Security Testing):**
@@ -97,7 +97,7 @@ Add one of the following blocks to your own repository’s workflow file, and cu
 SAST-Scan:
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/02-sast-workflow.yml@main
   with:
-    scantool: semgrep # Options: [semgrep, sonarqube (coming soon), bearer, codeql]
+    scantool: semgrep # Options: [semgrep, sonarqube (work in progress), bearer, codeql]
     # language: python, javascript # (Optional) For CodeQL, comma-separated list
     project_dir: ./src
     environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
