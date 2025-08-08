@@ -111,15 +111,21 @@ permissions:
   </thead>
   <tbody>
     <tr>
-      <td><code>scantool</code></td>
-      <td><code>semgrep</code>, <code>sonarqube</code> (work in progress), <code>bearer</code>, <code>codeql</code>, <code>zap</code></td>
-      <td>Select the analysis tool to use. For DAST, use <code>zap</code>.</td>
-      <td>SAST, DAST</td>
+      <td><code>sast-scan-tool</code></td>
+      <td><code>semgrep</code>, <code>sonarqube</code> (work in progress), <code>bearer</code>, <code>codeql</code></td>
+      <td>Select the SAST tool to use for static code analysis.</td>
+      <td>SAST</td>
+    </tr>
+    <tr>
+      <td><code>dast-scan-tool</code></td>
+      <td><code>zap</code></td>
+      <td>Select the DAST tool to use for dynamic application security testing. Currently only <code>zap</code> is supported.</td>
+      <td>DAST</td>
     </tr>
     <tr>
       <td><code>language</code></td>
       <td>e.g. <code>python</code>, <code>javascript</code>, <code>terraform</code></td>
-      <td>(Optional) For CodeQL: comma-separated list of languages. For IAC: use <code>terraform</code>.</td>
+      <td>(Optional) For CodeQL, comma-separated list of languages. For IAC: use <code>terraform</code>.</td>
       <td>SAST, IAC</td>
     </tr>
     <tr>
@@ -184,6 +190,7 @@ permissions:
     </tr>
   </tbody>
 </table>
+
 
 --- 
 

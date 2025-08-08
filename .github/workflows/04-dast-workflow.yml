@@ -3,7 +3,7 @@ name: Reusable DAST Checkov GH actions Workflow
 on:
   workflow_call:
     inputs:
-      scantool: { type: string, required: true }
+      dast-scan-tool: { type: string, required: true }
       language: { type: string, required: false }
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
@@ -23,10 +23,10 @@ permissions:
 #####################################################################
 jobs:
   ZAP-Scan:
-    if: ${{ inputs.scantool == 'zap' }}
+    if: ${{ inputs.dast-scan-tool == 'zap' }}
     uses: ./.github/workflows/dast-zap-workflow.yml
     with:
-      scantool: ${{ inputs.scantool }}
+      dast-scan-tool: ${{ inputs.dast-scan-tool }}
 #      language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}

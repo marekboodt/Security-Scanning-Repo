@@ -3,7 +3,7 @@ name: Reusable SAST Checkov GH actions Workflow
 on:
   workflow_call:
     inputs:
-      scantool: { type: string, required: true }
+      sast-scan-tool: { type: string, required: true }
       language: { type: string, required: false }
       project_dir: { type: string, required: true }
       environment: { type: string, required: true }
@@ -28,10 +28,10 @@ permissions:
 # Sonarqube - multi lang - not set up yet
 jobs:
   Semgrep-Scan:
-    if: ${{ inputs.scantool == 'semgrep' }}
+    if: ${{ inputs.sast-scan-tool == 'semgrep' }}
     uses: ./.github/workflows/sast-semgrep-workflow.yml
     with:
-      scantool: ${{ inputs.scantool }}
+      sast-scan-tool: ${{ inputs.sast-scan-tool }}
 #      language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
@@ -39,19 +39,19 @@ jobs:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
   CodeQL-Scan:
-    if: ${{ inputs.scantool == 'codeql' }}
+    if: ${{ inputs.sast-scan-tool == 'codeql' }}
     uses: ./.github/workflows/sast-codeql-workflow.yml
     with:
-      scantool: ${{ inputs.scantool }}
+      sast-scan-tool: ${{ inputs.sast-scan-tool }}
       language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
 
   Bearer-Scan:
-    if: ${{ inputs.scantool == 'bearer' }}
+    if: ${{ inputs.sast-scan-tool == 'bearer' }}
     uses: ./.github/workflows/sast-bearer-workflow.yml
     with:
-      scantool: ${{ inputs.scantool }}
+      sast-scan-tool: ${{ inputs.sast-scan-tool }}
 #      language: ${{ inputs.language }}
       project_dir: ${{ inputs.project_dir }}
       environment: ${{ inputs.environment }}
