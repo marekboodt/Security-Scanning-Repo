@@ -62,6 +62,7 @@ SAST-Scan:
     SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+```
 
 ### IAC scan (GitHub Actions) - code to be added in your pipeline
 ```yaml
@@ -72,6 +73,7 @@ IAC-GH-Actions-Workflow:
     language: terraform
     project_dir: ./
     environment: non-prod
+```
 
 ### IAC scan (custom scan) - code to be added in your pipeline
 ```yaml
@@ -82,6 +84,7 @@ IAC-Custom-Workflow:
     language: terraform
     project_dir: ./
     environment: non-prod
+```
 
 ### DAST scan - code to be added in your pipeline
 ```yaml
