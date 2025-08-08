@@ -111,12 +111,59 @@ Add one of the following blocks to your own repository’s workflow file, and cu
 > - Set `SONAR_HOST_URL` as a [GitHub Actions repository variable](https://docs.github.com/en/actions/learn-github-actions/variables).  
 > - If you are not using Semgrep or SonarQube, you can leave these empty or remove them from your workflow.
 
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Values</th>
+      <th>Comment/Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>scantool</code></td>
+      <td><code>semgrep</code>, <code>sonarqube</code> (work in progress), <code>bearer</code>, <code>codeql</code></td>
+      <td>Select the static analysis tool to use.</td>
+    </tr>
+    <tr>
+      <td><code>language</code></td>
+      <td>e.g. <code>python</code>, <code>javascript</code></td>
+      <td>(Optional) For CodeQL: comma-separated list of languages to scan.</td>
+    </tr>
+    <tr>
+      <td><code>project_dir</code></td>
+      <td>Path (e.g. <code>./src</code>)</td>
+      <td>Directory containing your source code.</td>
+    </tr>
+    <tr>
+      <td><code>environment</code></td>
+      <td><code>prod</code>, <code>non-prod</code></td>
+      <td><code>prod</code>: blocks pipeline on findings; <code>non-prod</code>: does not block pipeline (continue-on-error).</td>
+    </tr>
+    <tr>
+      <td><code>SEMGREP_APP_TOKEN</code></td>
+      <td>Secret value</td>
+      <td>Required for Semgrep scans. Set as a GitHub secret.</td>
+    </tr>
+    <tr>
+      <td><code>SONAR_TOKEN</code></td>
+      <td>Secret value</td>
+      <td>Required for SonarQube scans. Set as a GitHub secret.</td>
+    </tr>
+    <tr>
+      <td><code>SONAR_HOST_URL</code></td>
+      <td>Variable value</td>
+      <td>Required for SonarQube. Set as a GitHub variable.</td>
+    </tr>
+  </tbody>
+</table>
+
 ```yaml
 SAST-Scan: 
   uses: marekboodt/Security-Scanning-Repo/.github/workflows/02-sast-workflow.yml@main
   with:
-    scantool: semgrep # Options: [semgrep, sonarqube (work in progress), bearer, codeql]
-    # language: python, javascript # (Optional) For CodeQL, comma-separated list
+    scantool: semgrep 
+    # language: python, javascript
     project_dir: ./src
     environment: non-prod # options: prod, non-prod | non-prod: does not block pipeline on findings (continue-on-error); prod: blocks pipeline if findings are found
   secrets: # Set these as GitHub repository secrets or variables. If not using Semgrep or SonarQube, these can be left empty.
