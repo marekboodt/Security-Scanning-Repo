@@ -36,9 +36,9 @@ This snippet will call the relevant workflow from this repository and run the se
 
 ## 📈 Results and Artifacts
 
-> **Scan results:**  
-> - All findings will appear in your repository’s **Security** and **Actions** tabs.  
-> - SARIF and other output files will be available as downloadable artifacts after the workflow run.
+**Scan results:**  
+- All findings will appear in your repository’s **Security** and **Actions** tabs.  
+- SARIF and other output files will be available as downloadable artifacts after the workflow run.
 
 ---
 
