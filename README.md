@@ -112,7 +112,7 @@ permissions:
   <tbody>
     <tr>
       <td><code>sast-scan-tool</code></td>
-      <td><code>semgrep</code>, <code>sonarqube</code> (work in progress), <code>bearer</code>, <code>codeql</code></td>
+      <td><code>semgrep</code>,  <code>bearer</code>, <code>codeql</code>, <code>sonarqube</code> (work in progress)</td>
       <td>Select the SAST tool to use for static code analysis.</td>
       <td>SAST</td>
     </tr>
