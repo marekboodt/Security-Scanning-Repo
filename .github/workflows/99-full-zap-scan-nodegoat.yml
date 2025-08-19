@@ -1,3 +1,5 @@
+# https://hub.docker.com/r/contrastsecuritydemo/nodegoat
+
 name: Full ZAP Scan - NodeGoat
 
 on:
@@ -27,11 +29,13 @@ jobs:
         run: |
           echo "Waiting for node goat to start..."
           for i in {1..30}; do
-            if curl -s http://localhost:4000 > /dev/null; then
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4000/about)
+            if [ "$STATUS" = "200" ]; then
               echo "NodeGoat is up!"
               exit 0
             fi
-            sleep 20
+            echo "Still waiting... HTTP $STATUS"
+            sleep 10
           done
           echo "NodeGoat did not start in time"
           exit 1
