@@ -1,5 +1,4 @@
 # https://hub.docker.com/r/contrastsecuritydemo/nodegoat
-
 name: Full ZAP Scan - NodeGoat
 
 on:
@@ -17,7 +16,7 @@ permissions:
 jobs:
   zap_full_scan:
     runs-on: ubuntu-latest
-    container: python:3.11  # or any image that has curl and can run your steps
+
     services:
       nodegoat:
         image: contrastsecuritydemo/nodegoat:1.3.0
@@ -25,21 +24,16 @@ jobs:
           - 4000:4000
 
     steps:
-      - name: Install curl
-        run: |
-          apt-get update && apt-get install -y curl
-    
       - name: Wait for NodeGoat to be ready
         run: |
           echo "Waiting for node goat to start..."
           for i in {1..30}; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://nodegoat:4000/about)
-            if [ "$STATUS" = "200" ]; then
+            if curl -s http://localhost:4000 > /dev/null; then
               echo "NodeGoat is up!"
               exit 0
             fi
-            echo "Still waiting... HTTP $STATUS"
-            sleep 10
+            sleep 5
+            sleep 20
           done
           echo "NodeGoat did not start in time"
           exit 1
@@ -47,7 +41,7 @@ jobs:
       - name: Run ZAP Full Scan (HTML + JUnit XML)
         uses: zaproxy/action-full-scan@v0.11.0
         with:
-          target: 'http://nodegoat:4000'
+          target: 'http://localhost:4000'
           fail_action: false
           cmd_options: '-a -x report_xml.xml -l WARN'
         continue-on-error: true
