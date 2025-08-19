@@ -17,7 +17,7 @@ permissions:
 jobs:
   zap_full_scan:
     runs-on: ubuntu-latest
-
+    container: python:3.11  # or any image that has curl and can run your steps
     services:
       nodegoat:
         image: contrastsecuritydemo/nodegoat:1.3.0
@@ -43,7 +43,7 @@ jobs:
       - name: Run ZAP Full Scan (HTML + JUnit XML)
         uses: zaproxy/action-full-scan@v0.11.0
         with:
-          target: 'http://localhost:4000'
+          target: 'http://nodegoat:4000'
           fail_action: false
           cmd_options: '-a -x report_xml.xml -l WARN'
         continue-on-error: true
