@@ -25,12 +25,13 @@ jobs:
     steps:
       - name: Wait for NodeGoat to be ready
         run: |
+          echo "Waiting for node goat to start..."
           for i in {1..30}; do
             if curl -s http://localhost:4000 > /dev/null; then
               echo "NodeGoat is up!"
               exit 0
             fi
-            sleep 5
+            sleep 20
           done
           echo "NodeGoat did not start in time"
           exit 1
