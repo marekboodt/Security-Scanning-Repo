@@ -25,6 +25,10 @@ jobs:
           - 4000:4000
 
     steps:
+      - name: Install curl
+        run: |
+          apt-get update && apt-get install -y curl
+    
       - name: Wait for NodeGoat to be ready
         run: |
           echo "Waiting for node goat to start..."
