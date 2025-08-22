@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Create docker network
+        run: docker network create zapnet
+        
       - name: Start MongoDB
         run: |
           docker run -d --name mongo -p 27017:27017 mongo:6
