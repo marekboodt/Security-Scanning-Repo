@@ -20,16 +20,16 @@ jobs:
     steps:
       - name: Create docker network
         run: docker network create zapnet
-        
+
       - name: Start MongoDB
         run: |
-          docker run -d --name mongo -p 27017:27017 mongo:6
+          docker run -d --name mongo --network zapnet mongo:6
 
       - name: Wait for MongoDB to be ready
         run: |
           echo "Waiting for MongoDB..."
           for i in {1..30}; do
-            if docker exec mongo mongosh --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1; then
+            if docker exec mongo mongosh --quiet --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1; then
               echo "MongoDB is ready."
               exit 0
             fi
@@ -40,19 +40,16 @@ jobs:
           exit 1
 
       - name: Start NodeGoat container
-        env:
-          MONGODB_URI: mongodb://localhost:27017/nodegoat
         run: |
-          # Some NodeGoat images support MONGO_URI or MONGODB_URI; try both by exporting.
-          docker run -d --name nodegoat -p 4000:4000 \
-            -e MONGO_URI="${MONGODB_URI}" \
-            -e MONGODB_URI="${MONGODB_URI}" \
+          docker run -d --name nodegoat --network zapnet -p 4000:4000 \
+            -e MONGO_URI="mongodb://mongo:27017/nodegoat" \
+            -e MONGODB_URI="mongodb://mongo:27017/nodegoat" \
             -e NODE_ENV=development \
             contrastsecuritydemo/nodegoat:1.3.0 \
             sh -lc 'npm start'
 
       - name: Show NodeGoat logs (initial)
-        run: docker logs --tail=100 nodegoat || true
+        run: docker logs --tail=80 nodegoat || true
 
       - name: Wait for NodeGoat to be ready
         run: |
