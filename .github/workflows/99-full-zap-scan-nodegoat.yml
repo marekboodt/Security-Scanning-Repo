@@ -1,0 +1,126 @@
+# https://hub.docker.com/r/contrastsecuritydemo/nodegoat
+name: Full ZAP Scan - NodeGoat
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  zap_full_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create docker network
+        run: docker network create zapnet
+
+      - name: Start MongoDB
+        run: |
+          docker run -d --name mongo --network zapnet mongo:6
+
+      - name: Wait for MongoDB to be ready
+        run: |
+          echo "Waiting for MongoDB..."
+          for i in {1..30}; do
+            if docker exec mongo mongosh --quiet --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1; then
+              echo "MongoDB is ready."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "MongoDB did not start in time"
+          docker logs mongo || true
+          exit 1
+
+      - name: Start NodeGoat container
+        run: |
+          docker run -d --name nodegoat --network zapnet -p 4000:4000 \
+            -e MONGO_URI="mongodb://mongo:27017/nodegoat" \
+            -e MONGODB_URI="mongodb://mongo:27017/nodegoat" \
+            -e NODE_ENV=development \
+            contrastsecuritydemo/nodegoat:1.3.0 \
+            sh -lc 'npm start'
+
+      - name: Show NodeGoat logs (initial)
+        run: docker logs --tail=80 nodegoat || true
+
+      - name: Wait for NodeGoat to be ready
+        run: |
+          echo "Waiting for NodeGoat to start..."
+          for i in {1..60}; do
+            if curl -fsS http://localhost:4000/ >/dev/null; then
+              echo "NodeGoat is up!"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "NodeGoat did not start in time"
+          docker logs nodegoat || true
+          exit 1
+
+      - name: Run ZAP Full Scan (HTML + JUnit XML)
+        uses: zaproxy/action-full-scan@v0.11.0
+        with:
+          target: 'http://localhost:4000'
+          fail_action: false
+          cmd_options: '-a -x report_xml.xml -l WARN'
+        continue-on-error: true
+
+        
+#    services:
+#      nodegoat:
+#        image: contrastsecuritydemo/nodegoat:1.3.0
+#        ports:
+#          - 4000:4000
+#    steps:
+
+ #     - name: Pull NodeGoat Docker image
+ #       run: docker pull contrastsecuritydemo/nodegoat:1.3.0
+
+#      - name: Run NodeGoat container
+#        run: docker run -d --name nodegoat -p 4000:4000 contrastsecuritydemo/nodegoat:1.3.0
+
+#      - name: Wait for NodeGoat to be ready
+#        run: |
+#          echo "Waiting for node goat to start..."
+#          for i in {1..30}; do
+#            if curl -s http://localhost:4000 > /dev/null; then
+#              echo "NodeGoat is up!"
+#              exit 0
+#            fi
+#            sleep 10
+#          done
+#          echo "NodeGoat did not start in time"
+#          exit 1
+      
+#      - name: Run ZAP Full Scan (HTML + JUnit XML)
+#        uses: zaproxy/action-full-scan@v0.11.0
+#        with:
+#          target: 'http://localhost:4000'
+#          fail_action: false
+#          cmd_options: '-a -x report_xml.xml -l WARN'
+#        continue-on-error: true
+
+      - name: Upload ZAP Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-zap-reports-nodegoat
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+            report_xml.xml
+        continue-on-error: true
+
+      - name: Publish ZAP JUnit Report
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: report_xml.xml
+        continue-on-error: true

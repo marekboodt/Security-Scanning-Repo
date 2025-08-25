@@ -5,6 +5,13 @@ It is designed to make security scanning easy and accessible for all developers 
 
 ---
 
+## DAST (Dynamic Application Security Testing) Read ME:**  
+
+For web application scanning with OWASP ZAP, see the The Read Me for DAST Security Scanning: [DAST README.md](DAST-README.md)
+
+---
+
+
 ## 👤 Who Is This For?
 
 **Any developer or team who wants to add robust security scanning to their GitHub projects with minimal setup.**
@@ -32,10 +39,6 @@ This snippet will call the relevant workflow from this repository and run the se
 - **IaC (Infrastructure as Code Security):**  
   Scans your Terraform infrastructure-as-code files for misconfigurations and security risks.  
   Supported tool: `checkov`
-
-- **DAST (Dynamic Application Security Testing):**  
-  Scans your running application from the outside, simulating attacks to find vulnerabilities—no access to source code needed.  
-  Supported tool: `OWASP ZAP` *(work in progress)*
 
 ---
 
@@ -98,7 +101,7 @@ permissions:
   security-events: write
 ```
 
-## 📝 Parameter Reference: SAST, DAST & IAC Workflows
+## 📝 Parameter Reference: SAST & IAC Workflows
 
 <table>
   <thead>
@@ -112,40 +115,34 @@ permissions:
   <tbody>
     <tr>
       <td><code>sast-scan-tool</code></td>
-      <td><code>semgrep</code>,  <code>bearer</code>, <code>codeql</code> and <code>sonarqube</code> (work in progress)</td>
+      <td><code>semgrep</code>, <code>bearer</code>, <code>codeql</code> and <code>sonarqube</code> (work in progress)</td>
       <td>Select the SAST tool to use for static code analysis.</td>
       <td>SAST</td>
     </tr>
     <tr>
-      <td><code>dast-scan-tool</code></td>
-      <td><code>zap</code></td>
-      <td>Select the DAST tool to use for dynamic application security testing. Currently only <code>zap</code> is supported.</td>
-      <td>DAST</td>
-    </tr>
-    <tr>
       <td><code>language</code></td>
       <td>e.g. <code>python</code>, <code>javascript</code>, <code>terraform</code></td>
-      <td>(Optional) For CodeQL, could make the scan Comma-separated list of languages. For IAC: use terraform.</code>.</td>
+      <td>(Optional) For CodeQL, can be a comma-separated list of languages. For IAC: use <code>terraform</code>.</td>
       <td>SAST, IAC</td>
     </tr>
     <tr>
       <td><code>project_dir</code></td>
       <td>Path (e.g. <code>./src</code>, <code>./</code>)</td>
       <td>Directory containing your source code or IaC files.</td>
-      <td>SAST, IAC, DAST</td>
+      <td>SAST, IAC</td>
     </tr>
     <tr>
       <td><code>environment</code></td>
       <td><code>prod</code>, <code>non-prod</code></td>
       <td><code>prod</code>: blocks pipeline on findings; <code>non-prod</code>: does not block pipeline (continue-on-error).</td>
-      <td>SAST, IAC, DAST</td>
+      <td>SAST, IAC</td>
     </tr>
     <tr>
       <td><code>SEMGREP_APP_TOKEN</code></td>
       <td>Secret value</td>
       <td>
         Required for Semgrep scans.<br>
-        Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
+        Set as a GitHub Actions repository secret.<br>
         If not using Semgrep, leave empty or remove.
       </td>
       <td>SAST</td>
@@ -170,21 +167,8 @@ permissions:
       </td>
       <td>SAST</td>
     </tr>
-    <tr>
-      <td><code>start_command</code></td>
-      <td>Shell command</td>
-      <td>Command to start your application before DAST scan (e.g., <code>python manage.py runserver</code>).</td>
-      <td>DAST</td>
-    </tr>
-    <tr>
-      <td><code>website_target</code></td>
-      <td>URL (e.g., <code>http://localhost:8000</code>)</td>
-      <td>URL of the running application to scan with DAST.</td>
-      <td>DAST</td>
-    </tr>
   </tbody>
 </table>
-
 
 --- 
 
@@ -206,18 +190,6 @@ SAST-Scan:
     SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-```
-
-### DAST scan (work in progress) - code to be added in your pipeline
-```yaml
-DAST-Scan:
-  uses: marekboodt/Security-Scanning-Repo/.github/workflows/04-dast-workflow.yml@main
-  with:
-    dast-scan-tool: zap # Currently supported: [zap]
-    project_dir: ./src
-    environment: non-prod 
-    start_command: python manage.py runserver
-    website_target: 'http://localhost:8000'
 ```
 
 ### IAC scan (GitHub Actions) - code to be added in your pipeline
