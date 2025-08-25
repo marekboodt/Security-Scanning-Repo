@@ -1,4 +1,4 @@
-# https://hub.docker.com/r/contrastsecuritydemo/nodegoat
+# https://hub.docker.com/r/contrastsecuritydemo/nodegoat 
 name: Full ZAP Scan - NodeGoat
 
 on:
