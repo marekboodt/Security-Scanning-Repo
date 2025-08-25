@@ -13,7 +13,8 @@ Just add a code snippet to your workflow; this repository manages everything els
 
 ## 🚀 How It Works
 
-You add a small snippet to your repository’s workflow. That snippet calls the DAST workflow here and runs OWASP ZAP against your target URL.
+You add a small snippet to your repository’s workflow. That snippet runs OWASP ZAP against your target URL.
+Use localhost when you start the app inside CI; use the public/staging URL if your app is reachable from the internet.
 
 - You provide the target URL (and optionally start your app inside the workflow).
 - The workflow runs ZAP and uploads results.
@@ -22,9 +23,9 @@ You add a small snippet to your repository’s workflow. That snippet calls the 
 ---
 
 ## ⚠️ Copy-Paste into your YAML-file (Important for localhost targets)
-If your target runs on localhost inside CI, keep ZAP in the same job that starts your app.
+If your target runs on localhost inside CI, keep ZAP in the same job (same runner) that starts your app.
 
-For apps started in CI (Docker, Compose, npm, Python, Java, .NET): you must copy-paste the ZAP YAML block directly into your pipeline, in the same running job/step/task that starts your app on localhost. This ensures ZAP can reach 
+For apps started in CI (Docker, Compose, npm, Python, Java, .NET): you must copy-paste the ZAP YAML block directly into your workflow in the same job and place it after the steps that start your app on localhost. This ensures ZAP can reach 
 http://localhost:PORT
 
 ---
@@ -34,6 +35,7 @@ http://localhost:PORT
 **Scan results:**  
 - All findings will appear in your repository’s **Security** and **Actions** tabs.  
 - SARIF and other ZAP reports (HTML/JSON/Markdown) will be available as downloadable artifacts after the run.
+- For HTTPS URLs on 443 or HTTP on 80, you don’t need to specify the port in the URL. Only add a port for non-defaults (e.g., :8080, :8443).
 
 ---
 
@@ -53,6 +55,9 @@ permissions:
 ## 🧩 Example Usage
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
+- [ZAP Full scan (generic “web-app” service)]
+- ZAP Quick Scan
+- Zap Full Scan - Without (generic “web-app” service)
 
 ### ZAP Full scan - Full scan against a single service (generic “web-app” service)
 Best scan to use, takes longer than the basic scan, but finds more. Best used not on every pipeline run.

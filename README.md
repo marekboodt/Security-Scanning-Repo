@@ -5,7 +5,7 @@ It is designed to make security scanning easy and accessible for all developers 
 
 ---
 
-## 🧪 DAST (Dynamic Application Security Testing) Read ME:**  
+## 🧪 DAST (Dynamic Application Security Testing) Read me:**  
 
 For web application scanning with OWASP ZAP, see the The Read Me for DAST Security Scanning: [DAST README.md](DAST-README.md)
 
