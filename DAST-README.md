@@ -56,8 +56,8 @@ permissions:
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
 - [ZAP Full scan (generic “web-app” service)](#zap-full-scan---full-scan-against-a-single-service-generic-web-app-service)
-- ZAP Quick Scan
-- Zap Full Scan - Without (generic “web-app” service)
+- [ZAP Quick Scan](#zap-quick-scan---baseline-scan-against-a-single-service-generic)
+- [Zap Full Scan - Without (generic “web-app” service)](#zap-full-scan---with-multi-container-target-db--app-on-custom-network)
 
 ### ZAP Full scan - Full scan against a single service (generic “web-app” service)
 Best scan to use, takes longer than the basic scan, but finds more. Best used not on every pipeline run.
