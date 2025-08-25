@@ -21,23 +21,11 @@ You add a small snippet to your repository’s workflow. That snippet calls the 
 
 ---
 
-## ⚠️ Reuse vs Copy-Paste (Important for localhost targets)
+## ⚠️ Copy-Paste into your YAML-file (Important for localhost targets)
 If your target runs on localhost inside CI, keep ZAP in the same job that starts your app.
 
 For apps started in CI (Docker, Compose, npm, Python, Java, .NET): you must copy-paste the ZAP YAML block directly into your pipeline, in the same running job/step/task that starts your app on localhost. This ensures ZAP can reach 
 http://localhost:PORT
-
----
-
-## 🛠️ Supported Scan Types & Tools
-
-- **SAST (Static Application Security Testing):**  
-  Analyzes your source code or binaries for vulnerabilities before running the application.  
-  Supported tools: `semgrep`, `bearer`, `codeql` and `sonarqube` *(work in progress)*.
-
-- **IaC (Infrastructure as Code Security):**  
-  Scans your Terraform infrastructure-as-code files for misconfigurations and security risks.  
-  Supported tool: `checkov`
 
 ---
 
@@ -73,7 +61,7 @@ for example best used before creating artifacts.
 ```yaml
 jobs:
   zap_full_scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest            # or self-hosted, or <NAME>
 
     # Start your target application as a service container
     services:
@@ -83,12 +71,13 @@ jobs:
           - HOST_PORT:CONTAINER_PORT  # e.g., 3000:3000 to expose on localhost:3000
 
     steps:
-      # Wait until the app is reachable to avoid scanning too early
+      # Wait until the app is reachable on localhost to avoid scanning too early
+      # If target is a public/staging URL rename localhost accordingly - https://your-env.example.com (optional set :PORT if not 80 or 443)
       - name: Wait for app to be ready
         run: |
           echo "Waiting for app to start..."
           for i in {1..30}; do
-            if curl -s http://localhost:HOST_PORT > /dev/null; then
+            if curl -s http://localhost:HOST_PORT > /dev/null; then     
               echo "App is up!"
               exit 0
             fi
@@ -130,7 +119,7 @@ takes about 1-2 minutes, but finds less
 ```yaml
 jobs:
   zap_scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest            # or self-hosted, or <NAME>
 
     # Start your target application as a service container
     services:
@@ -139,7 +128,9 @@ jobs:
         ports:
           - HOST_PORT:CONTAINER_PORT        # e.g., 3000:3000
 
-    steps:
+      # Wait until the app is reachable on localhost to avoid scanning too early
+      # If target is a public/staging URL rename localhost accordingly - https://your-env.example.com (optional set :PORT if not 80 or 443)
+      steps:
       - name: Wait for app to be ready
         run: |
           echo "Waiting for app to start..."
@@ -184,7 +175,7 @@ jobs:
 ```yaml
 jobs:
   zap_full_scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest            # or self-hosted, or <NAME>
 
     steps:
       # Use a dedicated Docker network so containers can resolve each other by name
@@ -231,7 +222,8 @@ jobs:
       - name: Show app logs (initial)
         run: docker logs --tail=80 APP_SERVICE || true
 
-      # Wait until the app is reachable on localhost
+      # Wait until the app is reachable on localhost to avoid scanning too early
+      # If target is a public/staging URL rename localhost accordingly - https://your-env.example.com (optional set :PORT if not 80 or 443)
       - name: Wait for app to be ready
         run: |
           echo "Waiting for app to start..."
