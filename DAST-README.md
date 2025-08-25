@@ -15,9 +15,17 @@ Just add a code snippet to your workflow; this repository manages everything els
 
 You add a small snippet to your repository’s workflow. That snippet calls the DAST workflow here and runs OWASP ZAP against your target URL.
 
-- **You select which scan type and tool to use** by setting parameters in your workflow snippet.
-- The scanning logic, tool integrations, and updates are all handled centrally in this repository.
-- **The `main` branch is always stable and production-ready.** New features and updates are tested in branches before being merged to `main`, so you always get the latest working version.
+- You provide the target URL (and optionally start your app inside the workflow).
+- The workflow runs ZAP and uploads results.
+- Results appear in your repository’s Security and Actions tabs; artifacts are attached to the run.
+
+---
+
+## ⚠️ Reuse vs Copy-Paste (Important for localhost targets)
+If your target runs on localhost inside CI, keep ZAP in the same job that starts your app.
+
+For apps started in CI (Docker, Compose, npm, Python, Java, .NET): you must copy-paste the ZAP YAML block directly into your pipeline, in the same running job/step/task that starts your app on localhost. This ensures ZAP can reach 
+http://localhost:PORT
 
 ---
 
@@ -37,54 +45,14 @@ You add a small snippet to your repository’s workflow. That snippet calls the 
 
 **Scan results:**  
 - All findings will appear in your repository’s **Security** and **Actions** tabs.  
-- SARIF and other output files will be available as downloadable artifacts after the workflow run.
-
----
-
-## ⚡ Quick Start
-
-1. Copy one of the code blocks below into your repository’s `.github/workflows/your-workflow.yml`.
-2. Adjust the `with:` parameters as needed for your project and scan tool.
-3. Set any required secrets or variables in your repository settings.
-4. Commit and push—scans will run automatically!
-
----
-
-## 🔑 Required Secrets and Variables
-
-<table>
-  <tr>
-    <th>Tool</th>
-    <th>Required Secret/Variable</th>
-    <th>Where to Set</th>
-  </tr>
-  <tr>
-    <td>Semgrep</td>
-    <td><code>SEMGREP_APP_TOKEN</code></td>
-    <td>GitHub Actions repository secret</td>
-  </tr>
-  <tr>
-    <td>SonarQube</td>
-    <td><code>SONAR_TOKEN</code></td>
-    <td>GitHub Actions repository secret</td>
-  </tr>
-  <tr>
-    <td>SonarQube</td>
-    <td><code>SONAR_HOST_URL</code></td>
-    <td>GitHub Actions repository variable</td>
-  </tr>
-  <tr>
-    <td>Others</td>
-    <td><em>none</em></td>
-    <td>-</td>
-  </tr>
-</table>
+- SARIF and other ZAP reports (HTML/JSON/Markdown) will be available as downloadable artifacts after the run.
 
 ---
 
 ## 🔒 Required Workflow Permissions
 
 To ensure security scan results are properly uploaded and visible in your repository’s Security tab, make sure to set the following permissions at the top of your main workflow YAML file:
+
 ```yaml
 permissions:
   actions: read
