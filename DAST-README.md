@@ -1,6 +1,8 @@
 # 🧪 DAST (Dynamic Application Security Testing) — OWASP ZAP
 
 This page explains how to run DAST for web applications using OWASP ZAP via the centralized GitHub Actions workflows in this repository. DAST scans a running app from the outside—no source code required.
+Zap full scan: https://github.com/zaproxy/action-full-scan
+Zap quick scan: https://github.com/zaproxy/action-baseline 
 
 ---
 
@@ -99,7 +101,7 @@ jobs:
 
       # Full (active) scan: deeper, slower
       - name: Run ZAP Full Scan (HTML + JUnit XML)
-        uses: zaproxy/action-full-scan@v0.12.0
+        uses: zaproxy/action-full-scan@v0.14.0
         with:
           target: 'http://localhost:HOST_PORT'   # Must match your exposed host port
           fail_action: false                     # Flip to true to fail on findings (prod gating)
@@ -156,7 +158,7 @@ jobs:
 
       # Baseline scan is passive by default; -a enables limited active checks
       - name: Run ZAP Baseline Scan (HTML + JUnit XML)
-        uses: zaproxy/action-baseline@v0.12.0
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           target: 'http://localhost:HOST_PORT'
           fail_action: false
@@ -245,7 +247,7 @@ jobs:
 
       # Full (active) scan against localhost
       - name: Run ZAP Full Scan (HTML + JUnit XML)
-        uses: zaproxy/action-full-scan@v0.12.0
+        uses: zaproxy/action-full-scan@v0.14.0
         with:
           target: 'http://localhost:HOST_PORT'     # Must match the -p host port exposed above
           fail_action: false
