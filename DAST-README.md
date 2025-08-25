@@ -55,7 +55,7 @@ permissions:
 ## 🧩 Example Usage
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
-- [ZAP Full scan (generic “web-app” service)]
+- [ZAP Full scan (generic “web-app” service)](#zap-full-scan---full-scan-against-a-single-service-generic-web-app-service)
 - ZAP Quick Scan
 - Zap Full Scan - Without (generic “web-app” service)
 
