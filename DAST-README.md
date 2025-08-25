@@ -1,8 +1,8 @@
 # 🧪 DAST (Dynamic Application Security Testing) — OWASP ZAP
 
 This page explains how to run DAST for web applications using OWASP ZAP via the centralized GitHub Actions workflows in this repository. DAST scans a running app from the outside—no source code required.
-Zap full scan: https://github.com/zaproxy/action-full-scan
-Zap quick scan: https://github.com/zaproxy/action-baseline 
+- Zap full scan: https://github.com/zaproxy/action-full-scan
+- Zap quick scan: https://github.com/zaproxy/action-baseline 
 
 ---
 
