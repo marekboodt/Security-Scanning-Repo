@@ -270,4 +270,5 @@ jobs:
 ---
 
 ## 🧩 Example ZAP Scan in YML files
-- [Juice shop test](/.github\workflows\98-full-zap-scan-juice-shop.yml)
+- [Juice shop test](example-01-full-zap-scan-juice-shop.yml)
+- [Node Goat](example-02-full-zap-scan-nodegoat.yml)
