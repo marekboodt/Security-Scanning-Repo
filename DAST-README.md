@@ -54,7 +54,7 @@ permissions:
 
 ---
 
-## 🧩 Example Usage
+## 📝 Example Usage
 
 Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
 - [ZAP Full scan (generic “web-app” service)](#zap-full-scan---full-scan-against-a-single-service-generic-web-app-service)
@@ -270,5 +270,5 @@ jobs:
 ---
 
 ## 🧩 Example ZAP Scan in YML files
-- [Juice shop test](example-01-full-zap-scan-juice-shop.yml)
-- [Node Goat](example-02-full-zap-scan-nodegoat.yml)
+- [Juice shop test](examples/example-01-full-zap-scan-juice-shop.yml)
+- [Node Goat](examples/eexample-02-full-zap-scan-nodegoat.yml)
