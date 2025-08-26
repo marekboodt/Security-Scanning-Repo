@@ -142,7 +142,7 @@ permissions:
       <td>Secret value</td>
       <td>
         Required for Semgrep scans.<br>
-        Set as a GitHub Actions repository secret.<br>
+        Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
         If not using Semgrep, leave empty or remove.
       </td>
       <td>SAST</td>

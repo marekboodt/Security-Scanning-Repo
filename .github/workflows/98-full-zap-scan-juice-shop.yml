@@ -1,0 +1,81 @@
+name: Full ZAP Scan
+# on Juice Shop (Optie A + JUnit)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  pull_request:
+
+permissions: # Optional, but recommended for best practice
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  zap_full_scan:
+    runs-on: ubuntu-latest
+
+    services:
+      juice-shop:
+        image: bkimminich/juice-shop
+        ports:
+          - 3000:3000
+
+    steps:
+      - name: Wait for Juice Shop to be ready
+        run: |
+          echo "Waiting for Juice Shop to start..."
+          for i in {1..30}; do
+            if curl -s http://localhost:3000 > /dev/null; then
+              echo "Juice Shop is up!"
+              exit 0
+            fi
+            echo "Still waiting..."
+            sleep 5
+          done
+          echo "Juice Shop did not start in time"
+          exit 1
+
+      - name: Debug Juice Shop logs if failed
+        if: failure()
+        run: docker logs $(docker ps -q -f "ancestor=bkimminich/juice-shop")
+
+      # Fix permissions so ZAP can write its reports
+      - name: Fix permissions for ZAP output
+        run: sudo chmod -R 777 $GITHUB_WORKSPACE
+        #run: sudo chmod -R 777 /home/runner/work/juice-shop/juice-shop
+
+      - name: Run ZAP Full Scan (HTML + JUnit XML)
+        uses: zaproxy/action-full-scan@v0.12.0
+        with:
+          target: 'http://localhost:3000'
+          fail_action: false
+          cmd_options: '-a -x report_xml.xml -l WARN'
+        continue-on-error: true
+
+      - name: List files in workspace
+        run: ls -la /home/runner/work/juice-shop/juice-shop
+        continue-on-error: true
+
+      - name: Find ZAP reports
+        run: find /home/runner/work/juice-shop/juice-shop -type f
+        continue-on-error: true
+
+      - name: Upload ZAP Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-zap-reports
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+            report_xml.xml
+        continue-on-error: true
+
+      - name: Publish ZAP JUnit Report
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: report_xml.xml
+        continue-on-error: true

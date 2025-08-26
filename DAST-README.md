@@ -267,4 +267,7 @@ jobs:
         continue-on-error: true
 ```
 
-> 
+---
+
+## 🧩 Example ZAP Scan in YML files
+- [Juice shop test](.github\workflows\98-full-zap-scan-juice-shop.yml)
