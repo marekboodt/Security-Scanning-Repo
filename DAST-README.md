@@ -40,7 +40,7 @@ http://localhost:PORT
 
 **Scan results:**  
 - All findings will appear in your repository’s **Security** and **Actions** tabs.  
-- ZAP reports (HTML/JSON/Markdown) will be available as downloadable artifacts after the run. $${\color{red}SARIF not supported}$$
+- ZAP reports (HTML/JSON/Markdown) will be available as downloadable artifacts after the run. $${\color{red}SARIF \space not \space supported}$$
 - For HTTPS URLs on 443 or HTTP on 80, you don’t need to specify the port in the URL. Only add a port for non-defaults (e.g., :8080, :8443).
 
 ---
