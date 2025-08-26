@@ -1,8 +1,8 @@
 # 🧪 DAST (Dynamic Application Security Testing) — OWASP ZAP
 
 This page explains how to run DAST for web applications using OWASP ZAP via the centralized GitHub Actions workflows in this repository. DAST scans a running app from the outside—no source code required.
-- Zap full scan: https://github.com/zaproxy/action-full-scan - tested version 0.12
-- Zap quick scan: https://github.com/zaproxy/action-baseline - tested version 0.14
+- Zap full scan: https://github.com/zaproxy/action-full-scan - tested version @v0.12.0
+- Zap quick scan: https://github.com/zaproxy/action-baseline - tested version @v0.14.0
 
 ---
 
@@ -34,9 +34,13 @@ http://localhost:PORT
 
 ## 📈 Results and Artifacts
 
+**Differences between Baseline and Full Scan:**
+- baseline is spider + passive (optional limited active with -a)
+- full is active (can be intrusive).
+
 **Scan results:**  
 - All findings will appear in your repository’s **Security** and **Actions** tabs.  
-- SARIF and other ZAP reports (HTML/JSON/Markdown) will be available as downloadable artifacts after the run.
+- ZAP reports (HTML/JSON/Markdown) will be available as downloadable artifacts after the run. $${\color{red}SARIF not supported}$$
 - For HTTPS URLs on 443 or HTTP on 80, you don’t need to specify the port in the URL. Only add a port for non-defaults (e.g., :8080, :8443).
 
 ---
@@ -193,7 +197,7 @@ jobs:
       - name: Start database
         run: |
           docker run -d --name DB_SERVICE --network APP_NET DB_IMAGE:DB_TAG
-          # e.g., docker run -d --name mongo --network zapnet mongo:6
+          # e.g., docker run -d --name mongo --network APP_NET mongo:6
 
       # Wait for the database to be ready (adjust health check command)
       - name: Wait for database to be ready
@@ -220,7 +224,7 @@ jobs:
             APP_IMAGE:APP_TAG \
             sh -lc 'APP_START_COMMAND'
           # Example:
-          # docker run -d --name nodegoat --network zapnet -p 4000:4000 \
+          # docker run -d --name nodegoat --network APP_NET -p 4000:4000 \
           #   -e MONGODB_URI="mongodb://mongo:27017/nodegoat" \
           #   contrastsecuritydemo/nodegoat:1.3.0 \
           #   sh -lc 'npm start'
