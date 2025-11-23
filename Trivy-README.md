@@ -41,12 +41,12 @@ jobs:
 
 | Parameter | Required | Default | Description |
 |-----------|----------|---------|-------------|
-| `image-name` | âœ… | - | Container image name |
-| `image-tag` | âœ… | - | Image tag (e.g., `latest`, `v1.0`, `${{ github.sha }}`) |
-| `dockerfile-path` | âœ… | - | Path to Dockerfile (e.g., `./`, `./docker`) |
-| `exception-profile` | âŒ | `none` | Exception profile: `ubuntu`, `alpine`, `node`, `python`, or `none` |
-| `severity` | âŒ | `HIGH,CRITICAL` | Severity levels to scan for |
-| `environment` | âœ… | - | `non-prod` (continue on error) or `prod` (fail on error) |
+| `image-name` | Yes | - | Container image name |
+| `image-tag` | Yes | - | Image tag (e.g., `latest`, `v1.0`, `${{ github.sha }}`) |
+| `dockerfile-path` | Yes | - | Path to Dockerfile (e.g., `./`, `./docker`) |
+| `exception-profile` | No | `none` | Exception profile: `ubuntu`, `alpine`, `node`, `python`, or `none` |
+| `severity` | No | `HIGH,CRITICAL` | Severity levels to scan for |
+| `environment` | Yes | - | `non-prod` (continue on error) or `prod` (fail on error) |
 
 ## Exception Management
 
@@ -76,15 +76,14 @@ CVE-YYYY-XXXXX  # Reason | Owner/Team | Date added YYYY-MM-DD | Review/Expire Da
 - **Date added**: When was it added?
 - **Review/Expire**: When to check again? (max 6 months)
 
-### Examples
-
+### Good Examples
 ```
-# Good âœ…
 CVE-2024-12345  # Feature disabled in config | Dev Team | 2024-11-23 | Review 2025-05-01
 CVE-2023-99999  # express@3 - upgrade Q2 2025 | Dev Team | 2024-11-23 | Expires 2025-06-30
 CVE-2024-11111  # Kernel bug - mitigated by isolation | Security | 2024-11-23 | Review 2025-03-01
-
-# Bad âŒ
+```
+### Bad Examples
+```
 CVE-2024-12345  # TODO
 CVE-2024-12345  # Accepted
 CVE-2024-12345  # Will fix later
@@ -96,9 +95,6 @@ CVE-2024-12345  # Will fix later
 |---------|------|---------|
 | `ubuntu` | `trivy-exceptions/ubuntu.trivyignore` | Ubuntu base images (18.04, 20.04, 22.04, etc.) |
 | `alpine` | `trivy-exceptions/alpine.trivyignore` | Alpine base images (musl-libc, busybox) |
-| `node` | `trivy-exceptions/node.trivyignore` | Node.js base images |
-| `python` | `trivy-exceptions/python.trivyignore` | Python base images |
-| `none` | - | No base image exceptions |
 
 Set in your workflow:
 ```yaml
@@ -127,15 +123,16 @@ Add to `.trivyignore` in your project repository. See [project README template](
 
 ```
 Security-Scanning-Repo/
-â”œâ”€â”€ .github/workflows/
-â”‚   â””â”€â”€ 10-container-scan-workflow.yml    # Reusable workflow
-â”œâ”€â”€ trivy-exceptions/
-â”‚   â”œâ”€â”€ global.trivyignore                # Global exceptions
-â”‚   â”œâ”€â”€ ubuntu.trivyignore                # Ubuntu specific
-â”‚   â”œâ”€â”€ alpine.trivyignore                # Alpine specific
-â”‚   â”œâ”€â”€ node.trivyignore                  # Node.js specific
-â”‚   â””â”€â”€ python.trivyignore                # Python specific
-â””â”€â”€ README.md
+├── .github/
+│   └── workflows/
+│       └── 10-container-scan-workflow.yml    # Reusable workflow
+├── trivy-exceptions/
+│   ├── global.trivyignore                    # Global exceptions
+│   ├── ubuntu.trivyignore                    # Ubuntu specific
+│   ├── alpine.trivyignore                    # Alpine specific
+│   ├── node.trivyignore                      # Node.js specific
+│   └── python.trivyignore                    # Python specific
+└── README.md
 ```
 
 ## How It Works
@@ -186,14 +183,14 @@ Add `actions: read` permission to your calling workflow.
 
 ## Best Practices
 
-### âœ… DO
+### DO
 - Add clear reason WHY you accept a CVE
 - Set realistic review dates (max 6 months)
 - Use `Expires` for temporary exceptions
 - Review exceptions monthly
 - Remove exceptions when CVE is patched
 
-### âŒ DON'T
+### DON'T
 - Add exceptions without proper reason
 - Use "TODO" or "fix later"
 - Forget to set review dates
