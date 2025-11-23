@@ -61,7 +61,14 @@ jobs:
       - name: Build image
         run: docker build -t ${{ inputs.image-name }}:${{ inputs.image-tag }} ${{ inputs.dockerfile-path }}
       
-      - name: Run Trivy scan
+      - name: Run Trivy scan (table)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ inputs.image-name }}:${{ inputs.image-tag }}'
+          format: 'table'
+          severity: ${{ inputs.severity }}
+      
+      - name: Run Trivy scan (SARIF)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: '${{ inputs.image-name }}:${{ inputs.image-tag }}'
@@ -69,14 +76,17 @@ jobs:
           output: 'trivy-results.sarif'
           severity: ${{ inputs.severity }}
           trivyignores: '.trivyignore-merged'
-        continue-on-error: ${{ inputs.environment == 'non-prod' }}
-      
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v4
+
+      - name: Upload SARIF file
+        uses: actions/upload-artifact@v4
         with:
-          sarif_file: trivy-results.sarif
-      
-      - name: Upload to GitHub Security
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: trivy-results.sarif
+          name: trivy-results
+          path: trivy-results.sarif
+
+ #     - name: Upload SARIF
+ #       uses: github/codeql-action/upload-sarif@v4
+ #       with:
+ #         sarif_file: trivy-results.sarif
+ #         category: trivy-container-scan  # Unieke category
+            
+
