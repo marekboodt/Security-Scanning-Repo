@@ -46,7 +46,7 @@ jobs:
       - name: Run IaC Custom *.sh scripts - Download Checkov and Run it
         id: run-custom-iac-checkov-scan # set ID to later in artifact upload use need.<<ID>>.outputs.artifact_name
         run: |
-          bash security-scanning/scripts/custom-${{ inputs.language }}-iac-script.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
+          bash security-scanning/02-scripts/custom-${{ inputs.language }}-iac-script.sh ${{ inputs.project_dir }} ${{ inputs.environment }} ${{ inputs.language }} ${{ env.TIMESTAMP }}
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 # ===================== Upload Custom IaC Scan files - Artifacts =====================
       - name: Upload scan results of Custom IaC Scan

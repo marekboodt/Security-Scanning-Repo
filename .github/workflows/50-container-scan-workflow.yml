@@ -32,7 +32,7 @@ jobs:
           repository: marekboodt/Security-Scanning-Repo
           path: central-exceptions
           sparse-checkout: |
-            trivy-exceptions/
+            03-exceptions/
       
       # Merge ignore files
       - name: Merge trivyignore files
@@ -40,16 +40,16 @@ jobs:
           touch .trivyignore-merged
           
           # 1. Globale exceptions
-          if [ -f "central-exceptions/trivy-exceptions/global.trivyignore" ]; then
+          if [ -f "central-exceptions/03-exceptions/global.trivyignore" ]; then
             echo "# Global exceptions" >> .trivyignore-merged
-            cat central-exceptions/trivy-exceptions/global.trivyignore >> .trivyignore-merged
+            cat central-exceptions/03-exceptions/global.trivyignore >> .trivyignore-merged
             echo "" >> .trivyignore-merged
           fi
           
           # 2. Base-image exceptions
-          if [ "${{ inputs.exception-profile }}" != "none" ] && [ -f "central-exceptions/trivy-exceptions/${{ inputs.exception-profile }}.trivyignore" ]; then
+          if [ "${{ inputs.exception-profile }}" != "none" ] && [ -f "central-exceptions/03-exceptions/${{ inputs.exception-profile }}.trivyignore" ]; then
             echo "# Exception profile (${{ inputs.exception-profile }})" >> .trivyignore-merged
-            cat central-exceptions/trivy-exceptions/${{ inputs.exception-profile }}.trivyignore >> .trivyignore-merged
+            cat central-exceptions/03-exceptions/${{ inputs.exception-profile }}.trivyignore >> .trivyignore-merged
             echo "" >> .trivyignore-merged
           fi
           
