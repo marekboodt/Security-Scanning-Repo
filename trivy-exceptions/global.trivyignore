@@ -1,0 +1,37 @@
+# =============================================================================
+# GLOBAL EXCEPTIONS - Applied to ALL projects
+# =============================================================================
+# Contact: security-team@company.com
+# Last review: 2024-11-22
+# Next review: 2025-01-22
+# =============================================================================
+# FORMAT: CVE-YYYY-XXXXX  # Reason | Owner | Added | Review/Expires
+#
+# GUIDELINES:
+# - Only add if NO fix available OR accepted company-wide risk
+# - Keep reason SHORT and CLEAR (why accepted, not what it is)
+# - Set review date (max 6 months)
+# - Remove when patched or no longer relevant
+# =============================================================================
+
+# =============================================================================
+# KERNEL ISSUES - No patches available
+# =============================================================================
+CVE-2024-35870  # Kernel SMB bug - no upstream patch | Security Team | 2024-11-22 | Review 2025-06-01
+CVE-2024-53179  # Kernel signing key UAF - no fix yet | Security Team | 2024-11-22 | Review 2025-06-01
+
+# =============================================================================
+# NETWORKING - Mitigated by infrastructure
+# =============================================================================
+CVE-2023-44487  # HTTP/2 DoS - mitigated by WAF/proxy | Platform Team | 2024-11-22 | Review 2025-03-01
+
+# =============================================================================
+# FALSE POSITIVES - Not exploitable in our setup
+# =============================================================================
+# CVE-____-_____  # Reason | Owner | Date | Review Date
+
+# =============================================================================
+# TEMPLATE - Copy below when adding new exception
+# =============================================================================
+# CVE-____-_____  # _________________________ | __________ | 2024-__-__ | Review 2025-__-__
+#                 # ↑ Why accepted?           ↑ Team       ↑ Today     ↑ Max 6 months
