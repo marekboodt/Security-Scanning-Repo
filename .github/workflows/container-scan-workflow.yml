@@ -1,0 +1,77 @@
+name: Container Scan - Trivy
+
+on:
+  workflow_call:
+    inputs:
+      image-name: { type: string, required: true }
+      image-tag: { type: string, required: true }
+      dockerfile-path: { type: string, required: true }
+      base-image: { type: string, required: false, default: 'none' }  # ubuntu, alpine, etc
+      severity: { type: string, required: false, default: 'HIGH,CRITICAL' }
+      environment: { type: string, required: true }
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Checkout centrale exceptions repo
+      - name: Checkout central exceptions
+        uses: actions/checkout@v4
+        with:
+          repository: marekboodt/Security-Scanning-Repo
+          path: central-exceptions
+          sparse-checkout: |
+            exceptions/
+      
+      # Merge ignore files
+      - name: Merge trivyignore files
+        run: |
+          touch .trivyignore-merged
+          
+          # 1. Globale exceptions
+          if [ -f "central-exceptions/exceptions/global.trivyignore" ]; then
+            echo "# Global exceptions" >> .trivyignore-merged
+            cat central-exceptions/exceptions/global.trivyignore >> .trivyignore-merged
+            echo "" >> .trivyignore-merged
+          fi
+          
+          # 2. Base-image exceptions
+          if [ "${{ inputs.base-image }}" != "none" ] && [ -f "central-exceptions/exceptions/${{ inputs.base-image }}.trivyignore" ]; then
+            echo "# Base image exceptions (${{ inputs.base-image }})" >> .trivyignore-merged
+            cat central-exceptions/exceptions/${{ inputs.base-image }}.trivyignore >> .trivyignore-merged
+            echo "" >> .trivyignore-merged
+          fi
+          
+          # 3. Project-specifieke exceptions
+          if [ -f ".trivyignore" ]; then
+            echo "# Project specific exceptions" >> .trivyignore-merged
+            cat .trivyignore >> .trivyignore-merged
+          fi
+          
+          echo "=== Merged trivyignore file ==="
+          cat .trivyignore-merged
+      
+      - name: Build image
+        run: docker build -t ${{ inputs.image-name }}:${{ inputs.image-tag }} ${{ inputs.dockerfile-path }}
+      
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ inputs.image-name }}:${{ inputs.image-tag }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: ${{ inputs.severity }}
+          trivyignores: '.trivyignore-merged'
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+      
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-results.sarif
