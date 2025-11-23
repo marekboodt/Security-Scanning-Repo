@@ -1,6 +1,14 @@
-# Security-Scanning-Repo
+# 🔐 Container Security Scanning
 
-Centralized security scanning workflows and exception management for container images using Trivy.
+This repository provides **centralized, reusable GitHub Actions workflows** for automated container image security scanning using Trivy.
+It is designed to make security scanning easy and accessible for all developers in your organization—so "no time" or "too difficult" is no longer an excuse.
+
+## 👤 Who Is This For?
+
+**Any developer or team who wants to add robust container security scanning to their GitHub projects with minimal setup.**
+Just add a code snippet to your workflow; this repository manages everything else—including centralized exception management.
+
+---
 
 ## Overview
 
@@ -28,7 +36,7 @@ permissions:
 
 jobs:
   container-scan:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/10-container-scan-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/50-container-scan-workflow.yml@main
     with:
       image-name: my-app
       image-tag: latest

@@ -1,4 +1,4 @@
-# ðŸ” IaC Security Scanning
+# ðŸ” IaC (Infrastructure as Code) Security Scanning
 
 This repository provides **centralized, reusable GitHub Actions workflows** for automated IaC (Infrastructure as Code) security scanning.
 It is designed to make security scanning easy and accessible for all developers in your organizationâ€”so "no time" or "too difficult" is no longer an excuse.

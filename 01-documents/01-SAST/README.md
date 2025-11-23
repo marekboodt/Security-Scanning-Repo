@@ -1,4 +1,4 @@
-# 🔐 SAST Security Scanning
+# 🔐 SAST (Static Application Security Testing) Security Scanning
 
 This repository provides **centralized, reusable GitHub Actions workflows** for automated SAST (Static Application Security Testing).
 It is designed to make security scanning easy and accessible for all developers in your organization—so "no time" or "too difficult" is no longer an excuse.
