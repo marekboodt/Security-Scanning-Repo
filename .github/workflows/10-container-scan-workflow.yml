@@ -6,7 +6,7 @@ on:
       image-name: { type: string, required: true }
       image-tag: { type: string, required: true }
       dockerfile-path: { type: string, required: true }
-      exception-profile: { type: string, required: false, default: 'none' }  # ubuntu, alpine, node, etc
+      exception-profile: { type: string, required: false, default: 'none' }
       severity: { type: string, required: false, default: 'HIGH,CRITICAL' }
       environment: { type: string, required: true }
 
@@ -16,8 +16,12 @@ permissions:
   security-events: write
 
 jobs:
+  generate-timestamp:
+    uses: ./.github/workflows/00-generate-timestamp.yml
+  
   trivy-scan:
     runs-on: ubuntu-latest
+    needs: generate-timestamp
     steps:
       - uses: actions/checkout@v4
       
@@ -36,7 +40,7 @@ jobs:
           touch .trivyignore-merged
           
           # 1. Globale exceptions
-          if [ -f "central-exceptions/trivy-exceptions/global.trivyignore" ]; then  # <- Was: exceptions/
+          if [ -f "central-exceptions/trivy-exceptions/global.trivyignore" ]; then
             echo "# Global exceptions" >> .trivyignore-merged
             cat central-exceptions/trivy-exceptions/global.trivyignore >> .trivyignore-merged
             echo "" >> .trivyignore-merged
@@ -67,27 +71,25 @@ jobs:
           image-ref: '${{ inputs.image-name }}:${{ inputs.image-tag }}'
           format: 'table'
           severity: ${{ inputs.severity }}
-          trivyignores: '.trivyignore-merged'  # <- Toevoegen!
+          trivyignores: '.trivyignore-merged'
       
       - name: Run Trivy scan (SARIF)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: '${{ inputs.image-name }}:${{ inputs.image-tag }}'
           format: 'sarif'
-          output: 'trivy-results.sarif'
+          output: 'trivy-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif'
           severity: ${{ inputs.severity }}
           trivyignores: '.trivyignore-merged'
 
       - name: Upload SARIF file to DOWNLOAD
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-results
-          path: trivy-results.sarif
+          name: trivy-results-${{ needs.generate-timestamp.outputs.timestamp }}
+          path: trivy-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
 
       - name: Upload SARIF to SECURITY TAB (GITHUB)
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: trivy-results.sarif
-          category: trivy-container-scan  # Unieke category
-            
-
+          sarif_file: trivy-results-${{ needs.generate-timestamp.outputs.timestamp }}.sarif
+          category: trivy-container-scan
