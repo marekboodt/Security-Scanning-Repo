@@ -1,1 +1,37 @@
-# ubuntu
+# =============================================================================
+# UBUNTU BASE IMAGE EXCEPTIONS
+# =============================================================================
+# For projects using: exception-profile: ubuntu
+# Contact: platform-team@company.com
+# Last review: YYYY-MM-DD
+# Next review: YYYY-MM-DD
+# =============================================================================
+# USE THIS FILE FOR:
+# =============================================================================
+# - Ubuntu-specific kernel issues
+# - System libraries (glibc, systemd, etc)
+# - Ubuntu backport pending issues
+# =============================================================================
+# TEMPLATE - Copy when adding new exception
+# =============================================================================
+# CVE-YYYY-XXXXX  # Reason | Owner/Team | Date added YYYY-MM-DD | Review/Expire Date YYYY-MM-DD
+
+
+# =============================================================================
+# UBUNTU KERNEL - Specific to Ubuntu builds
+# =============================================================================
+CVE-2025-38118  # Bluetooth MGMT UAF - not used in containers | Platform Team | 2024-11-22 | Review 2025-12-01
+
+# =============================================================================
+# SYSTEM LIBRARIES - Ubuntu specific
+# =============================================================================
+
+
+# =============================================================================
+# BACKPORT PENDING - Waiting for Ubuntu security team
+# =============================================================================
+
+
+# =============================================================================
+# FALSE POSITIVES - Not exploitable in Ubuntu containers
+# =============================================================================
