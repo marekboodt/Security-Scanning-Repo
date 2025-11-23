@@ -78,16 +78,16 @@ jobs:
           severity: ${{ inputs.severity }}
           trivyignores: '.trivyignore-merged'
 
-      - name: Upload SARIF file
+      - name: Upload SARIF file to DOWNLOAD
         uses: actions/upload-artifact@v4
         with:
           name: trivy-results
           path: trivy-results.sarif
 
- #     - name: Upload SARIF
- #       uses: github/codeql-action/upload-sarif@v4
- #       with:
- #         sarif_file: trivy-results.sarif
- #         category: trivy-container-scan  # Unieke category
+      - name: Upload SARIF to SECURITY TAB (GITHUB)
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-container-scan  # Unieke category
             
 
