@@ -2,17 +2,19 @@
 # GLOBAL EXCEPTIONS - Applied to ALL projects
 # =============================================================================
 # Contact: security-team@company.com
-# Last review: 2024-11-22
-# Next review: 2025-01-22
+# Last review: YYYY-MM-DD
+# Next review: YYYY-MM-DD
 # =============================================================================
-# FORMAT: CVE-YYYY-XXXXX  # Reason | Owner | Added | Review/Expires
-#
-# GUIDELINES:
-# - Only add if NO fix available OR accepted company-wide risk
-# - Keep reason SHORT and CLEAR (why accepted, not what it is)
-# - Set review date (max 6 months)
-# - Remove when patched or no longer relevant
+# USE THIS FILE FOR:
 # =============================================================================
+# - Kernel issues without fix (all OS types)
+# - Company-wide accepted risks
+# - False positives affecting all projects
+# =============================================================================
+# TEMPLATE - Copy when adding new exception
+# =============================================================================
+# CVE-YYYY-XXXXX  # Reason | Owner/Team | Date added YYYY-MM-DD | Review/Expire Date YYYY-MM-DD
+
 
 # =============================================================================
 # KERNEL ISSUES - No patches available
@@ -28,13 +30,8 @@ CVE-2023-44487  # HTTP/2 DoS - mitigated by WAF/proxy | Platform Team | 2024-11-
 # =============================================================================
 # FALSE POSITIVES - Not exploitable in our setup
 # =============================================================================
-# CVE-____-_____  # Reason | Owner | Date | Review Date
+
 
 # =============================================================================
-# TEMPLATE - Copy below when adding new exception
+# DEPENDENCIES - Accepted company-wide
 # =============================================================================
-# CVE-____-_____  # _________________________ | __________ | 2024-__-__ | Review 2025-__-__
-#                 # ↑ Why accepted?           ↑ Team       ↑ Today     ↑ Max 6 months
-
-
-CVE-2023-44487 # TESTING
