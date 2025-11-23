@@ -52,11 +52,11 @@ jobs:
 
 ### Three-Level System
 
-1. **Global** (`03-exceptions/global.trivyignore`)
+1. **Global** (`03-exceptions/Trivy/global.trivyignore`)
    - Applied to ALL projects
    - Use for: Kernel issues, company-wide decisions, common false positives
 
-2. **Base Image** (`03-exceptions/ubuntu.trivyignore`, `alpine.trivyignore`, etc.)
+2. **Base Image** (`03-exceptions/Trivy/ubuntu.trivyignore`, `alpine.trivyignore`, etc.)
    - Applied when `exception-profile` is set
    - Use for: OS-specific CVEs, base image issues
 
@@ -93,8 +93,8 @@ CVE-2024-12345  # Will fix later
 
 | Profile | File | Use For |
 |---------|------|---------|
-| `ubuntu` | `03-exceptions/ubuntu.trivyignore` | Ubuntu base images (18.04, 20.04, 22.04, etc.) |
-| `alpine` | `03-exceptions/alpine.trivyignore` | Alpine base images (musl-libc, busybox) |
+| `ubuntu` | `03-exceptions/Trivy/ubuntu.trivyignore` | Ubuntu base images (18.04, 20.04, 22.04, etc.) |
+| `alpine` | `03-exceptions/Trivy/alpine.trivyignore` | Alpine base images (musl-libc, busybox) |
 
 Set in your workflow:
 ```yaml
@@ -107,8 +107,8 @@ with:
 ### Global or Base-Image Exceptions
 
 1. Fork this repository
-2. Edit the appropriate file in `03-exceptions/`:
-   - `global.trivyignore` - for all projects
+2. Edit the appropriate file in `03-exceptions/Trivy/`:
+   - `Trivy/global.trivyignore` - for all projects
    - `ubuntu.trivyignore` - for Ubuntu images
    - `alpine.trivyignore` - for Alpine images
 3. Add CVE with proper format
@@ -126,7 +126,7 @@ Security-Scanning-Repo/
 ├── .github/
 │   └── workflows/
 │       └── 10-container-scan-workflow.yml    # Reusable workflow
-├── 03-exceptions/
+├── 03-exceptions/Trivy/
 │   ├── global.trivyignore                    # Global exceptions
 │   ├── ubuntu.trivyignore                    # Ubuntu specific
 │   ├── alpine.trivyignore                    # Alpine specific
@@ -139,7 +139,7 @@ Security-Scanning-Repo/
 
 1. Your workflow calls the reusable workflow
 2. Workflow checks out your project code
-3. Workflow checks out this repo's `03-exceptions/`
+3. Workflow checks out this repo's `03-exceptions/Trivy/`
 4. Merges exceptions in order:
    - Global exceptions (always)
    - Base-image exceptions (if profile set)

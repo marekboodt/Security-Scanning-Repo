@@ -28,7 +28,7 @@ This snippet will call the relevant workflow from this repository and run the se
 - **[SAST Guide](01-documents/01-SAST/SAST-README.md)** - Static code analysis with Semgrep, Bearer, CodeQL
 - **[DAST Guide](01-documents/02-DAST/DAST-README.md)** - Dynamic testing with OWASP ZAP
 - **[IaC Guide](01-documents/03-IAC/IAC-README.md)** - Infrastructure scanning with Checkov
-- **[Container Guide](01-documents/04-Trivy-container/Trivy-README.md)** - Docker image scanning with Trivy
+- **[Container Guide](01-documents/04-Container-Trivy/Trivy-README.md)** - Docker image scanning with Trivy
 
 ---
 
