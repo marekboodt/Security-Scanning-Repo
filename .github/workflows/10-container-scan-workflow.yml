@@ -6,7 +6,7 @@ on:
       image-name: { type: string, required: true }
       image-tag: { type: string, required: true }
       dockerfile-path: { type: string, required: true }
-      base-image: { type: string, required: false, default: 'none' }  # ubuntu, alpine, etc
+      exception-profile: { type: string, required: false, default: 'none' }  # ubuntu, alpine, node, etc
       severity: { type: string, required: false, default: 'HIGH,CRITICAL' }
       environment: { type: string, required: true }
 
@@ -43,9 +43,9 @@ jobs:
           fi
           
           # 2. Base-image exceptions
-          if [ "${{ inputs.base-image }}" != "none" ] && [ -f "central-exceptions/exceptions/${{ inputs.base-image }}.trivyignore" ]; then
-            echo "# Base image exceptions (${{ inputs.base-image }})" >> .trivyignore-merged
-            cat central-exceptions/exceptions/${{ inputs.base-image }}.trivyignore >> .trivyignore-merged
+          if [ "${{ inputs.exception-profile }}" != "none" ] && [ -f "central-exceptions/exceptions/${{ inputs.exception-profile }}.trivyignore" ]; then
+            echo "# Exception profile (${{ inputs.exception-profile }})" >> .trivyignore-merged
+            cat central-exceptions/exceptions/${{ inputs.exception-profile }}.trivyignore >> .trivyignore-merged
             echo "" >> .trivyignore-merged
           fi
           
