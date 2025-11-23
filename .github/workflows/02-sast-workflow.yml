@@ -29,7 +29,7 @@ permissions:
 jobs:
   Semgrep-Scan:
     if: ${{ inputs.sast-scan-tool == 'semgrep' }}
-    uses: ./.github/workflows/sast-semgrep-workflow.yml
+    uses: ./.github/workflows/_02-sast-semgrep-workflow.yml
     with:
       sast-scan-tool: ${{ inputs.sast-scan-tool }}
 #      language: ${{ inputs.language }}
@@ -40,7 +40,7 @@ jobs:
 
   CodeQL-Scan:
     if: ${{ inputs.sast-scan-tool == 'codeql' }}
-    uses: ./.github/workflows/sast-codeql-workflow.yml
+    uses: ./.github/workflows/_02-sast-codeql-workflow.yml
     with:
       sast-scan-tool: ${{ inputs.sast-scan-tool }}
       language: ${{ inputs.language }}
@@ -49,7 +49,7 @@ jobs:
 
   Bearer-Scan:
     if: ${{ inputs.sast-scan-tool == 'bearer' }}
-    uses: ./.github/workflows/sast-bearer-workflow.yml
+    uses: ./.github/workflows/_02-sast-bearer-workflow.yml
     with:
       sast-scan-tool: ${{ inputs.sast-scan-tool }}
 #      language: ${{ inputs.language }}
