@@ -23,14 +23,12 @@ This snippet will call the relevant workflow from this repository and run the se
 
 ---
 
-## ðŸ› ï¸ Supported Scan Types
+## ðŸ“š Detailed Documentation Supported Scan Types
 
-| Scan Type | Description | Guide |
-|-----------|-------------|-------|
-| **SAST** | Static Application Security Testing - Analyzes source code for vulnerabilities | [SAST Guide](01-documents/01-SAST/SAST-README.md) |
-| **DAST** | Dynamic Application Security Testing - Tests running applications | [DAST Guide](01-documents/02-DAST/DAST-README.md) |
-| **IaC** | Infrastructure as Code Security - Scans Terraform for misconfigurations | [IaC Guide](01-documents/03-IAC/IAC-README.md) |
-| **Container** | Container Image Security - Scans Docker images with Trivy | [Container Scanning Guide](01-documents/04-Trivy-container/Trivy-README.md)|
+- **[SAST Guide](01-documents/01-SAST/SAST-README.md)** - Static code analysis with Semgrep, Bearer, CodeQL
+- **[DAST Guide](01-documents/02-DAST/DAST-README.md)** - Dynamic testing with OWASP ZAP
+- **[IaC Guide](01-documents/03-IAC/IAC-README.md)** - Infrastructure scanning with Checkov
+- **[Container Guide](01-documents/04-Trivy-container/Trivy-README.md)** - Docker image scanning with Trivy
 
 ---
 
@@ -63,27 +61,5 @@ permissions:
 - All findings appear in your repository's **Security** tab
 - Detailed logs available in the **Actions** tab
 - SARIF and other output files available as downloadable artifacts
-
----
-
-## ðŸ“š Detailed Documentation
-
-- **[SAST Guide](docs/SAST-README.md)** - Static code analysis with Semgrep, Bearer, CodeQL
-- **[DAST Guide](docs/DAST-README.md)** - Dynamic testing with OWASP ZAP
-- **[IaC Guide](docs/IAC-README.md)** - Infrastructure scanning with Checkov
-- **[Container Guide](docs/CONTAINER-README.md)** - Docker image scanning with Trivy
-
----
-
-## ðŸ”‘ Required Secrets Overview
-
-| Tool | Required Secret/Variable | Type |
-|------|-------------------------|------|
-| Semgrep | `SEMGREP_APP_TOKEN` | Secret |
-| SonarQube | `SONAR_TOKEN` | Secret |
-| SonarQube | `SONAR_HOST_URL` | Variable |
-| Bearer, CodeQL, Checkov, ZAP, Trivy | *none* | - |
-
-See individual guides for detailed setup instructions.
 
 ---
