@@ -27,10 +27,10 @@ This snippet will call the relevant workflow from this repository and run the se
 
 | Scan Type | Description | Guide |
 |-----------|-------------|-------|
-| **SAST** | Static Application Security Testing - Analyzes source code for vulnerabilities | [SAST Guide](docs/SAST-README.md) |
-| **DAST** | Dynamic Application Security Testing - Tests running applications | [DAST Guide](docs/DAST-README.md) |
-| **IaC** | Infrastructure as Code Security - Scans Terraform for misconfigurations | [IaC Guide](docs/IAC-README.md) |
-| **Container** | Container Image Security - Scans Docker images with Trivy | [Container Guide](docs/CONTAINER-README.md) |
+| **SAST** | Static Application Security Testing - Analyzes source code for vulnerabilities | [SAST Guide](01-documents/01-SAST/SAST-README.md) |
+| **DAST** | Dynamic Application Security Testing - Tests running applications | [DAST Guide](01-documents/02-DAST/DAST-README.md) |
+| **IaC** | Infrastructure as Code Security - Scans Terraform for misconfigurations | [IaC Guide](01-documents/03-IAC/IAC-README.md) |
+| **Container** | Container Image Security - Scans Docker images with Trivy | [Container Scanning Guide](01-documents/04-Trivy-container/Trivy-README.md)|
 
 ---
 
