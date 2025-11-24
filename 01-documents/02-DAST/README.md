@@ -130,27 +130,24 @@ takes about 1-2 minutes, but finds less
 ```yaml
 jobs:
   zap_scan:
-    runs-on: ubuntu-latest            # or self-hosted, or <NAME>
+    runs-on: ubuntu-latest
 
-    # Start your target application as a service container
     services:
       web-app:
-        image: OWNER/IMAGE:TAG              # e.g., bkimminich/juice-shop:latest
+        image: OWNER/IMAGE:TAG           # e.g., bkimminich/juice-shop:latest
         ports:
-          - HOST_PORT:CONTAINER_PORT        # e.g., 3000:3000
+          - HOST_PORT:CONTAINER_PORT     # e.g., 3000:3000
 
-      # Wait until the app is reachable on localhost to avoid scanning too early
-      # If target is a public/staging URL rename localhost accordingly - https://your-env.example.com (optional set :PORT if not 80 or 443)
-      steps:
+    steps:
+      # Wait on host port just to fail fast if app isn’t ready
       - name: Wait for app to be ready
         run: |
           echo "Waiting for app to start..."
           for i in {1..30}; do
-            if curl -s http://localhost:HOST_PORT > /dev/null; then
+            if curl -fsS http://localhost:HOST_PORT/ > /dev/null; then
               echo "App is up!"
               exit 0
             fi
-            echo "Still waiting..."
             sleep 5
           done
           echo "App did not start in time"
@@ -158,15 +155,14 @@ jobs:
 
       # Optional: only if report writes fail due to permissions
       - name: Fix permissions for ZAP output (optional)
-        run: sudo chmod -R 777 $GITHUB_WORKSPACE
+        run: sudo chmod -R a+rwX "$GITHUB_WORKSPACE"
 
-      # Baseline scan is passive by default; -a enables limited active checks
       - name: Run ZAP Baseline Scan (HTML + JUnit XML)
         uses: zaproxy/action-baseline@v0.14.0
         with:
-          target: 'http://localhost:HOST_PORT'
+          target: 'http://web-app:CONTAINER_PORT'   # use service hostname, not localhost
           fail_action: false
-          cmd_options: '-a -x report_xml.xml'    # Remove -a for passive-only scans
+          cmd_options: '-a -x report_xml.xml'       # remove -a for passive-only
         continue-on-error: true
 
       - name: Upload ZAP Reports
@@ -178,7 +174,7 @@ jobs:
             report_json.json
             report_md.md
             report_xml.xml
-        continue-on-error: true
+          if-no-files-found: ignore
 ```
 
 ### Zap Full Scan - With multi-container target (DB + app on custom network)
