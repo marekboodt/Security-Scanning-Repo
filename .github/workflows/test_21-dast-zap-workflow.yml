@@ -1,0 +1,113 @@
+name: DAST ZAP Scan (service or external)
+
+on:
+  workflow_call:
+    inputs:
+      dast-scan-tool: { type: string, required: true }
+      project_dir:    { type: string, required: true }
+      environment:    { type: string, required: true }
+      start_command:  { type: string, required: false, default: "" }
+      website_target: { type: string, required: true }
+      service_image:  { type: string, required: false }
+      container_port: { type: number, required: false }
+      health_path:    { type: string, required: false, default: "/" }
+      env_json:       { type: string, required: false, default: "{}" }
+      scan_type:      { type: string, required: false, default: "baseline" }
+      cmd_options:    { type: string, required: false, default: "-x report_xml.xml" }
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+  checks: write
+
+jobs:
+  zap_scan:
+    runs-on: ubuntu-latest
+    # Ensure ZAP container action and the service share the same bridge network
+    container:
+      image: ubuntu:22.04
+
+    services:
+      app:
+        if: ${{ inputs.service_image != '' }}
+        image: ${{ inputs.service_image }}
+        env: ${{ fromJSON(inputs.env_json) }}
+        # No host port mapping needed when the job runs in a container
+        # Use healthcheck via options if desired:
+        # options: --health-cmd="curl -fsS http://localhost:${{ inputs.container_port }}${{ inputs.health_path }} || exit 1" --health-interval=5s --health-retries=20
+
+    steps:
+      - name: Install curl
+        run: |
+          apt-get update -y
+          apt-get install -y curl ca-certificates
+
+      # Option A: wait on service container
+      - name: Wait for service
+        if: ${{ inputs.service_image != '' && inputs.container_port != '' }}
+        env:
+          TARGET: http://app:${{ inputs.container_port }}${{ inputs.health_path }}
+        run: |
+          echo "Waiting for $TARGET ..."
+          for i in {1..90}; do
+            if curl -fsS "$TARGET" >/dev/null; then
+              echo "Service is ready."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Service not ready in time."
+          exit 1
+
+      # Option B: start a host process and wait on external/local URL
+      - name: Start host application (optional)
+        if: ${{ inputs.start_command != '' && inputs.service_image == '' }}
+        working-directory: ${{ inputs.project_dir }}
+        run: |
+          set -e
+          echo "Starting: ${{ inputs.start_command }}"
+          ${{ inputs.start_command }} &
+          echo "Waiting for target: ${{ inputs.website_target }}"
+          timeout 120 bash -c 'until curl -fsS "${{ inputs.website_target }}" >/dev/null; do sleep 2; done'
+
+      - name: Verify target
+        run: curl -v "${{ inputs.service_image != '' && inputs.container_port != '' && format('http://app:{0}{1}', inputs.container_port, inputs.health_path) || inputs.website_target }}" || exit 1
+
+      # ZAP Baseline or Full
+      - name: ZAP Baseline
+        if: ${{ inputs.scan_type == 'baseline' }}
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: ${{ inputs.service_image != '' && inputs.container_port != '' && format('http://app:{0}', inputs.container_port) || inputs.website_target }}
+          fail_action: false
+          cmd_options: ${{ inputs.cmd_options }}
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+
+      - name: ZAP Full Scan
+        if: ${{ inputs.scan_type == 'full' }}
+        uses: zaproxy/action-full-scan@v0.12.0
+        with:
+          target: ${{ inputs.service_image != '' && inputs.container_port != '' && format('http://app:{0}', inputs.container_port) || inputs.website_target }}
+          fail_action: false
+          cmd_options: ${{ inputs.cmd_options }}
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+
+      - name: Upload ZAP Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+            report_xml.xml
+          if-no-files-found: ignore
+
+      - name: Publish ZAP JUnit Report
+        if: always()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: report_xml.xml
+        continue-on-error: ${{ inputs.environment == 'non-prod' }}
