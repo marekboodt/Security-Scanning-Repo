@@ -33,7 +33,8 @@ jobs:
       app:
         image: ${{ inputs.service_image }}
         env: ${{ fromJSON(inputs.env_json) }}
-        ports: ${{ inputs.container_port }}:${{ inputs.container_port }}
+        ports:
+          - "${{ inputs.container_port }}:${{ inputs.container_port }}"
 
     steps:
       - name: Ensure curl exists
