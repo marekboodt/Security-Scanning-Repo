@@ -35,10 +35,8 @@ jobs:
         env: ${{ fromJSON(inputs.env_json) }}
 
     steps:
-      - name: Install curl
-        run: |
-          apt-get update -y
-          apt-get install -y curl ca-certificates
+      - name: Ensure curl exists
+        run: curl --version
 
       - name: Wait for service
         env:
