@@ -40,7 +40,7 @@ jobs:
 
       - name: Wait for service
         env:
-          TARGET: http://app:${{ inputs.container_port }}${{ inputs.health_path }}
+          TARGET: http://localhost:${{ inputs.container_port }}${{ inputs.health_path }}
         run: |
           echo "Waiting for $TARGET ..."
           for i in {1..90}; do
@@ -61,7 +61,7 @@ jobs:
         if: ${{ inputs.scan_type == 'baseline' }}
         uses: zaproxy/action-baseline@v0.14.0
         with:
-          target: ${{ format('http://app:{0}', inputs.container_port) }}
+          target: ${{ format('http://localhost:{0}', inputs.container_port) }}
           fail_action: false
           cmd_options: ${{ inputs.cmd_options }}
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
@@ -70,7 +70,7 @@ jobs:
         if: ${{ inputs.scan_type == 'full' }}
         uses: zaproxy/action-full-scan@v0.12.0
         with:
-          target: ${{ format('http://app:{0}', inputs.container_port) }}
+          target: ${{ format('http://localhost:{0}', inputs.container_port) }}
           fail_action: false
           cmd_options: ${{ inputs.cmd_options }}
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
