@@ -29,9 +29,6 @@ jobs:
     if: ${{ inputs.service_image != '' && inputs.container_port != '' }}
     runs-on: ubuntu-latest
 
-    container:
-      image: ubuntu:22.04
-
     services:
       app:
         image: ${{ inputs.service_image }}
