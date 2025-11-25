@@ -19,10 +19,8 @@ permissions:
   actions: read
   contents: read
   security-events: write
-  checks: write
 
 jobs:
-
   ###############################################
   # ✅ JOB 1 — CONTAINERIZED APP (Service Mode)
   ###############################################
