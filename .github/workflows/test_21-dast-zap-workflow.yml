@@ -21,6 +21,8 @@ permissions:
   security-events: write
 
 jobs:
+  generate-timestamp:
+    uses: ./.github/workflows/00-generate-timestamp.yml
   ###############################################
   # ✅ JOB 1 — CONTAINERIZED APP (Service Mode)
   ###############################################
@@ -78,11 +80,20 @@ jobs:
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
       # --- REPORTING ---
-      - name: Upload ZAP Reports
+      - name: Set scan mode
+        id: scan-mode
+        run: |
+          if [ -n "${{ inputs.service_image }}" ]; then
+            echo "mode=container" >> $GITHUB_OUTPUT
+          else
+            echo "mode=external-URL" >> $GITHUB_OUTPUT
+          fi
+    
+      - name: Upload ZAP Reports Container IMG
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: zap-reports
+          name: DAST-ZAP-${{ inputs.scan_type }}-${{ steps.scan-mode.outputs.mode }}-Report-${{ needs.generate-timestamp.outputs.timestamp }}
           path: |
             report_html.html
             report_json.json
@@ -90,12 +101,18 @@ jobs:
             report_xml.xml
           if-no-files-found: ignore
 
-      - name: Publish JUnit Report
+      - name: Upload SARIF to GitHub Security
         if: always()
-        uses: mikepenz/action-junit-report@v4
+        uses: github/codeql-action/upload-sarif@v4
         with:
-          report_paths: report_xml.xml
-        continue-on-error: ${{ inputs.environment == 'non-prod' }}
+          sarif_file: report.sarif
+      
+      - name: Upload ZAP SARIF Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DAST-ZAP-SARIF-${{ needs.generate-timestamp.outputs.timestamp }}
+          path: report.sarif
 
   ###############################################
   # ✅ JOB 2 — EXTERNAL URL MODE
@@ -134,11 +151,20 @@ jobs:
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
 
       # --- REPORTING ---
-      - name: Upload ZAP Reports
+      - name: Set scan mode
+        id: scan-mode
+        run: |
+          if [ -n "${{ inputs.service_image }}" ]; then
+            echo "mode=container" >> $GITHUB_OUTPUT
+          else
+            echo "mode=external-URL" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Upload ZAP Reports external URL
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: zap-reports
+          name: DAST-ZAP-${{ inputs.scan_type }}-${{ steps.scan-mode.outputs.mode }}-Report-${{ needs.generate-timestamp.outputs.timestamp }}
           path: |
             report_html.html
             report_json.json
