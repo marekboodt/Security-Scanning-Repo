@@ -1,0 +1,52 @@
+name: DAST Cloudflare Scan
+
+on:
+  workflow_call:
+    inputs:
+      website_target:
+        type: string
+        required: true
+      environment:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  cloudflare-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve domain
+        run: |
+          DOMAIN=$(echo "${{ inputs.website_target }}" | sed 's~https\?://~~' | cut -d/ -f1)
+          echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
+
+      - name: DNS lookup
+        run: |
+          dig +short $DOMAIN
+
+      - name: Check Cloudflare headers
+        run: |
+          curl -sI "${{ inputs.website_target }}" | tee headers.txt
+
+          grep -qi "cf-ray" headers.txt || echo "::warning::CF-Ray header missing"
+          grep -qi "server: cloudflare" headers.txt || echo "::warning::Not served by Cloudflare"
+
+      - name: TLS configuration
+        run: |
+          echo | openssl s_client -connect ${DOMAIN}:443 -servername ${DOMAIN} 2>/dev/null \
+            | openssl x509 -noout -text \
+            | grep "TLSv"
+
+      - name: HSTS check
+        run: |
+          curl -sI "${{ inputs.website_target }}" | grep -i strict-transport-security \
+            || echo "::warning::HSTS not enabled"
+
+      - name: Security headers
+        run: |
+          for h in x-content-type-options x-frame-options content-security-policy; do
+            curl -sI "${{ inputs.website_target }}" | grep -i $h \
+              || echo "::warning::$h header missing"
+          done
