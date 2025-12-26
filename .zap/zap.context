@@ -1,0 +1,5 @@
+<context>
+  <exclude>https://cdnjs.cloudflare.com/.*</exclude>
+  <exclude>https://challenges.cloudflare.com/.*</exclude>
+  <exclude>https://static.cloudflareinsights.com/.*</exclude>
+</context>
