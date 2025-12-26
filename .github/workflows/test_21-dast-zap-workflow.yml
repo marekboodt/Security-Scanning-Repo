@@ -30,6 +30,7 @@ jobs:
     name: ZAP Scan (Containerized App)
     if: ${{ inputs.service_image != '' && inputs.container_port != '' }}
     runs-on: ubuntu-latest
+    needs: generate-timestamp
 
     services:
       app:
