@@ -42,7 +42,7 @@ jobs:
 
   Cloudflare-Scan:
     if: ${{ inputs.dast-scan-tool == 'cloudflare' }}
-    uses: ./.github/workflows/test_30-dast-cloudflare.yml
+    uses: ./.github/workflows/test_29-dast-cloudflare-exception.yml
     with:
       website_target: ${{ inputs.website_target }}
       environment:    ${{ inputs.environment }}
