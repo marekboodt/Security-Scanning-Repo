@@ -52,6 +52,14 @@ jobs:
 
 ### Configuration Per Mode
 
+The workflow automatically selects **one** execution mode based on which inputs are set:
+
+- **Container mode** → `service_image` and `container_port` are set
+- **Local app mode** → `start_command` is set (and `service_image` is empty)
+- **External URL mode** → neither `service_image` nor `start_command` is set
+
+⚠️ Only one mode can be active at a time.
+
 | Input | Container Mode | Local App Mode | External URL Mode |
 |---|---|---|---|
 | `dast-scan-tool` | `zap` | `zap` | `zap` |
