@@ -66,22 +66,21 @@ jobs:
         run: |
           mkdir -p .zap
           cat > .zap/zap.context << 'EOF'
-          <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-          <configuration>
-            <context>
-              <name>Juice Shop Scan</name>
-              <desc>Exclude third-party domains</desc>
+          <?xml version="1.0" encoding="UTF-8"?>
+          <context>
+            <name>JuiceShopContext</name>
       
-              <!-- Scan only the app -->
-              <inscope>http://localhost:3000.*</inscope>
+            <includeRegexes>
+              <regex>^http://localhost:3000/.*</regex>
+            </includeRegexes>
       
-              <!-- Exclude Cloudflare / CDN -->
-              <exclude>https://cdnjs.cloudflare.com/.*</exclude>
-              <exclude>http://cdnjs.cloudflare.com/.*</exclude>
-              <exclude>https://challenges.cloudflare.com/.*</exclude>
-              <exclude>https://static.cloudflareinsights.com/.*</exclude>
-            </context>
-          </configuration>
+            <excludeRegexes>
+              <regex>^https?://cdnjs\.cloudflare\.com/.*</regex>
+              <regex>^https?://challenges\.cloudflare\.com/.*</regex>
+              <regex>^https?://static\.cloudflareinsights\.com/.*</regex>
+              <regex>^https?://.*\.cdn\.mozilla\.net/.*</regex>
+            </excludeRegexes>
+          </context>
           EOF
 
 
