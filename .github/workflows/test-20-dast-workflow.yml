@@ -39,10 +39,3 @@ jobs:
       env_json:       ${{ inputs.env_json }}
       scan_type:      ${{ inputs.scan_type }}
       cmd_options:    ${{ inputs.cmd_options }}
-
-  Cloudflare-Scan:
-    if: ${{ inputs.dast-scan-tool == 'cloudflare' }}
-    uses: ./.github/workflows/test_29-dast-cloudflare-exception.yml
-    with:
-      website_target: ${{ inputs.website_target }}
-      environment:    ${{ inputs.environment }}
