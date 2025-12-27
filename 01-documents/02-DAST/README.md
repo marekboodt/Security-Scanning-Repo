@@ -1,19 +1,19 @@
-# ðŸ§ª DAST (Dynamic Application Security Testing) â€” OWASP ZAP  
+# 🧪 DAST (Dynamic Application Security Testing) â€” OWASP ZAP  
 ### Reusable GitHub Actions Workflow
 
 This document explains how to run **DAST scans using OWASP ZAP** via a **centralized, reusable GitHub Actions workflow**.
 
 The goal is simple:
 
-> âœ… Developers add **one job** to their pipeline  
-> âœ… The central workflow handles **everything else**
+> ✅ Developers add **one job** to their pipeline  
+> ✅ The central workflow handles **everything else**
 
 DAST scans a **running web application from the outside**.  
 No source code access is required.
 
 ---
 
-## âœ… Quick Start (TL;DR)
+## ✅ Quick Start (TL;DR)
 
 To get DAST running in your repository:
 
@@ -25,7 +25,7 @@ ZAP reports will be available as **workflow artifacts**.
 
 ---
 
-## ðŸ§  What This Workflow Supports
+## 🧠 What This Workflow Supports
 
 This reusable workflow supports **three execution modes**, automatically selected based on inputs.
 
@@ -39,7 +39,7 @@ Only **one mode runs per pipeline**.
 
 ---
 
-## ðŸ‘¤ Who Is This For?
+## 👤 Who Is This For?
 
 **Any developer or team** that wants to add DAST scanning with:
 - Minimal YAML
@@ -51,7 +51,7 @@ You do **not** need security expertise to use this.
 
 ---
 
-## ðŸš€ How It Works (Concept)
+## 🚀 How It Works (Concept)
 
 1. Your pipeline calls the **reusable DAST workflow**
 2. The workflow:
@@ -67,7 +67,7 @@ Security-Scanning-Repo/.github/workflows/
 
 ---
 
-## ðŸ§© What Developers Need to Add (Minimal YAML)
+## 🧩 What Developers Need to Add (Minimal YAML)
 
 Add **one job** to your workflow file:
 
@@ -94,16 +94,16 @@ That is all you need to add.
 
 ---
 
-## ðŸ§  Execution Modes Explained
+## 🧠 Execution Modes Explained
 
-### âœ… Mode 1 â€” Containerized Application (Recommended)
+### ✅ Mode 1 - Containerized Application (Recommended)
 
 Used when `service_image` is set.
 
 - The app is started as a **GitHub Actions service container**
 - ZAP scans `http://localhost:<container_port>`
 
-âœ… Best for:
+✅ Best for:
 - Modern applications
 - CI before deployment
 - Pull requests
@@ -114,19 +114,19 @@ Used when `service_image` is set.
 
 ---
 
-### âœ… Mode 2 â€” Local Application (GitHub Runner)
+### ✅  Mode 2 - Local Application (GitHub Runner)
 
 Used when `start_command` is set and `service_image` is empty.
 
 - The app starts as a **process inside the GitHub runner**
 - ZAP scans a localhost URL
 
-âœ… Best for:
+✅ Best for:
 - Non-containerized apps
 - Legacy services
 - Framework dev servers
 
-âš ï¸ â€œLocalâ€ means **local to the GitHub runner**, not your laptop.
+⚠️ "Local" **local to the GitHub runner**, not your laptop.
 
 **Required inputs:**
 - `start_command`
@@ -135,14 +135,14 @@ Used when `start_command` is set and `service_image` is empty.
 
 ---
 
-### âœ… Mode 3 â€” External URL
+### ✅ Mode 3 - External URL
 
 Used when **neither** `service_image` nor `start_command` is set.
 
 - No app is started
 - ZAP scans the given URL directly
 
-âœ… Best for:
+✅ Best for:
 - Staging environments
 - Periodic scans
 - Post-deployment checks
@@ -152,16 +152,16 @@ Used when **neither** `service_image` nor `start_command` is set.
 
 ---
 
-## âš™ï¸ Input Parameters Reference
+## ⚙️ Input Parameters Reference
 
 ### Core Inputs
 
 | Input | Required | Description |
 |---|---|---|
-| `dast-scan-tool` | âœ… | Must be `zap` |
-| `environment` | âœ… | Controls fail behavior (e.g. `non-prod`) |
-| `scan_type` | âŒ | `baseline` (default) or `full` |
-| `cmd_options` | âŒ | Passed directly to ZAP |
+| `dast-scan-tool` | ✅ | Must be `zap` |
+| `environment` | ✅ | Controls fail behavior (e.g. `non-prod`) |
+| `scan_type` | ❌ | `baseline` (default) or `full` |
+| `cmd_options` | ❌ | Passed directly to ZAP |
 
 ---
 
@@ -169,10 +169,10 @@ Used when **neither** `service_image` nor `start_command` is set.
 
 | Input | Required | Description |
 |---|---|---|
-| `service_image` | âœ… | Docker image to run |
-| `container_port` | âœ… | Port exposed by the container |
-| `health_path` | âŒ | Health endpoint (default `/`) |
-| `env_json` | âŒ | JSON string with env variables |
+| `service_image` | ✅ | Docker image to run |
+| `container_port` | ✅ | Port exposed by the container |
+| `health_path` | ❌ | Health endpoint (default `/`) |
+| `env_json` | ❌ | JSON string with env variables |
 
 ---
 
@@ -180,9 +180,9 @@ Used when **neither** `service_image` nor `start_command` is set.
 
 | Input | Required | Description |
 |---|---|---|
-| `start_command` | âœ… | Command to start the app |
-| `project_dir` | âœ… | Directory where command runs |
-| `website_target` | âœ… | Local URL ZAP should scan |
+| `start_command` | ✅ | Command to start the app |
+| `project_dir` | ✅ | Directory where command runs |
+| `website_target` | ✅ | Local URL ZAP should scan |
 
 ---
 
@@ -190,11 +190,11 @@ Used when **neither** `service_image` nor `start_command` is set.
 
 | Input | Required | Description |
 |---|---|---|
-| `website_target` | âœ… | Deployed application URL |
+| `website_target` | ✅ | Deployed application URL |
 
 ---
 
-## ðŸ“ˆ Scan Types
+## 📈 Scan Types
 
 ### Baseline Scan
 - Spider + passive rules
@@ -206,12 +206,12 @@ Used when **neither** `service_image` nor `start_command` is set.
 - More findings
 - Slower and intrusive
 
-âœ… Use **baseline** on PRs  
-âœ… Use **full** before releases
+✅ Use **baseline** on PRs  
+✅ Use **full** before releases
 
 ---
 
-## ðŸ“Š Results and Artifacts
+## 📊 Results and Artifacts
 
 - Reports are uploaded as **GitHub Actions artifacts**
 - Available formats:
@@ -220,13 +220,13 @@ Used when **neither** `service_image` nor `start_command` is set.
   - Markdown
   - XML
 
-âš ï¸ **SARIF is not supported by OWASP ZAP GitHub Actions**
+⚠️ **SARIF is not supported by OWASP ZAP GitHub Actions**
 
 Artifacts can be downloaded from the workflow run.
 
 ---
 
-## ðŸ” Required Workflow Permissions
+## 🔐 Required Workflow Permissions
 
 Your workflow must include:
 
@@ -239,7 +239,7 @@ permissions:
 
 ---
 
-## ðŸ§­ What Is Managed Centrally?
+## 🧭­ What Is Managed Centrally?
 
 You **do not** need to manage:
 - ZAP installation
@@ -252,7 +252,7 @@ All logic is centralized and versioned.
 
 ---
 
-## âœ… Summary
+## ✅  Summary
 
 - Add **one job**
 - Choose **one execution mode**
@@ -260,17 +260,7 @@ All logic is centralized and versioned.
 - Review results via artifacts
 
 This setup is designed to be:
-- âœ… Reusable
-- âœ… Low maintenance
-- âœ… Easy to adopt
-- âœ… Consistent across teams
-
----
-
-## ðŸ’¡ Optional (Future Enhancements)
-
-You may add later:
-- Authenticated scans
-- Fail-on-high rules for prod
-- Rate limiting
-- Scheduled nightly scans
+- ✅  Reusable
+- ✅  Low maintenance
+- ✅  Easy to adopt
+- ✅  Consistent across teams
