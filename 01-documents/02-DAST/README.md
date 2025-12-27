@@ -1,4 +1,4 @@
-# 🧪 DAST (Dynamic Application Security Testing) â€” OWASP ZAP  
+# 🧪 DAST (Dynamic Application Security Testing) - OWASP ZAP  
 ### Reusable GitHub Actions Workflow
 
 This document explains how to run **DAST scans using OWASP ZAP** via a **centralized, reusable GitHub Actions workflow**.
@@ -91,6 +91,18 @@ jobs:
 ```
 
 That is all you need to add.
+
+---
+
+## 🔀 Which Mode Should I Use?
+
+| If your app... | Set this | Leave empty |
+|---|---|---|
+| Is a Docker image | `service_image`, `container_port` | `start_command` |
+| Starts via command | `start_command`, `project_dir` | `service_image` |
+| Already deployed | `website_target` only | Both above |
+
+⚠️ Do not mix modes.
 
 ---
 
