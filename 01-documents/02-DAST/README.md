@@ -199,7 +199,7 @@ Used when **neither** `service_image` nor `start_command` is set.
 ### Baseline Scan
 - Spider + passive rules
 - Optional limited active checks (`-a`)
-- Fast (â‰ˆ1â€“2 minutes)
+- Fast (≈1-2 minutes)
 
 ### Full Scan
 - Active scanning
