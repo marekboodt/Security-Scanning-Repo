@@ -47,8 +47,6 @@ jobs:
       cmd_options: "-a -j -r report_html.html -x report_xml.xml"
     secrets: inherit
 ```
-> 💡 **Note:** This example shows **container mode**.  
-> For other modes, see the examples below.
 
 ---
 
@@ -57,7 +55,7 @@ jobs:
 | Input | Container Mode | Local App Mode | External URL Mode |
 |---|---|---|---|
 | `dast-scan-tool` | `zap` | `zap` | `zap` |
-| `environment` | `"prod" or "non-prod"` | `"prod" or "non-prod"` | `"prod" or "non-prod"` |
+| `environment` | `prod` / `non-prod` | `prod` / `non-prod` | `prod` / `non-prod` |
 | `project_dir` | `./` | `"./app"` | `./` |
 | `start_command` | `""` | `"npm ci && npm start"` | `""` |
 | `website_target` | `"http://app:8080"` | `"http://localhost:3000"` | `"https://staging.example.com"` |
@@ -73,8 +71,7 @@ jobs:
 ## 📈 Scan Types
 
 ### ZAP Baseline Scan
-- Spider + passive rules
-- Optional limited active checks (`-a`)
+- Spider + passive rules (optional limited active with `-a`)
 - Fast (~1-2 minutes)
 
 ### ZAP Full Scan
