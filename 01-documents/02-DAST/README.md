@@ -83,7 +83,7 @@ That is all you need to add.
 | `container_port` | `8080` | `0` | `0` |
 | `health_path` | `"/"` or `"/health"` | `"/"` | `"/"` |
 | `env_json` | `"{}"` *(optional)* | `"{}"` | `"{}"` |
-| `scan_type` | `"full"` | `"baseline"` | `"full"` |
+| `scan_type` | `"full" or "baseline"` | `"full" or "baseline"` | `"full" or "baseline"` |
 | `cmd_options` | `"-a -j -r report_html.html -x report_xml.xml"` | same | same |
 
 
