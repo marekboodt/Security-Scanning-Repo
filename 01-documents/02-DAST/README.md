@@ -25,20 +25,6 @@ ZAP reports will be available as **workflow artifacts**.
 
 ---
 
-## 🧠 What This Workflow Supports
-
-This reusable workflow supports **three execution modes**, automatically selected based on inputs.
-
-| Mode | When to use it |
-|---|---|
-| **Containerized app** | Your app is available as a Docker image |
-| **Local app (runner)** | Your app starts via a command (Node, Java, Python, etc.) |
-| **External URL** | Your app is already deployed (staging / prod) |
-
-Only **one mode runs per pipeline**.
-
----
-
 ## 🧩 What Developers Need to Add (Minimal YAML)
 
 Add **one job** to your workflow file:
@@ -64,8 +50,6 @@ jobs:
 > 💡 **Note:** This example shows **container mode**.  
 > For other modes, see the examples below.
 
-That is all you need to add.
-
 ---
 
 ### Configuration Per Mode
@@ -86,126 +70,14 @@ That is all you need to add.
 
 ---
 
-## 🔀 Which Mode Should I Use?
-
-| If your app... | Set this | Leave empty |
-|---|---|---|
-| Is a Docker image | `service_image`, `container_port` | `start_command` |
-| Starts via command | `start_command`, `project_dir` | `service_image` |
-| Already deployed | `website_target` only | Both above |
-
-⚠️ Do not mix modes.
-
----
-
-## 🧠 Execution Modes Explained
-
-### ✅ Mode 1 - Containerized Application (Recommended)
-
-Used when `service_image` is set.
-
-- The app is started as a **GitHub Actions service container**
-- ZAP scans `http://localhost:<container_port>`
-
-✅ Best for:
-- Modern applications
-- CI before deployment
-- Pull requests
-
-**Required inputs:**
-- `service_image`
-- `container_port`
-
----
-
-### ✅  Mode 2 - Local Application (GitHub Runner)
-
-Used when `start_command` is set and `service_image` is empty.
-
-- The app starts as a **process inside the GitHub runner**
-- ZAP scans a localhost URL
-
-✅ Best for:
-- Non-containerized apps
-- Legacy services
-- Framework dev servers
-
-⚠️ "Local" **local to the GitHub runner**, not your laptop.
-
-**Required inputs:**
-- `start_command`
-- `project_dir`
-- `website_target`
-
----
-
-### ✅ Mode 3 - External URL
-
-Used when **neither** `service_image` nor `start_command` is set.
-
-- No app is started
-- ZAP scans the given URL directly
-
-✅ Best for:
-- Staging environments
-- Periodic scans
-- Post-deployment checks
-
-**Required input:**
-- `website_target`
-
----
-
-## ⚙️ Input Parameters Reference
-
-### Core Inputs
-
-| Input | Required | Description |
-|---|---|---|
-| `dast-scan-tool` | ✅ | Must be `zap` |
-| `environment` | ✅ | Controls fail behavior (e.g. `non-prod`) |
-| `scan_type` | ❌ | `baseline` (default) or `full` |
-| `cmd_options` | ❌ | Passed directly to ZAP |
-
----
-
-### Container Mode Inputs
-
-| Input | Required | Description |
-|---|---|---|
-| `service_image` | ✅ | Docker image to run |
-| `container_port` | ✅ | Port exposed by the container |
-| `health_path` | ❌ | Health endpoint (default `/`) |
-| `env_json` | ❌ | JSON string with env variables |
-
----
-
-### Local App Mode Inputs
-
-| Input | Required | Description |
-|---|---|---|
-| `start_command` | ✅ | Command to start the app |
-| `project_dir` | ✅ | Directory where command runs |
-| `website_target` | ✅ | Local URL ZAP should scan |
-
----
-
-### External URL Mode Inputs
-
-| Input | Required | Description |
-|---|---|---|
-| `website_target` | ✅ | Deployed application URL |
-
----
-
 ## 📈 Scan Types
 
-### Baseline Scan
+### ZAP Baseline Scan
 - Spider + passive rules
 - Optional limited active checks (`-a`)
 - Fast (~1-2 minutes)
 
-### Full Scan
+### ZAP Full Scan
 - Active scanning
 - More findings
 - Slower and intrusive
