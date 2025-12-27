@@ -1,53 +1,234 @@
-# 🧪 DAST (Dynamic Application Security Testing) — OWASP ZAP
+# ðŸ§ª DAST (Dynamic Application Security Testing) â€” OWASP ZAP  
+### Reusable GitHub Actions Workflow
 
-This page explains how to run DAST for web applications using OWASP ZAP via the centralized GitHub Actions workflows in this repository. DAST scans a running app from the outside—no source code required.
-- Zap full scan: https://github.com/zaproxy/action-full-scan - tested version @v0.12.0
-- Zap quick scan: https://github.com/zaproxy/action-baseline - tested version @v0.14.0
+This document explains how to run **DAST scans using OWASP ZAP** via a **centralized, reusable GitHub Actions workflow**.
 
----
+The goal is simple:
 
-## 👤 Who Is This For?
+> âœ… Developers add **one job** to their pipeline  
+> âœ… The central workflow handles **everything else**
 
-**Any developer or team who wants to add robust security scanning to their GitHub projects with minimal setup.**
-Just add a code snippet to your workflow; this repository manages everything else.
-
----
-
-## 🚀 How It Works
-
-You add a small snippet to your repository’s workflow. That snippet runs OWASP ZAP against your target URL.
-Use localhost when you start the app inside CI; use the public/staging URL if your app is reachable from the internet.
-
-- You provide the target URL (and optionally start your app inside the workflow).
-- The workflow runs ZAP and uploads results.
-- Results appear in your repository’s Security and Actions tabs; artifacts are attached to the run.
+DAST scans a **running web application from the outside**.  
+No source code access is required.
 
 ---
 
-## ⚠️ Copy-Paste into your YAML-file (Important for localhost targets)
-If your target runs on localhost inside CI, keep ZAP in the same job (same runner) that starts your app.
+## âœ… Quick Start (TL;DR)
 
-For apps started in CI (Docker, Compose, npm, Python, Java, .NET): you must copy-paste the ZAP YAML block directly into your workflow in the same job and place it after the steps that start your app on localhost. This ensures ZAP can reach 
-http://localhost:PORT
+To get DAST running in your repository:
 
----
+1. Copy **one job** into your workflow (example below)
+2. Choose **how your app runs** (container, local app, or external URL)
+3. Commit and run the pipeline
 
-## 📈 Results and Artifacts
-
-**Differences between Baseline and Full Scan:**
-- baseline is spider + passive (optional limited active with -a)
-- full is active (can be intrusive).
-
-**Scan results:**  
-- All findings will appear in your repository’s **Security** and **Actions** tabs.  
-- ZAP reports (HTML/JSON/Markdown) will be available as downloadable artifacts after the run. $${\color{red}SARIF \space not \space supported}$$
-- For HTTPS URLs on 443 or HTTP on 80, you don’t need to specify the port in the URL. Only add a port for non-defaults (e.g., :8080, :8443).
+ZAP reports will be available as **workflow artifacts**.
 
 ---
 
-## 🔒 Required Workflow Permissions
+## ðŸ§  What This Workflow Supports
 
-To ensure security scan results are properly uploaded and visible in your repository’s Security tab, make sure to set the following permissions at the top of your main workflow YAML file:
+This reusable workflow supports **three execution modes**, automatically selected based on inputs.
+
+| Mode | When to use it |
+|---|---|
+| **Containerized app** | Your app is available as a Docker image |
+| **Local app (runner)** | Your app starts via a command (Node, Java, Python, etc.) |
+| **External URL** | Your app is already deployed (staging / prod) |
+
+Only **one mode runs per pipeline**.
+
+---
+
+## ðŸ‘¤ Who Is This For?
+
+**Any developer or team** that wants to add DAST scanning with:
+- Minimal YAML
+- No local ZAP setup
+- Centralized maintenance
+- Consistent reporting
+
+You do **not** need security expertise to use this.
+
+---
+
+## ðŸš€ How It Works (Concept)
+
+1. Your pipeline calls the **reusable DAST workflow**
+2. The workflow:
+   - Starts or connects to your app
+   - Runs OWASP ZAP
+   - Uploads reports as artifacts
+3. You review results in the **Actions tab**
+
+All logic lives in the central repository:
+```
+Security-Scanning-Repo/.github/workflows/
+```
+
+---
+
+## ðŸ§© What Developers Need to Add (Minimal YAML)
+
+Add **one job** to your workflow file:
+
+```yaml
+jobs:
+  DAST-ZAP:
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/test-20-dast-workflow.yml@main
+    with:
+      dast-scan-tool: zap
+      environment: non-prod
+      project_dir: ./
+      start_command: ""
+      website_target: "http://app:3000"
+      service_image: "bkimminich/juice-shop:latest"
+      container_port: 3000
+      health_path: "/"
+      env_json: "{}"
+      scan_type: "full"
+      cmd_options: "-a -j -r report_html.html -x report_xml.xml"
+    secrets: inherit
+```
+
+That is all you need to add.
+
+---
+
+## ðŸ§  Execution Modes Explained
+
+### âœ… Mode 1 â€” Containerized Application (Recommended)
+
+Used when `service_image` is set.
+
+- The app is started as a **GitHub Actions service container**
+- ZAP scans `http://localhost:<container_port>`
+
+âœ… Best for:
+- Modern applications
+- CI before deployment
+- Pull requests
+
+**Required inputs:**
+- `service_image`
+- `container_port`
+
+---
+
+### âœ… Mode 2 â€” Local Application (GitHub Runner)
+
+Used when `start_command` is set and `service_image` is empty.
+
+- The app starts as a **process inside the GitHub runner**
+- ZAP scans a localhost URL
+
+âœ… Best for:
+- Non-containerized apps
+- Legacy services
+- Framework dev servers
+
+âš ï¸ â€œLocalâ€ means **local to the GitHub runner**, not your laptop.
+
+**Required inputs:**
+- `start_command`
+- `project_dir`
+- `website_target`
+
+---
+
+### âœ… Mode 3 â€” External URL
+
+Used when **neither** `service_image` nor `start_command` is set.
+
+- No app is started
+- ZAP scans the given URL directly
+
+âœ… Best for:
+- Staging environments
+- Periodic scans
+- Post-deployment checks
+
+**Required input:**
+- `website_target`
+
+---
+
+## âš™ï¸ Input Parameters Reference
+
+### Core Inputs
+
+| Input | Required | Description |
+|---|---|---|
+| `dast-scan-tool` | âœ… | Must be `zap` |
+| `environment` | âœ… | Controls fail behavior (e.g. `non-prod`) |
+| `scan_type` | âŒ | `baseline` (default) or `full` |
+| `cmd_options` | âŒ | Passed directly to ZAP |
+
+---
+
+### Container Mode Inputs
+
+| Input | Required | Description |
+|---|---|---|
+| `service_image` | âœ… | Docker image to run |
+| `container_port` | âœ… | Port exposed by the container |
+| `health_path` | âŒ | Health endpoint (default `/`) |
+| `env_json` | âŒ | JSON string with env variables |
+
+---
+
+### Local App Mode Inputs
+
+| Input | Required | Description |
+|---|---|---|
+| `start_command` | âœ… | Command to start the app |
+| `project_dir` | âœ… | Directory where command runs |
+| `website_target` | âœ… | Local URL ZAP should scan |
+
+---
+
+### External URL Mode Inputs
+
+| Input | Required | Description |
+|---|---|---|
+| `website_target` | âœ… | Deployed application URL |
+
+---
+
+## ðŸ“ˆ Scan Types
+
+### Baseline Scan
+- Spider + passive rules
+- Optional limited active checks (`-a`)
+- Fast (â‰ˆ1â€“2 minutes)
+
+### Full Scan
+- Active scanning
+- More findings
+- Slower and intrusive
+
+âœ… Use **baseline** on PRs  
+âœ… Use **full** before releases
+
+---
+
+## ðŸ“Š Results and Artifacts
+
+- Reports are uploaded as **GitHub Actions artifacts**
+- Available formats:
+  - HTML
+  - JSON
+  - Markdown
+  - XML
+
+âš ï¸ **SARIF is not supported by OWASP ZAP GitHub Actions**
+
+Artifacts can be downloaded from the workflow run.
+
+---
+
+## ðŸ” Required Workflow Permissions
+
+Your workflow must include:
 
 ```yaml
 permissions:
@@ -58,217 +239,38 @@ permissions:
 
 ---
 
-## 📝 Example Usage
+## ðŸ§­ What Is Managed Centrally?
 
-Add one of the following blocks to your own repository’s workflow file, and customize the parameters as needed.
-- [ZAP Full scan (generic “web-app” service)](#zap-full-scan---full-scan-against-a-single-service-generic-web-app-service)
-- [ZAP Quick Scan](#zap-quick-scan---baseline-scan-against-a-single-service-generic)
-- [Zap Full Scan - Without (generic “web-app” service)](#zap-full-scan---with-multi-container-target-db--app-on-custom-network)
+You **do not** need to manage:
+- ZAP installation
+- Docker setup
+- Scan orchestration
+- Artifact naming
+- Mode selection
 
-### ZAP Full scan - Full scan against a single service (generic “web-app” service)
-Best scan to use, takes longer than the basic scan, but finds more. Best used not on every pipeline run.
-for example best used before creating artifacts.
-
-```yaml
-jobs:
-  zap_full_scan:
-    runs-on: ubuntu-latest            # or self-hosted, or <NAME>
-
-    # Start your target application as a service container
-    services:
-      web-app:                        # Service name (choose any, e.g., "api" or "frontend")
-        image: OWNER/IMAGE:TAG        # e.g., bkimminich/juice-shop:latest
-        ports:
-          - HOST_PORT:CONTAINER_PORT  # e.g., 3000:3000 to expose on localhost:3000
-
-    steps:
-      # Wait until the app is reachable on localhost to avoid scanning too early
-      # If target is a public/staging URL rename localhost accordingly - https://your-env.example.com (optional set :PORT if not 80 or 443)
-      - name: Wait for app to be ready
-        run: |
-          echo "Waiting for app to start..."
-          for i in {1..30}; do
-            if curl -s http://localhost:HOST_PORT > /dev/null; then     
-              echo "App is up!"
-              exit 0
-            fi
-            echo "Still waiting..."
-            sleep 5
-          done
-          echo "App did not start in time"
-          exit 1
-
-      # Optional: Only needed if ZAP report writes fail due to permissions
-      - name: Fix permissions for ZAP output (optional)
-        run: sudo chmod -R 777 $GITHUB_WORKSPACE
-        # $GITHUB_WORKSPACE is the repo's working directory path for this job
-
-      # Full (active) scan: deeper, slower
-      - name: Run ZAP Full Scan (HTML + JUnit XML)
-        uses: zaproxy/action-full-scan@v0.12.0
-        with:
-          target: 'http://localhost:HOST_PORT'   # Must match your exposed host port
-          fail_action: false                     # Flip to true to fail on findings (prod gating)
-          cmd_options: '-a -x report_xml.xml -l WARN'
-        continue-on-error: true                  # Keep during tuning; remove for enforcement
-
-      # Publish reports as artifacts for download
-      - name: Upload ZAP Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: full-zap-reports
-          path: |
-            report_html.html
-            report_json.json
-            report_md.md
-            report_xml.xml
-        continue-on-error: true
-```
-
-### ZAP Quick Scan - Baseline scan against a single service (generic)
-takes about 1-2 minutes, but finds less 
-```yaml
-jobs:
-  zap_scan:
-    runs-on: ubuntu-latest
-
-    services:
-      web-app:
-        image: OWNER/IMAGE:TAG           # e.g., bkimminich/juice-shop:latest
-        ports:
-          - HOST_PORT:CONTAINER_PORT     # e.g., 3000:3000
-
-    steps:
-      # Wait on host port just to fail fast if app isn’t ready
-      - name: Wait for app to be ready
-        run: |
-          echo "Waiting for app to start..."
-          for i in {1..30}; do
-            if curl -fsS http://localhost:HOST_PORT/ > /dev/null; then
-              echo "App is up!"
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "App did not start in time"
-          exit 1
-
-      # Optional: only if report writes fail due to permissions
-      - name: Fix permissions for ZAP output (optional)
-        run: sudo chmod -R a+rwX "$GITHUB_WORKSPACE"
-
-      - name: Run ZAP Baseline Scan (HTML + JUnit XML)
-        uses: zaproxy/action-baseline@v0.14.0
-        with:
-          target: 'http://web-app:CONTAINER_PORT'   # use service hostname, not localhost
-          fail_action: false
-          cmd_options: '-a -x report_xml.xml'       # remove -a for passive-only
-        continue-on-error: true
-
-      - name: Upload ZAP Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: zap-reports
-          path: |
-            report_html.html
-            report_json.json
-            report_md.md
-            report_xml.xml
-          if-no-files-found: ignore
-```
-
-### Zap Full Scan - With multi-container target (DB + app on custom network)
-
-```yaml
-jobs:
-  zap_full_scan:
-    runs-on: ubuntu-latest            # or self-hosted, or <NAME>
-
-    steps:
-      # Use a dedicated Docker network so containers can resolve each other by name
-      - name: Create docker network
-        run: docker network create APP_NET         # e.g., zapnet
-
-      # Start your database (adjust image/version)
-      - name: Start database
-        run: |
-          docker run -d --name DB_SERVICE --network APP_NET DB_IMAGE:DB_TAG
-          # e.g., docker run -d --name mongo --network APP_NET mongo:6
-
-      # Wait for the database to be ready (adjust health check command)
-      - name: Wait for database to be ready
-        run: |
-          echo "Waiting for database..."
-          for i in {1..30}; do
-            # Example ping for Mongo; replace with your DB's health check
-            if docker exec DB_SERVICE mongosh --quiet --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1; then
-              echo "Database is ready."
-              exit 0
-            fi
-            sleep 2
-          done
-          echo "Database did not start in time"
-          docker logs DB_SERVICE || true
-          exit 1
-
-      # Start your application container, connected to the same network
-      - name: Start application container
-        run: |
-          docker run -d --name APP_SERVICE --network APP_NET -p HOST_PORT:CONTAINER_PORT \
-            -e APP_DB_URI="DB_SCHEME://DB_SERVICE:DB_PORT/DB_NAME" \
-            -e NODE_ENV=development \
-            APP_IMAGE:APP_TAG \
-            sh -lc 'APP_START_COMMAND'
-          # Example:
-          # docker run -d --name nodegoat --network APP_NET -p 4000:4000 \
-          #   -e MONGODB_URI="mongodb://mongo:27017/nodegoat" \
-          #   contrastsecuritydemo/nodegoat:1.3.0 \
-          #   sh -lc 'npm start'
-
-      # Optional: show recent app logs to aid debugging
-      - name: Show app logs (initial)
-        run: docker logs --tail=80 APP_SERVICE || true
-
-      # Wait until the app is reachable on localhost to avoid scanning too early
-      # If target is a public/staging URL rename localhost accordingly - https://your-env.example.com (optional set :PORT if not 80 or 443)
-      - name: Wait for app to be ready
-        run: |
-          echo "Waiting for app to start..."
-          for i in {1..60}; do
-            if curl -fsS http://localhost:HOST_PORT/ >/dev/null; then
-              echo "App is up!"
-              exit 0
-            fi
-            sleep 2
-          done
-          echo "App did not start in time"
-          docker logs APP_SERVICE || true
-          exit 1
-
-      # Full (active) scan against localhost
-      - name: Run ZAP Full Scan (HTML + JUnit XML)
-        uses: zaproxy/action-full-scan@v0.12.0
-        with:
-          target: 'http://localhost:HOST_PORT'     # Must match the -p host port exposed above
-          fail_action: false
-          cmd_options: '-a -x report_xml.xml -l WARN'
-        continue-on-error: true
-
-      # Publish artifacts
-      - name: Upload ZAP Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: full-zap-reports
-          path: |
-            report_html.html
-            report_json.json
-            report_md.md
-            report_xml.xml
-        continue-on-error: true
-```
+All logic is centralized and versioned.
 
 ---
 
-## 🧩 Example ZAP Scan in YML files
-- [Juice shop test](examples/example-01-full-zap-scan-juice-shop.yml)
-- [Node Goat](examples/example-02-full-zap-scan-nodegoat.yml)
+## âœ… Summary
+
+- Add **one job**
+- Choose **one execution mode**
+- Tune scan type if needed
+- Review results via artifacts
+
+This setup is designed to be:
+- âœ… Reusable
+- âœ… Low maintenance
+- âœ… Easy to adopt
+- âœ… Consistent across teams
+
+---
+
+## ðŸ’¡ Optional (Future Enhancements)
+
+You may add later:
+- Authenticated scans
+- Fail-on-high rules for prod
+- Rate limiting
+- Scheduled nightly scans
