@@ -70,15 +70,22 @@ That is all you need to add.
 
 ### Configuration Per Mode
 
+### Configuration Per Mode
+
 | Input | Container Mode | Local App Mode | External URL Mode |
 |---|---|---|---|
+| `dast-scan-tool` | `zap` | `zap` | `zap` |
+| `environment` | `non-prod` | `non-prod` | `non-prod` |
+| `project_dir` | `./` | `"./app"` | `./` |
+| `start_command` | `""` | `"npm ci && npm start"` | `""` |
+| `website_target` | `"http://app:8080"` | `"http://localhost:3000"` | `"https://staging.example.com"` |
 | `service_image` | `"myorg/myapp:latest"` | `""` | `""` |
 | `container_port` | `8080` | `0` | `0` |
 | `health_path` | `"/"` or `"/health"` | `"/"` | `"/"` |
-| `env_json` | `'{"NODE_ENV":"test"}'` (optional) | `"{}"` | `"{}"` |
-| `start_command` | `""` | `"npm ci && npm start"` | `""` |
-| `project_dir` | `./` | `"./app"` | `./` |
-| `website_target` | `"http://app:8080"` | `"http://localhost:3000"` | `"https://staging.example.com"` |
+| `env_json` | `"{}"` *(optional)* | `"{}"` | `"{}"` |
+| `scan_type` | `"full"` | `"baseline"` | `"full"` |
+| `cmd_options` | `"-a -j -r report_html.html -x report_xml.xml"` | same | same |
+
 
 ---
 
