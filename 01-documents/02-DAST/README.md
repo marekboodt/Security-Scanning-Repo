@@ -39,34 +39,6 @@ Only **one mode runs per pipeline**.
 
 ---
 
-## 👤 Who Is This For?
-
-**Any developer or team** that wants to add DAST scanning with:
-- Minimal YAML
-- No local ZAP setup
-- Centralized maintenance
-- Consistent reporting
-
-You do **not** need security expertise to use this.
-
----
-
-## 🚀 How It Works (Concept)
-
-1. Your pipeline calls the **reusable DAST workflow**
-2. The workflow:
-   - Starts or connects to your app
-   - Runs OWASP ZAP
-   - Uploads reports as artifacts
-3. You review results in the **Actions tab**
-
-All logic lives in the central repository:
-```
-Security-Scanning-Repo/.github/workflows/
-```
-
----
-
 ## 🧩 What Developers Need to Add (Minimal YAML)
 
 Add **one job** to your workflow file:
@@ -89,8 +61,24 @@ jobs:
       cmd_options: "-a -j -r report_html.html -x report_xml.xml"
     secrets: inherit
 ```
+> 💡 **Note:** This example shows **container mode**.  
+> For other modes, see the examples below.
 
 That is all you need to add.
+
+---
+
+### Configuration Per Mode
+
+| Input | Container Mode | Local App Mode | External URL Mode |
+|---|---|---|---|
+| `service_image` | `"myorg/myapp:latest"` | `""` | `""` |
+| `container_port` | `8080` | `0` | `0` |
+| `health_path` | `"/"` or `"/health"` | `"/"` | `"/"` |
+| `env_json` | `'{"NODE_ENV":"test"}'` (optional) | `"{}"` | `"{}"` |
+| `start_command` | `""` | `"npm ci && npm start"` | `""` |
+| `project_dir` | `./` | `"./app"` | `./` |
+| `website_target` | `"http://app:8080"` | `"http://localhost:3000"` | `"https://staging.example.com"` |
 
 ---
 
@@ -211,7 +199,7 @@ Used when **neither** `service_image` nor `start_command` is set.
 ### Baseline Scan
 - Spider + passive rules
 - Optional limited active checks (`-a`)
-- Fast (≈1-2 minutes)
+- Fast (~1-2 minutes)
 
 ### Full Scan
 - Active scanning
