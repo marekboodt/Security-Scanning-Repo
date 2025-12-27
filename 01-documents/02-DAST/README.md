@@ -66,9 +66,6 @@ jobs:
 | `scan_type` | `"full" or "baseline"` | `"full" or "baseline"` | `"full" or "baseline"` |
 | `cmd_options` | `"-a -j -r report_html.html -x report_xml.xml"` | same | same |
 
-> 💡 In container mode, `website_target` is not used for scanning.  
-> The scan always targets `http://localhost:<container_port>`.
-
 ---
 
 ## 📈 Scan Types
