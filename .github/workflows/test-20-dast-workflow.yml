@@ -26,7 +26,7 @@ permissions:
 jobs:
   ZAP-Scan:
     if: ${{ inputs.dast-scan-tool == 'zap' }}
-    uses: ./.github/workflows/test_21-dast-zap-workflow.yml
+    uses: ./.github/workflows/_21-dast-zap-workflow.yml
     with:
       dast-scan-tool: ${{ inputs.dast-scan-tool }}
       project_dir:    ${{ inputs.project_dir }}
