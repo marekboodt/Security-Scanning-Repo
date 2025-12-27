@@ -56,15 +56,18 @@ jobs:
 |---|---|---|---|
 | `dast-scan-tool` | `zap` | `zap` | `zap` |
 | `environment` | `prod` / `non-prod` | `prod` / `non-prod` | `prod` / `non-prod` |
-| `project_dir` | `./` | `"./app"` | `./` |
+`project_dir` | `./` *(not used)* | `"./app"` | `./` *(not used)*
 | `start_command` | `""` | `"npm ci && npm start"` | `""` |
 | `website_target` | `"http://app:8080"` | `"http://localhost:3000"` | `"https://staging.example.com"` |
 | `service_image` | `"myorg/myapp:latest"` | `""` | `""` |
 | `container_port` | `8080` | `""` | `""` |
-| `health_path` | `"/"` or `"/health"` | `"/"` | `"/"` |
+| `health_path` | `"/"` or `"/health"` | `"/"` *(not used)* | `"/"` *(not used)* |
 | `env_json` | `"{}"` *(optional)* | `"{}"` | `"{}"` |
 | `scan_type` | `"full" or "baseline"` | `"full" or "baseline"` | `"full" or "baseline"` |
 | `cmd_options` | `"-a -j -r report_html.html -x report_xml.xml"` | same | same |
+
+> 💡 In container mode, `website_target` is not used for scanning.  
+> The scan always targets `http://localhost:<container_port>`.
 
 ---
 
