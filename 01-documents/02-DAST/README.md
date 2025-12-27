@@ -32,7 +32,7 @@ Add **one job** to your workflow file:
 ```yaml
 jobs:
   DAST-ZAP:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/test-20-dast-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/20-dast-workflow.yml@main
     with:
       dast-scan-tool: zap
       environment: non-prod
