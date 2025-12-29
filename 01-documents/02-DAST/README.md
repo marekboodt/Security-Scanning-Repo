@@ -81,25 +81,52 @@ The workflow automatically selects **one** execution mode based on which inputs 
 
 ## 🧩 Apps with Dependencies (e.g. Database, Multi-Container)
 
-Some applications cannot be scanned using the reusable workflow modes above because they require
-additional infrastructure (for example a database or multiple containers).
+Some applications cannot be scanned using the reusable workflow modes described above.
+This is typically the case for applications that require additional infrastructure,
+such as a database or multiple tightly coupled containers.
 
-Examples:
+Examples include:
 - NodeGoat (requires MongoDB)
 - Applications with stateful backends
-- Multi-container stacks
+- Multi-container application stacks
 
-For these applications, the infrastructure must be started **inside the same job**
-before running OWASP ZAP. In this case, the ZAP scan is **hard-coded** in the workflow.
+### Why this works differently
 
-This is a deliberate design choice:
-- GitHub Actions reusable workflows run in separate jobs
-- Containers started in one job are not available in another job
+The reusable DAST workflow (`20-dast-workflow.yml` → `_21-dast-zap-workflow.yml`) is designed
+to scan applications that are either:
+- self-contained containers,
+- local development servers, or
+- already deployed and reachable via a URL.
+
+Reusable workflows always run in **separate jobs**.
+Because of this, they cannot access containers or processes that were started in another job.
+
+For applications with dependencies, this means:
+- The application **and its infrastructure must be started first**
+- The OWASP ZAP scan must run **in the same job**
+- The ZAP scan logic is therefore **hard-coded** in the workflow
+
+This is a deliberate and unavoidable limitation of GitHub Actions,
+not a limitation of the ZAP scan itself.
+
+---
 
 ### Example: NodeGoat (Baseline + Full Scan)
 
 The example below shows how to scan an application with a database dependency.
-The application and database are started first, followed by a baseline scan and a full scan.
+
+In this workflow:
+1. The database (MongoDB) is started
+2. The application (NodeGoat) is started and verified
+3. A **baseline scan** is executed
+4. The application is restarted to ensure a clean state
+5. A **full (active) scan** is executed
+6. Both reports are stored as artifacts
+
+Only the **ZAP scan steps** are security-related.
+All preceding steps are required to make the application reachable and stable
+before the scan can run.
+
 ```yaml
 # https://hub.docker.com/r/contrastsecuritydemo/nodegoat
 name: DAST Scan - NodeGoat (Baseline + Full)
