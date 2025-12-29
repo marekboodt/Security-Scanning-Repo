@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/contrastsecuritydemo/nodegoat
-name: Full DAST Scan - NodeGoat (hardcoded ZAP scan)
+name: DAST Scan - NodeGoat (Baseline + Full)
 
 on:
   push:
@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # -------------------------
+      # ✅ START INFRASTRUCTURE
+      # -------------------------
       - name: Create docker network
         run: docker network create zapnet
 
@@ -66,14 +69,25 @@ jobs:
           exit 1
 
       # -------------------------
-      # ✅ ZAP FULL SCAN (HARDCODED)
+      # ✅ ZAP BASELINE SCAN
+      # -------------------------
+      - name: Run ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: "http://localhost:4000"
+          fail_action: false
+          cmd_options: "-a -j -r baseline_report_html.html -x baseline_report_xml.xml -l WARN"
+        continue-on-error: true
+
+      # -------------------------
+      # ✅ ZAP FULL SCAN
       # -------------------------
       - name: Run ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
           target: "http://localhost:4000"
           fail_action: false
-          cmd_options: "-a -j -r report_html.html -x report_xml.xml -l WARN"
+          cmd_options: "-a -j -r full_report_html.html -x full_report_xml.xml -l WARN"
         continue-on-error: true
 
       # -------------------------
@@ -85,8 +99,8 @@ jobs:
         with:
           name: dast-zap-nodegoat-reports
           path: |
-            report_html.html
-            report_json.json
-            report_md.md
-            report_xml.xml
+            baseline_report_html.html
+            baseline_report_xml.xml
+            full_report_html.html
+            full_report_xml.xml
           if-no-files-found: ignore
