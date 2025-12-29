@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/contrastsecuritydemo/nodegoat
-name: Full DAST Scan - NodeGoat (via reusable workflow)
+name: Full DAST Scan - NodeGoat (hardcoded ZAP scan)
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
   security-events: write
 
 jobs:
-  nodegoat_infra:
+  nodegoat_dast:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,45 +22,71 @@ jobs:
         run: docker network create zapnet
 
       - name: Start MongoDB
-        run: docker run -d --name mongo --network zapnet mongo:6
-
-      - name: Wait for MongoDB
         run: |
+          docker run -d --name mongo --network zapnet mongo:6
+
+      - name: Wait for MongoDB to be ready
+        run: |
+          echo "Waiting for MongoDB..."
           for i in {1..30}; do
-            docker exec mongo mongosh --quiet --eval "db.runCommand({ ping: 1 })" && exit 0
+            if docker exec mongo mongosh --quiet --eval "db.runCommand({ ping: 1 })" >/dev/null 2>&1; then
+              echo "MongoDB is ready."
+              exit 0
+            fi
             sleep 2
           done
+          echo "MongoDB did not start in time"
+          docker logs mongo || true
           exit 1
 
       - name: Start NodeGoat
         run: |
           docker run -d --name nodegoat --network zapnet -p 4000:4000 \
             -e MONGO_URI="mongodb://mongo:27017/nodegoat" \
+            -e MONGODB_URI="mongodb://mongo:27017/nodegoat" \
+            -e NODE_ENV=development \
             contrastsecuritydemo/nodegoat:1.3.0 \
             sh -lc 'npm start'
 
-      - name: Wait for NodeGoat
+      - name: Show NodeGoat logs (initial)
+        run: docker logs --tail=80 nodegoat || true
+
+      - name: Wait for NodeGoat to be ready
         run: |
+          echo "Waiting for NodeGoat..."
           for i in {1..60}; do
-            curl -fsS http://localhost:4000 && exit 0
+            if curl -fsS http://localhost:4000/ >/dev/null; then
+              echo "NodeGoat is up!"
+              exit 0
+            fi
             sleep 2
           done
+          echo "NodeGoat did not start in time"
+          docker logs nodegoat || true
           exit 1
 
-      # ✅ CALL REUSABLE DAST WORKFLOW
-  dast_scan:
-    needs: nodegoat_infra
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/20-dast-workflow.yml@main
-    secrets: inherit
-    with:
-      dast-scan-tool: zap
-      environment: non-prod
-      website_target: "http://localhost:4000"
-  
-      service_image: ""
-      container_port: ""
-      start_command: ""
-      project_dir: ./
-  
-      scan_type: "full"
-      cmd_options: "-a -j -r report_html.html -x report_xml.xml"
+      # -------------------------
+      # ✅ ZAP FULL SCAN (HARDCODED)
+      # -------------------------
+      - name: Run ZAP Full Scan
+        uses: zaproxy/action-full-scan@v0.12.0
+        with:
+          target: "http://localhost:4000"
+          fail_action: false
+          cmd_options: "-a -j -r report_html.html -x report_xml.xml -l WARN"
+        continue-on-error: true
+
+      # -------------------------
+      # ✅ UPLOAD REPORTS
+      # -------------------------
+      - name: Upload ZAP Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dast-zap-nodegoat-reports
+          path: |
+            report_html.html
+            report_json.json
+            report_md.md
+            report_xml.xml
+          if-no-files-found: ignore
