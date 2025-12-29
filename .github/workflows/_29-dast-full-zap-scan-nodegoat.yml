@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/contrastsecuritydemo/nodegoat
-name: DAST Scan - NodeGoat (Baseline + Full)
+name: _29 - DAST Scan - NodeGoat (Baseline + Full)
 
 on:
   push:
