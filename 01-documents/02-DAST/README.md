@@ -68,7 +68,7 @@ The workflow automatically selects **one** execution mode based on which inputs 
 | `start_command` | `""` | `"npm ci && npm start"` | `""` |
 | `website_target` | `"http://app:8080"` | `"http://localhost:3000"` | `"https://staging.example.com"` |
 | `service_image` | `"myorg/myapp:latest"` | `""` | `""` |
-| `container_port` | `8080` | `""` | `comment this or leave it out` |
+| `container_port` | `8080` | *(omit)* | *(omit)* |
 | `health_path` | `"/"` or `"/health"` | `"/"` *(not used)* | `"/"` *(not used)* |
 | `env_json` | `"{}"` *(optional)* | `"{}"` | `"{}"` |
 | `scan_type` | `"full" or "baseline"` | `"full" or "baseline"` | `"full" or "baseline"` |
