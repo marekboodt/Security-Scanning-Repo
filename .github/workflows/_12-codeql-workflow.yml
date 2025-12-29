@@ -14,6 +14,9 @@ permissions:
 
 jobs:
   # CodeQL does not support Sarif output to be saved, it will save it automatically in github
+  generate-timestamp:
+    uses: ./.github/workflows/00-generate-timestamp.yml
+  
   codeql-analyze:
     runs-on: ubuntu-latest
     timeout-minutes: 60
