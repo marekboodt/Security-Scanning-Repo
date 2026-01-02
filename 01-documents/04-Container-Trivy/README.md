@@ -55,7 +55,6 @@ jobs:
       image-name: my-app
       image-tag: latest
       dockerfile-path: ./
-      exception-profile: ubuntu 
       environment: non-prod
 ```
 ---
