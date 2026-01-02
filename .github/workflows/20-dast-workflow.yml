@@ -4,7 +4,6 @@ on:
   workflow_call:
     inputs:
       dast-scan-tool: { type: string, required: true }
-      language:       { type: string, required: false }
       project_dir:    { type: string, required: true }
       environment:    { type: string, required: true }
       start_command:  { type: string, required: false, default: "" }
