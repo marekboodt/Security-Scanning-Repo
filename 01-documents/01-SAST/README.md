@@ -36,6 +36,20 @@ Findings will appear in:
 
 ---
 
+## 🧰 Supported SAST Tools
+
+The reusable workflow supports the following tools:
+
+| Tool | Type | Notes |
+|---|---|---|
+| **Semgrep** | Multi-language | Best results, supports SARIF, optional deep scan |
+| **CodeQL** | Multi-language | Native GitHub engine, results stored in GitHub |
+| **Bearer** | Multi-language | Lightweight and fast feedback |
+
+Only **one tool** runs per workflow execution.
+
+---
+
 ## 🧩 Minimal YAML (One Job Only)
 
 Add the following job to your workflow:
@@ -49,20 +63,6 @@ jobs:
       environment: non-prod
     secrets: inherit
 ```
-
----
-
-## 🧰 Supported SAST Tools
-
-The reusable workflow supports the following tools:
-
-| Tool | Type | Notes |
-|---|---|---|
-| **Semgrep** | Multi-language | Best results, supports SARIF, optional deep scan |
-| **CodeQL** | Multi-language | Native GitHub engine, results stored in GitHub |
-| **Bearer** | Multi-language | Lightweight and fast feedback |
-
-Only **one tool** runs per workflow execution.
 
 ---
 
