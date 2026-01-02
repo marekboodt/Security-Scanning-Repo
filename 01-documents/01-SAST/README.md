@@ -100,7 +100,7 @@ jobs:
 
 ---
 
-## 🔐 Optional Secrets (Tool-Specific)
+## 🔐 Tool-Specific Secrets
 
 Some SAST tools support enhanced scanning when additional secrets are provided.
 
@@ -123,22 +123,13 @@ jobs:
     secrets:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 ```
-### CodeQL
+### CodeQL and Bearer
 
 - No secrets required
-- Results are automatically published to **GitHub → Security → Code scanning**
-
-No additional configuration is needed when using CodeQL.
-
----
-
-### Bearer
-
-- No secrets required
-- SARIF results are uploaded automatically
-- Findings appear in **GitHub → Security → Code scanning** and as workflow artifacts
-
-No additional configuration is needed when using Bearer.
+- You can safely use:
+```yaml
+secrets: inherit
+```
 
 ---
 
