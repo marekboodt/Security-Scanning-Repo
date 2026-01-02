@@ -55,6 +55,7 @@ jobs:
       image-name: my-app
       image-tag: latest
       dockerfile-path: ./
+      exception-profile: ubuntu 
       environment: non-prod
 ```
 ---
@@ -65,8 +66,8 @@ jobs:
 | `image-name` | ✅ | Name of the container image |
 | `image-tag` | ✅ | Image tag (e.g. `latest`, `v1.0`, `${{ github.sha }}`) |
 | `dockerfile-path` | ✅ | Path used to build the Docker image |
-| `exception-profile` | ❌ | Base image exception profile (default: `none`) |
-| `severity` | ❌ | Severity levels to scan for (default: `HIGH,CRITICAL`) |
+| `exception-profile` | ❌ | Optional base image exception profile (default: `none`) |
+| `severity`          | ❌ | Optional severity filter (default: `HIGH,CRITICAL`)     |
 | `environment` | ✅ | `prod` or `non-prod` |
 
 ### Environment behavior
