@@ -64,7 +64,7 @@ This is the **default and recommended** way to run IaC scans.
 ```yaml
 jobs:
   IAC-Scan:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/40-iac-github-action-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/40-iac-github-action-workflow.yml@v1
     with:
       language: terraform
       project_dir: ./
@@ -81,7 +81,7 @@ Use this mode when you need:
 ```yaml
 jobs:
   IAC-Custom-Scan:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/41-iac-custom-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/41-iac-custom-workflow.yml@v1
     with:
       language: terraform
       project_dir: ./
