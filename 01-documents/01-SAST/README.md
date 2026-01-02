@@ -100,6 +100,48 @@ jobs:
 
 ---
 
+## 🔐 Optional Secrets (Tool-Specific)
+
+Some SAST tools support enhanced scanning when additional secrets are provided.
+
+These secrets are **optional** and only required for specific tools.
+
+### Semgrep (Deep Scan)
+Required only when using Semgrep deep scans:
+
+- `SEMGREP_APP_TOKEN`
+
+Example:
+```yaml
+jobs:
+  SAST:
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/10-sast-workflow.yml@main
+    with:
+      sast-scan-tool: semgrep
+      project_dir: ./src
+      environment: non-prod
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+```
+### CodeQL
+
+- No secrets required
+- Results are automatically published to **GitHub → Security → Code scanning**
+
+No additional configuration is needed when using CodeQL.
+
+---
+
+### Bearer
+
+- No secrets required
+- SARIF results are uploaded automatically
+- Findings appear in **GitHub → Security → Code scanning** and as workflow artifacts
+
+No additional configuration is needed when using Bearer.
+
+---
+
 ## 📊 Results & Reporting
 
 All supported tools generate **SARIF** output.
