@@ -91,12 +91,11 @@ jobs:
 
 ### CodeQL
 - Uses GitHub’s official CodeQL action
-- Results appear automatically in GitHub Security
-- No manual SARIF artifact export
+- Native GitHub integration
 
 ### Bearer
 - Lightweight static scan
-- SARIF uploaded to GitHub Security and artifacts
+- Fast feedback for common issues
 
 ---
 
