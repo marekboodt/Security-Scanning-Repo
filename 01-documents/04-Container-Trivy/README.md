@@ -1,39 +1,53 @@
-# 🔐 Container Security Scanning
+# 🔐 Container Image Security Scanning
+### Reusable GitHub Actions Workflow (Trivy)
 
-This repository provides **centralized, reusable GitHub Actions workflows** for automated container image security scanning using Trivy.
-It is designed to make security scanning easy and accessible for all developers in your organization—so "no time" or "too difficult" is no longer an excuse.
+This document explains how to run **container image security scans** using **Trivy** via a **centralized, reusable GitHub Actions workflow**.
 
-## 👤 Who Is This For?
+The goal is simple:
 
-**Any developer or team who wants to add robust container security scanning to their GitHub projects with minimal setup.**
-Just add a code snippet to your workflow; this repository manages everything else—including centralized exception management.
+> ✅ Developers add **one job**  
+> ✅ Provide image build details  
+> ✅ The central workflow handles **everything else**
+
+Container scanning analyzes **built container images** for known vulnerabilities without deploying them.
 
 ---
+## 🎯 Goal
 
-## Overview
+The purpose of this setup is to provide **consistent and automated container security scanning** across repositories.
 
-This repository provides:
-- **Reusable workflow** for Trivy container scanning
-- **Centralized exception management** (global and base-image specific)
-- **Automated SARIF upload** to GitHub Security and Artifacts
+All scanning logic, exception handling, and reporting are **managed centrally**, while application teams only configure:
+- image name and tag,
+- Docker build context,
+- environment.
 
-## Usage
+This keeps pipelines simple and security consistent.
 
-Call the reusable workflow from your project:
+---
+## ✅ Quick Start (TL;DR)
 
+To enable container scanning in your repository:
+
+1. Add **one job** to your workflow
+2. Set the image name and tag
+3. Set the Dockerfile path
+4. Choose the environment (`prod` or `non-prod`)
+5. Commit and run the pipeline
+
+Results will appear in:
+- ✅ GitHub **Security → Code scanning**
+- ✅ Workflow **artifacts**
+
+---
+## 🧰 Supported Scan Tool
+
+This reusable workflow uses **Trivy** to scan container images and publish findings to GitHub Security.
+
+---
+## 🧩 Minimal YAML (One Job Only)
+
+Add the following job to your workflow:
 ```yaml
-name: Container Security Scan
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-
-permissions:
-  actions: read
-  contents: read
-  security-events: write
-
 jobs:
   container-scan:
     uses: marekboodt/Security-Scanning-Repo/.github/workflows/50-container-scan-workflow.yml@main
@@ -41,194 +55,99 @@ jobs:
       image-name: my-app
       image-tag: latest
       dockerfile-path: ./
-      exception-profile: ubuntu
       environment: non-prod
 ```
+---
+## ⚙️ Configuration Inputs
 
-## Workflow Parameters
+| Input | Required | Description |
+|---|---|---|
+| `image-name` | ✅ | Name of the container image |
+| `image-tag` | ✅ | Image tag (e.g. `latest`, `v1.0`, `${{ github.sha }}`) |
+| `dockerfile-path` | ✅ | Path used to build the Docker image |
+| `exception-profile` | ❌ | Base image exception profile (default: `none`) |
+| `severity` | ❌ | Severity levels to scan for (default: `HIGH,CRITICAL`) |
+| `environment` | ✅ | `prod` or `non-prod` |
 
-| Parameter | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `image-name` | Yes | - | Container image name |
-| `image-tag` | Yes | - | Image tag (e.g., `latest`, `v1.0`, `${{ github.sha }}`) |
-| `dockerfile-path` | Yes | - | Path to Dockerfile (e.g., `./`, `./docker`) |
-| `exception-profile` | No | `none` | Exception profile: `ubuntu`, `alpine`, `node`, `python`, or `none` |
-| `severity` | No | `HIGH,CRITICAL` | Severity levels to scan for |
-| `environment` | Yes | - | `non-prod` (continue on error) or `prod` (fail on error) |
+### Environment behavior
 
-## Exception Management
+- `non-prod` → findings do **not fail** the pipeline
+- `prod` → intended for stricter enforcement
 
-### Three-Level System
+---
+## 🔍 Tool-Specific Notes (Trivy)
 
-1. **Global** (`03-exceptions/Trivy/global.trivyignore`)
-   - Applied to ALL projects
-   - Use for: Kernel issues, company-wide decisions, common false positives
+- Trivy scans the built container image
+- Two outputs are generated:
+  - Table output (logs)
+  - SARIF output (GitHub Security + artifacts)
 
-2. **Base Image** (`03-exceptions/Trivy/ubuntu.trivyignore`, `alpine.trivyignore`, etc.)
-   - Applied when `exception-profile` is set
-   - Use for: OS-specific CVEs, base image issues
+Severity filtering is applied using the `severity` input.
 
-3. **Project-Specific** (`.trivyignore` in project repo)
-   - Applied to single project only
-   - Use for: Application dependencies, temporary exceptions
+---
 
-### Exception Format
+## 🚫 Exception Handling (Trivy Ignore Files)
 
-```
-CVE-YYYY-XXXXX  # Reason | Owner/Team | Date added YYYY-MM-DD | Review/Expire Date YYYY-MM-DD
-```
+Trivy supports ignoring specific findings via `.trivyignore` files.
 
-**Required fields:**
-- **Reason**: WHY is this accepted? (short and clear)
-- **Owner/Team**: Which team is responsible?
-- **Date added**: When was it added?
-- **Review/Expire**: When to check again? (max 6 months)
+This workflow automatically merges exceptions from **three levels**, in order:
 
-### Good Examples
-```
-CVE-2024-12345  # Feature disabled in config | Dev Team | 2024-11-23 | Review 2025-05-01
-CVE-2023-99999  # express@3 - upgrade Q2 2025 | Dev Team | 2024-11-23 | Expires 2025-06-30
-CVE-2024-11111  # Kernel bug - mitigated by isolation | Security | 2024-11-23 | Review 2025-03-01
-```
-### Bad Examples
-```
-CVE-2024-12345  # TODO
-CVE-2024-12345  # Accepted
-CVE-2024-12345  # Will fix later
-```
+1. **Global exceptions**  
+   Applied to all projects
+2. **Base-image exception profile**  
+   Applied when `exception-profile` is set
+3. **Project-specific exceptions**  
+   Defined in `.trivyignore` in the project repository
 
-## Available Exception Profiles
+The merged ignore file is shown in the workflow logs for transparency.
 
-| Profile | File | Use For |
-|---------|------|---------|
-| `ubuntu` | `03-exceptions/Trivy/ubuntu.trivyignore` | Ubuntu base images (18.04, 20.04, 22.04, etc.) |
-| `alpine` | `03-exceptions/Trivy/alpine.trivyignore` | Alpine base images (musl-libc, busybox) |
+---
 
-Set in your workflow:
-```yaml
-with:
-  exception-profile: ubuntu  # or alpine, node, python, none
-```
+## 📊 Results & Reporting
 
-## Adding Exceptions
+Container scan results are available in:
 
-### Global or Base-Image Exceptions
+- ✅ **GitHub → Security → Code scanning** (SARIF)
+- ✅ **Workflow artifacts** (SARIF download)
+- ✅ **Workflow logs** (table output)
 
-1. Fork this repository
-2. Edit the appropriate file in `03-exceptions/Trivy/`:
-   - `Trivy/global.trivyignore` - for all projects
-   - `ubuntu.trivyignore` - for Ubuntu images
-   - `alpine.trivyignore` - for Alpine images
-3. Add CVE with proper format
-4. Create Pull Request
-5. Security team will review and merge
+Artifacts are timestamped for traceability.
 
-### Project-Specific Exceptions
+---
 
-Add to `.trivyignore` in your project repository. See [project README template](https://github.com/marekboodt/Create-Test-Container-Image/blob/main/README.md) for details.
+## 🔐 Required Permissions
 
-## Repository Structure
-
-```
-Security-Scanning-Repo/
-├── .github/
-│   └── workflows/
-│       └── 10-container-scan-workflow.yml    # Reusable workflow
-├── 03-exceptions/Trivy/
-│   ├── global.trivyignore                    # Global exceptions
-│   ├── ubuntu.trivyignore                    # Ubuntu specific
-│   ├── alpine.trivyignore                    # Alpine specific
-│   ├── node.trivyignore                      # Node.js specific
-│   └── python.trivyignore                    # Python specific
-└── README.md
-```
-
-## How It Works
-
-1. Your workflow calls the reusable workflow
-2. Workflow checks out your project code
-3. Workflow checks out this repo's `03-exceptions/Trivy/`
-4. Merges exceptions in order:
-   - Global exceptions (always)
-   - Base-image exceptions (if profile set)
-   - Project exceptions (if `.trivyignore` exists)
-5. Builds your Docker image
-6. Scans image with merged exceptions
-7. Uploads results:
-   - Table output in logs
-   - SARIF to GitHub Security tab
-   - SARIF as downloadable artifact
-
-## Results Location
-
-- **Security Tab**: `Security â†’ Code scanning alerts` (per CVE tracking)
-- **Artifacts**: Workflow run â†’ Artifacts section â†’ `trivy-results`
-- **Logs**: Workflow run logs (table output)
-
-## Troubleshooting
-
-### CVE not being ignored
-
-Check:
-1. Is format correct? `CVE-YYYY-XXXXX  # Comment`
-2. Is it in the right file? (global/profile/project)
-3. Is `exception-profile` set correctly?
-4. Check "Merged trivyignore file" output in workflow logs
-
-### No Security alerts
-
-Ensure workflow has permissions:
+Your workflow must include:
 ```yaml
 permissions:
   actions: read
   contents: read
   security-events: write
 ```
+---
+## 🧭 What Is Managed Centrally?
 
-### Permission errors
+You **do not** manage:
+- Trivy installation
+- Scan execution logic
+- Exception merging
+- SARIF upload
+- Artifact naming
+- Timestamp handling
 
-Add `actions: read` permission to your calling workflow.
+All logic is versioned and maintained in the **central security repository**.
 
-## Best Practices
+---
+## ✅ Summary
 
-### DO
-- Add clear reason WHY you accept a CVE
-- Set realistic review dates (max 6 months)
-- Use `Expires` for temporary exceptions
-- Review exceptions monthly
-- Remove exceptions when CVE is patched
+- Add **one job**
+- Provide image build details
+- Optional exception profiles
+- Centralized security logic
+- Consistent container scanning across teams
 
-### DON'T
-- Add exceptions without proper reason
-- Use "TODO" or "fix later"
-- Forget to set review dates
-- Add project-specific issues to global
-- Accept all CVEs blindly
-
-## Exception Review Process
-
-### Monthly Review
-1. Check all items with past review dates
-2. Remove if CVE is patched
-3. Extend if still valid (max 6 months)
-4. Update reason if situation changed
-
-### Adding New Exception
-1. Check if already exists in global/base-image
-2. Try to fix first (always preferred!)
-3. Add with proper documentation
-4. Create PR with justification
-5. Security team reviews and approves
-
-## Questions & Support
-
-- **Issues**: Create issue in this repository
-- **Security Team**: security-team@company.com
-- **Platform Team**: platform-team@company.com
-
-## Related Resources
-
-- [Trivy Documentation](https://trivy.dev/)
-- [GitHub Code Scanning](https://docs.github.com/en/code-security/code-scanning)
-- [Example Project](https://github.com/marekboodt/Create-Test-Container-Image)
-- [Trivy Ignore Files](https://aquasecurity.github.io/trivy/latest/docs/configuration/filtering/)
+Designed to be:
+- ✅ Reusable
+- ✅ Low maintenance
+- ✅ Developer-friendly
+- ✅ Enterprise-ready
