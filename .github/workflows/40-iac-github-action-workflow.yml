@@ -27,8 +27,6 @@ jobs:
     needs: generate-timestamp
     env:
       TIMESTAMP: ${{ needs.generate-timestamp.outputs.timestamp }}
-    outputs:
-      scan_results_dir: ${{ steps.set-scan-dir.outputs.scan_results_dir }}
     steps:    
       - name: Checkout Project Repository - GH actions
         uses: actions/checkout@v3
