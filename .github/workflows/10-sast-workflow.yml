@@ -4,8 +4,8 @@ on:
   workflow_call:
     inputs:
       sast-scan-tool: { type: string, required: true }
-      language: { type: string, required: false }
       project_dir: { type: string, required: true }
+      language: { type: string, required: false }
       environment: { type: string, required: true }
     secrets:
       SEMGREP_APP_TOKEN: { required: false }
@@ -23,8 +23,8 @@ permissions:
 #####################################################################
 ### the list to test with official github actions 
 # Semgrep - multi lang - best result WITH the key
-# Bearer - multi lang - okay-ish outcome
-# CodeQL - multi lang - okay-ish outcome
+# Bearer - multi lang
+# CodeQL - multi lang
 # Sonarqube - multi lang - not set up yet
 jobs:
   Bearer-Scan:
