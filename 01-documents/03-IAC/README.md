@@ -181,4 +181,3 @@ Designed to be:
 - ✅ Transparent
 - ✅ Enterprise-ready
 
----
