@@ -114,14 +114,21 @@ jobs:
 - SARIF results are uploaded to GitHub Code Scanning
 - Artifacts are timestamped for traceability
 
-### Skip Rules / Risk Acceptance
+### 🚫 Checkov Skip Rules (`.checkov.yml`)
 
-If present, a `.checkov.yml` file is respected.
+IaC security exceptions are managed via a `.checkov.yml` file in the repository root.
 
 This file can be used to:
-- suppress known findings,
+- suppress known false positives,
 - document accepted risks,
-- reduce noise.
+- reduce scan noise in non-applicable paths.
+
+All skipped checks must be:
+- documented with a reason,
+- owned by a team,
+- reviewed periodically.
+
+The reusable IaC workflows automatically respect this file if present.
 
 ---
 
