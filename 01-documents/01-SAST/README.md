@@ -1,178 +1,154 @@
-# 🔐 SAST (Static Application Security Testing) Security Scanning
+# 🧪 SAST (Static Application Security Testing)
+### Reusable GitHub Actions Workflow
 
-This repository provides **centralized, reusable GitHub Actions workflows** for automated SAST (Static Application Security Testing).
-It is designed to make security scanning easy and accessible for all developers in your organization—so "no time" or "too difficult" is no longer an excuse.
+This document explains how to run **SAST scans** via a **centralized, reusable GitHub Actions workflow**.
 
----
+The goal is simple:
 
-## 👤 Who Is This For?
+> ✅ Developers add **one job** to their pipeline  
+> ✅ Choose **one SAST tool**  
+> ✅ The central workflow handles **everything else**
 
-**Any developer or team who wants to add robust security scanning to their GitHub projects with minimal setup.**
-Just add a code snippet to your workflow; this repository manages everything else.
-
----
-
-## 🚀 How It Works
-
-You simply add a provided code snippet to your own repository's GitHub Actions workflow file.
-This snippet will call the relevant workflow from this repository and run the selected security scan on your code.
-
-- **You select which scan tool to use** by setting parameters in your workflow snippet.
-- The scanning logic, tool integrations, and updates are all handled centrally in this repository.
-- **The `main` branch is always stable and production-ready.** New features and updates are tested in branches before being merged to `main`, so you always get the latest working version.
+SAST analyzes **source code without running the application**.
 
 ---
 
-## 🛠️ What is SAST?
+## 🎯 Goal
 
-**SAST (Static Application Security Testing)** analyzes your source code or binaries for vulnerabilities before running the application.
+The purpose of this setup is to provide **consistent static code scanning** across repositories with **minimal developer effort**.
 
-**Supported tools:** `semgrep`, `bearer`, `codeql` and `sonarqube` *(work in progress)*.
-
----
-
-## 📈 Results and Artifacts
-
-**Scan results:**  
-- All findings will appear in your repository's **Security** and **Actions** tabs.  
-- SARIF and other output files will be available as downloadable artifacts after the workflow run.
+Security logic, tooling, and reporting are **managed centrally**, while application teams only configure **high‑level inputs**.
 
 ---
 
-## ⚡ Quick Start
+## ✅ Quick Start (TL;DR)
 
-1. Copy the code block below into your repository's `.github/workflows/your-workflow.yml`.
-2. Adjust the `with:` parameters as needed for your project and scan tool.
-3. Set any required secrets or variables in your repository settings.
-4. Commit and push—scans will run automatically!
+To enable SAST in your repository:
 
----
+1. Add **one job** to your workflow
+2. Select a SAST tool (`semgrep`, `codeql`, or `bearer`)
+3. Set the project directory
+4. Commit and run the pipeline
 
-## 🔑 Required Secrets and Variables
-
-<table>
-  <tr>
-    <th>Tool</th>
-    <th>Required Secret/Variable</th>
-    <th>Where to Set</th>
-  </tr>
-  <tr>
-    <td>Semgrep</td>
-    <td><code>SEMGREP_APP_TOKEN</code></td>
-    <td>GitHub Actions repository secret</td>
-  </tr>
-  <tr>
-    <td>SonarQube</td>
-    <td><code>SONAR_TOKEN</code></td>
-    <td>GitHub Actions repository secret</td>
-  </tr>
-  <tr>
-    <td>SonarQube</td>
-    <td><code>SONAR_HOST_URL</code></td>
-    <td>GitHub Actions repository variable</td>
-  </tr>
-  <tr>
-    <td>Bearer, CodeQL</td>
-    <td><em>none</em></td>
-    <td>-</td>
-  </tr>
-</table>
+Findings will appear in:
+- ✅ GitHub **Security → Code scanning**
+- ✅ Workflow **artifacts** (SARIF)
 
 ---
 
-## 🔒 Required Workflow Permissions
+## 🧩 Minimal YAML (One Job Only)
 
-To ensure security scan results are properly uploaded and visible in your repository's Security tab, make sure to set the following permissions at the top of your main workflow YAML file:
+Add the following job to your workflow:
+```yaml
+jobs:
+  SAST:
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/10-sast-workflow.yml@main
+    with:
+      sast-scan-tool: semgrep
+      project_dir: ./
+      environment: non-prod
+    secrets: inherit
+```
+
+---
+
+## 🧰 Supported SAST Tools
+
+The reusable workflow supports the following tools:
+
+| Tool | Type | Notes |
+|---|---|---|
+| **Semgrep** | Multi-language | Best results, supports SARIF, optional deep scan |
+| **CodeQL** | Multi-language | Native GitHub engine, results stored in GitHub |
+| **Bearer** | Multi-language | Lightweight and fast feedback |
+
+Only **one tool** runs per workflow execution.
+
+---
+
+## ⚙️ Configuration Inputs
+
+| Input | Required | Description |
+|---|---|---|
+| `sast-scan-tool` | ✅ | `semgrep`, `codeql`, or `bearer` |
+| `project_dir` | ✅ | Directory containing the source code |
+| `environment` | ✅ | `prod` or `non-prod` |
+| `language` | ❌ | Required for CodeQL only |
+
+### Environment behavior
+
+- `non-prod` → findings do **not fail** the pipeline
+- `prod` → intended for stricter enforcement
+
+---
+
+## 🔍 Tool-Specific Notes
+
+### Semgrep
+- Fast lightweight scan by default
+- Optional **deep scan** when `SEMGREP_APP_TOKEN` is provided
+- SARIF uploaded to GitHub Security and artifacts
+
+### CodeQL
+- Uses GitHub’s official CodeQL action
+- Results appear automatically in GitHub Security
+- No manual SARIF artifact export
+
+### Bearer
+- Lightweight static scan
+- SARIF uploaded to GitHub Security and artifacts
+
+---
+
+## 📊 Results & Reporting
+
+All supported tools generate **SARIF** output.
+
+Results are available in:
+- ✅ **GitHub → Security → Code scanning**
+- ✅ **Workflow artifacts** (timestamped)
+
+This enables centralized visibility and developer‑friendly triage.
+
+---
+
+## 🔐 Required Permissions
+
+Your workflow must include:
 ```yaml
 permissions:
   actions: read
   contents: read
   security-events: write
-
-
 ```
 
 ---
 
-## ðŸ“ Parameter Reference
+## 🧭 What Is Managed Centrally?
 
-<table>
-  <thead>
-    <tr>
-      <th>Variable</th>
-      <th>Values</th>
-      <th>Comment/Reason</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>sast-scan-tool</code></td>
-      <td><code>semgrep</code>, <code>bearer</code>, <code>codeql</code>, <code>sonarqube</code> (work in progress)</td>
-      <td>Select the SAST tool to use for static code analysis.</td>
-    </tr>
-    <tr>
-      <td><code>language</code></td>
-      <td>e.g. <code>python</code>, <code>javascript</code></td>
-      <td>(Optional) For CodeQL, can be a comma-separated list of languages.</td>
-    </tr>
-    <tr>
-      <td><code>project_dir</code></td>
-      <td>Path (e.g. <code>./src</code>, <code>./</code>)</td>
-      <td>Directory containing your source code.</td>
-    </tr>
-    <tr>
-      <td><code>environment</code></td>
-      <td><code>prod</code>, <code>non-prod</code></td>
-      <td><code>prod</code>: blocks pipeline on findings; <code>non-prod</code>: does not block pipeline (continue-on-error).</td>
-    </tr>
-    <tr>
-      <td><code>SEMGREP_APP_TOKEN</code></td>
-      <td>Secret value</td>
-      <td>
-        Required for Semgrep scans.<br>
-        Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
-        If not using Semgrep, leave empty or remove.
-      </td>
-    </tr>
-    <tr>
-      <td><code>SONAR_TOKEN</code></td>
-      <td>Secret value</td>
-      <td>
-        Required for SonarQube scans.<br>
-        Set as a <a href="https://docs.github.com/en/actions/security-guides/encrypted-secrets">GitHub Actions repository secret</a>.<br>
-        If not using SonarQube, leave empty or remove.
-      </td>
-    </tr>
-    <tr>
-      <td><code>SONAR_HOST_URL</code></td>
-      <td>Variable value</td>
-      <td>
-        Required for SonarQube.<br>
-        Set as a <a href="https://docs.github.com/en/actions/learn-github-actions/variables">GitHub Actions repository variable</a>.<br>
-        If not using SonarQube, leave empty or remove.
-      </td>
-    </tr>
-  </tbody>
-</table>
+You **do not** manage:
+- Tool installation
+- Tool versions
+- SARIF handling
+- Upload to GitHub Security
+- Artifact naming
+- Scan orchestration
 
---- 
+All logic lives in the **central security repository**.
 
-## ðŸ§© Example Usage
+---
 
-Add the following block to your own repository's workflow file, and customize the parameters as needed.
+## ✅ Summary
 
-### SAST Scan - Code to Add in Your Pipeline
+- Add **one job**
+- Choose **one SAST tool**
+- Minimal pipeline changes
+- Centralized security logic
+- Consistent results across teams
 
-```yaml
-SAST-Scan: 
-  uses: marekboodt/Security-Scanning-Repo/.github/workflows/02-sast-workflow.yml@main
-  with:
-    sast-scan-tool: semgrep 
-    # language: python, javascript
-    project_dir: ./src
-    environment: non-prod
-  secrets: 
-    SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-```
+Designed to be:
+- ✅ Reusable
+- ✅ Low maintenance
+- ✅ Developer-friendly
+- ✅ Enterprise-ready
+
