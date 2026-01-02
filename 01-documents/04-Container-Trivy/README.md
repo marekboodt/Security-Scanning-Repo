@@ -50,7 +50,7 @@ Add the following job to your workflow:
 ```yaml
 jobs:
   container-scan:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/50-container-scan-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/50-container-scan-workflow.yml@v1
     with:
       image-name: my-app
       image-tag: latest
