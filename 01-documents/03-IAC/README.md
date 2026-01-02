@@ -1,73 +1,149 @@
-# ðŸ” IaC (Infrastructure as Code) Security Scanning
+# 🏗️ IaC (Infrastructure as Code) Security Scanning
+### Reusable GitHub Actions Workflow
 
-This repository provides **centralized, reusable GitHub Actions workflows** for automated IaC (Infrastructure as Code) security scanning.
-It is designed to make security scanning easy and accessible for all developers in your organizationâ€”so "no time" or "too difficult" is no longer an excuse.
+This document explains how to run **IaC security scans** using **Checkov** via **centralized, reusable GitHub Actions workflows**.
 
----
+The goal is simple:
 
-## ðŸ‘¤ Who Is This For?
+> ✅ Developers add **one job**  
+> ✅ Choose **how the scan is executed**  
+> ✅ The central workflow handles **everything else**
 
-**Any developer or team who wants to add robust security scanning to their GitHub projects with minimal setup.**
-Just add a code snippet to your workflow; this repository manages everything else.
-
----
-
-## ðŸš€ How It Works
-
-You simply add a provided code snippet to your own repository's GitHub Actions workflow file.
-This snippet will call the relevant workflow from this repository and run the selected security scan on your infrastructure code.
-
-- **You select which workflow to use** by setting parameters in your workflow snippet.
-- The scanning logic, tool integrations, and updates are all handled centrally in this repository.
-- **The `main` branch is always stable and production-ready.** New features and updates are tested in branches before being merged to `main`, so you always get the latest working version.
+IaC scanning analyzes **infrastructure definitions** such as Terraform code without deploying resources.
 
 ---
 
-## ðŸ› ï¸ What is IaC Scanning?
+## 🎯 Goal
 
-**IaC (Infrastructure as Code Security)** scans your Terraform infrastructure-as-code files for misconfigurations and security risks.
+The purpose of this setup is to provide **consistent and repeatable IaC security scanning** across repositories.
 
-**Supported tool:** `checkov`
+All scanning logic, tooling, and reporting are **managed centrally**, while application teams only configure:
+- the IaC language,
+- the project directory,
+- and the target environment.
 
----
-
-## ðŸ“ˆ Results and Artifacts
-
-**Scan results:**  
-- All findings will appear in your repository's **Security** and **Actions** tabs.  
-- SARIF and other output files will be available as downloadable artifacts after the workflow run.
+This ensures predictable results and low maintenance.
 
 ---
 
-## âš¡ Quick Start
+## ✅ Quick Start (TL;DR)
 
-1. Copy one of the code blocks below into your repository's `.github/workflows/your-workflow.yml`.
-2. Adjust the `with:` parameters as needed for your project.
-3. Commit and pushâ€”scans will run automatically!
+To enable IaC scanning in your repository:
 
----
+1. Add **one job** to your workflow
+2. Set the IaC language (e.g. `terraform`)
+3. Set the project directory
+4. Choose the environment (`prod` or `non-prod`)
+5. Commit and run the pipeline
 
-## ðŸ”‘ Required Secrets and Variables
-
-<table>
-  <tr>
-    <th>Tool</th>
-    <th>Required Secret/Variable</th>
-    <th>Where to Set</th>
-  </tr>
-  <tr>
-    <td>Checkov</td>
-    <td><em>none</em></td>
-    <td>-</td>
-  </tr>
-</table>
+Results will appear in:
+- ✅ GitHub **Security → Code scanning**
+- ✅ Workflow **artifacts**
 
 ---
 
-## ðŸ”’ Required Workflow Permissions
+## 🧰 Supported IaC Scanning Modes
 
-To ensure security scan results are properly uploaded and visible in your repository's Security tab, make sure to set the following permissions at the top of your main workflow YAML file:
+The reusable IaC setup supports **two execution modes**, both using **Checkov**.
 
+| Mode | Description | When to use |
+|---|---|---|
+| **GitHub Action** | Uses the official Checkov GitHub Action | Default, simple, fast |
+| **Custom Workflow** | Runs custom scripts from the security repo | Advanced use cases, more control |
+
+Both modes:
+- Use Checkov
+- Generate SARIF
+- Upload results to GitHub Security
+
+---
+
+## 🧩 Minimal YAML — GitHub Action Mode (Recommended)
+
+This is the **default and recommended** way to run IaC scans.
+```yaml
+jobs:
+  IAC-Scan:
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/40-iac-github-action-workflow.yml@main
+    with:
+      language: terraform
+      project_dir: ./
+      environment: non-prod
+```
+---
+
+## 🧩 Minimal YAML — Custom Workflow Mode
+
+Use this mode when you need:
+- custom scripts,
+- extended logic,
+- or non-standard Checkov execution.
+```yaml
+jobs:
+  IAC-Custom-Scan:
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/41-iac-custom-workflow.yml@main
+    with:
+      language: terraform
+      project_dir: ./
+      environment: non-prod
+```
+
+---
+## ⚙️ Configuration Inputs
+
+| Input | Required | Description |
+|---|---|---|
+| `language` | ✅ | IaC language (e.g. `terraform`) |
+| `project_dir` | ✅ | Directory containing IaC files |
+| `environment` | ✅ | `prod` or `non-prod` |
+
+### Environment behavior
+
+- `non-prod` → findings do **not fail** the pipeline
+- `prod` → intended for stricter enforcement
+
+---
+
+## 🔍 Tool-Specific Notes (Checkov)
+
+- Checkov scans all supported IaC files in the target directory
+- Multiple output formats are generated:
+  - CLI
+  - JSON
+  - SARIF
+- SARIF results are uploaded to GitHub Code Scanning
+- Artifacts are timestamped for traceability
+
+### Skip Rules / Risk Acceptance
+
+If present, a `.checkov.yml` file is respected.
+
+This file can be used to:
+- suppress known findings,
+- document accepted risks,
+- reduce noise.
+
+---
+
+## 📊 Results & Reporting
+
+IaC scan results are available in:
+
+- ✅ **GitHub → Security → Code scanning** (SARIF)
+- ✅ **Workflow artifacts** (CLI, JSON, SARIF)
+
+Artifacts are named using:
+- language
+- environment
+- timestamp
+
+This enables easy auditing and historical comparison.
+
+---
+
+## 🔐 Required Permissions
+
+Your workflow must include:
 ```yaml
 permissions:
   actions: read
@@ -77,98 +153,32 @@ permissions:
 
 ---
 
-## ðŸ“ Parameter Reference
+## 🧭 What Is Managed Centrally?
 
-<table>
-  <thead>
-    <tr>
-      <th>Variable</th>
-      <th>Values</th>
-      <th>Comment/Reason</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>type</code></td>
-      <td><code>iac</code></td>
-      <td>Specifies the scan type as Infrastructure as Code.</td>
-    </tr>
-    <tr>
-      <td><code>language</code></td>
-      <td><code>terraform</code></td>
-      <td>The IaC language to scan. Currently supports Terraform.</td>
-    </tr>
-    <tr>
-      <td><code>project_dir</code></td>
-      <td>Path (e.g. <code>./</code>, <code>./terraform</code>)</td>
-      <td>Directory containing your IaC files.</td>
-    </tr>
-    <tr>
-      <td><code>environment</code></td>
-      <td><code>prod</code>, <code>non-prod</code></td>
-      <td><code>prod</code>: blocks pipeline on findings; <code>non-prod</code>: does not block pipeline (continue-on-error).</td>
-    </tr>
-  </tbody>
-</table>
+You **do not** manage:
+- Checkov installation
+- Scan execution logic
+- Output formatting
+- SARIF upload
+- Artifact naming
+- Timestamp handling
 
---- 
-
-## ðŸ§© Example Usage
-
-Add one of the following blocks to your own repository's workflow file, and customize the parameters as needed.
-
-### IaC Scan (GitHub Actions) - Recommended
-
-Best to use for standard scanning needs.
-
-```yaml
-IAC-GH-Actions-Workflow:
-  uses: marekboodt/Security-Scanning-Repo/.github/workflows/03-iac-github-action-workflow.yml@main
-  with:
-    type: iac
-    language: terraform
-    project_dir: ./
-    environment: non-prod 
-```
-
-### IaC Scan (Custom Scan) - Advanced
-
-Use this if you want a more fine-grained outcome.
-
-```yaml
-IAC-Custom-Workflow:
-  uses: marekboodt/Security-Scanning-Repo/.github/workflows/03-iac-custom-workflow.yml@main
-  with:
-    type: iac
-    language: terraform
-    project_dir: ./
-    environment: non-prod 
-```
+All logic is versioned and maintained in the **central security repository**.
 
 ---
 
-## âš™ï¸ Configuring Checkov (Optional)
+## ✅ Summary
 
-If you want to accept certain risks or skip specific checks in your IaC scans, add a file named `.checkov.yml` to the root folder of your GitHub project.
+- Add **one job**
+- Choose **GitHub Action or Custom mode**
+- Minimal configuration
+- Centralized security logic
+- Consistent IaC scanning across teams
 
-This file allows you to configure which folders or checks to skip.
+Designed to be:
+- ✅ Reusable
+- ✅ Low maintenance
+- ✅ Transparent
+- ✅ Enterprise-ready
 
-### .checkov.yml Example
-
-```yaml
-# Skip PATH in the Security Scanning Repo
-skip-path:
-  - .github/workflows/DEV/
-  - .github/workflows/OLD/
-
-# Testing to "accept" risks / vulnerabilities
-skip-check:
-  ## AWS ##
-  - CKV_AWS_23      # Reason X: we accept the risk of S3 bucket doesn't need versioning 
-
-  ## AZURE ##
-  - CKV_AZURE_141   # Reason Y: we accept the risk ...
-
-  ## GCP ##
-  - CKV_GCP_53      # Reason Z: we accept the risk ...
-```
+---
