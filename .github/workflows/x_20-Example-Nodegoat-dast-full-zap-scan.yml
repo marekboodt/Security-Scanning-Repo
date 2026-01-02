@@ -1,5 +1,5 @@
 # https://hub.docker.com/r/contrastsecuritydemo/nodegoat
-name: _29 - DAST Scan - NodeGoat (Baseline + Full)
+name: Example Pipeline NodeGoat - NON REUSABLE (Baseline + Full) - Due to Starting Ingrastructure
 
 on:
   push:
