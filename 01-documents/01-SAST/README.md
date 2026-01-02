@@ -56,7 +56,7 @@ Add the following job to your workflow:
 ```yaml
 jobs:
   SAST:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/10-sast-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/10-sast-workflow.yml@v1
     with:
       sast-scan-tool: semgrep
       project_dir: ./
@@ -114,7 +114,7 @@ Example:
 ```yaml
 jobs:
   SAST:
-    uses: marekboodt/Security-Scanning-Repo/.github/workflows/10-sast-workflow.yml@main
+    uses: marekboodt/Security-Scanning-Repo/.github/workflows/10-sast-workflow.yml@v1
     with:
       sast-scan-tool: semgrep
       project_dir: ./src
