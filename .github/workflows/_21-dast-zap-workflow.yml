@@ -138,22 +138,12 @@ jobs:
           fail_action: false
           cmd_options: ${{ inputs.cmd_options }}
         continue-on-error: ${{ inputs.environment == 'non-prod' }}
-
-      # --- REPORTING ---
-      - name: Set scan mode
-        id: scan-mode
-        run: |
-          if [ -n "${{ inputs.service_image }}" ]; then
-            echo "mode=container" >> $GITHUB_OUTPUT
-          else
-            echo "mode=external-URL" >> $GITHUB_OUTPUT
-          fi
           
       - name: Upload ZAP Reports external URL
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: DAST-ZAP-${{ inputs.scan_type }}-${{ steps.scan-mode.outputs.mode }}-Report-${{ needs.generate-timestamp.outputs.timestamp }}
+          name: DAST-ZAP-${{ inputs.scan_type }}-external-URL-Report-${{ needs.generate-timestamp.outputs.timestamp }}
           path: |
             report_html.html
             report_json.json
