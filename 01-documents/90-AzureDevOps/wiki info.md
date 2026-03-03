@@ -67,54 +67,13 @@ schedules:
 - cron: "0 2 * * 3"
 ```
 
-|
- Position 
-|
- Value 
-|
- Meaning 
-|
-|
---------:
-|
-:------
-|
-:--------
-|
-|
- 1 
-|
-`0`
-|
- Minute 
-|
-|
- 2 
-|
-`2`
-|
- Hour (UTC) 
-|
-|
- 3 
-|
-`*`
-|
- Every day of the month 
-|
-|
- 4 
-|
-`*`
-|
- Every month 
-|
-|
- 5 
-|
-`3`
-|
- Day of the week (1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday, 0 = Sunday) 
-|
+| Position | Value | Meaning |
+|---------:|:------|:--------|
+| 1 | `0` | Minute |
+| 2 | `2` | Hour (UTC) |
+| 3 | `*` | Every day of the month |
+| 4 | `*` | Every month |
+| 5 | `3` | Day of the week (1 = Monday, 2 = Tuesday, 3 = Wednesday, 4 = Thursday, 5 = Friday, 6 = Saturday, 0 = Sunday) |
+
 
 
