@@ -66,6 +66,7 @@ Example from the pipeline:
 schedules:
 - cron: "0 2 * * 3"
 ```
+
 |
  Position 
 |
